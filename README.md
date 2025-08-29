@@ -1,5 +1,5 @@
 # Projeto de TCC
 
-- primeira verção
+- primeira versão
 - idealizando
--  testes e recrutamento dos menbros
+- testes e recrutamento dos membros
