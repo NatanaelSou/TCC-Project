@@ -1,0 +1,41 @@
+@import 'base.css';
+
+header {
+    background-color: var(--card-bg);
+    padding: 20px 0;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+nav {
+    margin-top: 15px;
+}
+
+nav a {
+    margin: 0 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+section {
+    background-color: var(--card-bg);
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+}
+
+ul, ol {
+    margin-left: 20px;
+    margin-top: 15px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: var(--card-bg);
+    margin-top: 50px;
+}
