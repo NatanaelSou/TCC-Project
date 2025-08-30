@@ -1,5 +1,7 @@
+/* Importa os estilos base compartilhados */
 @import 'base.css';
 
+/* Estilização do cabeçalho da página inicial */
 header {
     background-color: var(--card-bg);
     padding: 20px 0;
@@ -7,16 +9,19 @@ header {
     margin-bottom: 30px;
 }
 
+/* Estilo da navegação principal */
 nav {
     margin-top: 15px;
 }
 
+/* Espaçamento e estilo dos links na navegação */
 nav a {
     margin: 0 10px;
     padding: 5px 10px;
     border-radius: 5px;
 }
 
+/* Estilo das seções de conteúdo */
 section {
     background-color: var(--card-bg);
     padding: 30px;
@@ -24,15 +29,18 @@ section {
     border-radius: 10px;
 }
 
+/* Estilo das listas */
 ul, ol {
     margin-left: 20px;
     margin-top: 15px;
 }
 
+/* Espaçamento dos itens da lista */
 li {
     margin-bottom: 10px;
 }
 
+/* Estilo do rodapé */
 footer {
     text-align: center;
     padding: 20px;

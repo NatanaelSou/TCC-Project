@@ -1,43 +1,52 @@
+/* Importa os estilos base compartilhados */
 @import 'base.css';
 
+/* Estilização do cabeçalho */
 header {
     background-color: var(--card-bg);
     padding: 20px 0;
     margin-bottom: 30px;
 }
 
+/* Configuração da navegação no cabeçalho */
 header nav {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
+/* Estilo do título principal */
 header h1 {
     margin-bottom: 15px;
 }
 
+/* Grade de conteúdos */
 .content-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Grade responsiva */
     gap: 20px;
     padding: 20px 0;
 }
 
+/* Estilo dos cards de conteúdo */
 .content-item {
     background-color: var(--card-bg);
     padding: 20px;
     border-radius: 10px;
-    transition: transform 0.3s;
+    transition: transform 0.3s; /* Animação ao passar o mouse */
 }
 
+/* Efeito de elevação ao passar o mouse */
 .content-item:hover {
     transform: translateY(-5px);
 }
 
+/* Lista de assinaturas */
 .subscription-list {
     margin-top: 20px;
 }
 
+/* Card individual de assinatura */
 .subscription-item {
     background-color: var(--card-bg);
     padding: 20px;
@@ -45,10 +54,12 @@ header h1 {
     margin-bottom: 15px;
 }
 
+/* Espaçamento entre seções */
 section {
     margin-bottom: 40px;
 }
 
+/* Estilo do rodapé */
 footer {
     text-align: center;
     padding: 20px;
