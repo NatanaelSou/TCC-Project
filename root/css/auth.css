@@ -1,18 +1,22 @@
+/* Importa os estilos base compartilhados */
 @import 'base.css';
 
+/* Estilo dos containers dos formulários */
 .login-container, .form-register {
-    max-width: 400px;
-    margin: 50px auto;
+    max-width: 400px; /* Largura máxima do formulário */
+    margin: 50px auto; /* Centraliza o formulário na página */
     padding: 30px;
     background-color: var(--card-bg);
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
+/* Estilo para cada grupo de campo do formulário */
 .form-group {
     margin-bottom: 20px;
 }
 
+/* Estilo para as etiquetas dos campos */
 .form-group label {
     display: block;
     margin-bottom: 8px;
@@ -20,6 +24,7 @@
     font-weight: 500;
 }
 
+/* Estilo para os campos de entrada */
 .form-group input {
     width: 100%;
     padding: 12px;
@@ -30,12 +35,14 @@
     font-size: 16px;
 }
 
+/* Efeito quando o campo está selecionado */
 .form-group input:focus {
     outline: none;
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 2px rgba(255, 66, 77, 0.2);
 }
 
+/* Estilo do rodapé do formulário */
 .form-footer {
     margin-top: 25px;
     text-align: center;
@@ -43,10 +50,7 @@
     padding-top: 20px;
 }
 
-.form-footer p {
-    margin: 10px 0;
-}
-
+/* Estilo do título */
 h2 {
     text-align: center;
     margin-bottom: 30px;
@@ -54,20 +58,23 @@ h2 {
     font-size: 24px;
 }
 
+/* Estilo do botão de enviar */
 button[type="submit"] {
     width: 100%;
     padding: 12px;
     font-size: 16px;
     font-weight: 600;
     margin-top: 20px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease; /* Animação suave */
 }
 
+/* Efeito quando passa o mouse sobre o botão */
 button[type="submit"]:hover {
     background-color: var(--hover-color);
     transform: translateY(-1px);
 }
 
+/* Ajustes para telas menores (smartphones) */
 @media (max-width: 480px) {
     .login-container, .form-register {
         margin: 20px;
