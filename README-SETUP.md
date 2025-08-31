@@ -53,7 +53,19 @@ GRANT ALL PRIVILEGES ON DATABASE content_service TO content_user;
 
 ### 3. Configurar Arquivo de Ambiente
 
-Edite o arquivo `.env` na raiz do projeto:
+Crie um arquivo `.env` em uma das seguintes localizações (o sistema irá procurar automaticamente):
+
+**Opção 1 - Raiz do projeto TCC-Project:**
+```
+TCC-Project/.env
+```
+
+**Opção 2 - Pasta Documentos (recomendado se .env estiver fora do projeto):**
+```
+C:/Users/Edy/OneDrive/Documentos/.env
+```
+
+Conteúdo do arquivo `.env`:
 
 ```env
 # Substitua pelos seus valores
@@ -63,7 +75,12 @@ DB_NAME=content_service
 DB_USER=postgres  # ou content_user se criou
 DB_PASSWORD=your_password_here
 JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
+PORT=3001
+FRONTEND_URL=http://localhost:3000
+NODE_ENV=development
 ```
+
+**Nota:** O sistema agora procura automaticamente o arquivo `.env` em múltiplas localizações, incluindo a pasta Documentos, para maior flexibilidade na organização dos arquivos de configuração.
 
 ## 🚀 Configuração e Execução
 

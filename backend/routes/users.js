@@ -1,18 +1,35 @@
-// Rotas para gerenciamento de usuários
-// Este arquivo define todas as rotas relacionadas aos usuários
+// =====================================================================================
+// ROTAS PARA GERENCIAMENTO DE USUÁRIOS
+// =====================================================================================
+// Este arquivo define todas as rotas relacionadas aos usuários da plataforma.
+// Responsável por:
+// - Registro de novos usuários com validação completa
+// - Autenticação via JWT (JSON Web Tokens)
+// - Gerenciamento de perfis de usuário
+// - Validação de dados de entrada e segurança
 
-const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { body, validationResult } = require('express-validator');
-const { User } = require('../models');
+const express = require('express'); // Framework web para criação de rotas
+const bcrypt = require('bcryptjs'); // Biblioteca para hash seguro de senhas
+const jwt = require('jsonwebtoken'); // Biblioteca para geração e validação de tokens JWT
+const { body, validationResult } = require('express-validator'); // Validação de dados de entrada
+const { User } = require('../models'); // Modelo de dados para operações com usuários
 
-const router = express.Router();
+// =====================================================================================
+// INICIALIZAÇÃO DO ROUTER
+// =====================================================================================
+const router = express.Router(); // Criar instância do router Express para definir rotas
 
-// Middleware para verificar token JWT
+// =====================================================================================
+// MIDDLEWARE DE AUTENTICAÇÃO
+// =====================================================================================
+
+// Middleware para verificar e validar token JWT nas requisições protegidas
+// - Extrai token do header Authorization (formato: "Bearer <token>")
+// - Verifica validade do token usando chave secreta
+// - Anexa dados do usuário decodificado ao objeto req para uso posterior
 const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const authHeader = req.headers['authorization']; // Obter header de autorização
+  const token = authHeader && authHeader.split(' ')[1]; // Extrair token (formato: "Bearer <token>")
 
   if (!token) {
     return res.status(401).json({ error: 'Token de acesso não fornecido' });
@@ -22,8 +39,8 @@ const authenticateToken = (req, res, next) => {
     if (err) {
       return res.status(403).json({ error: 'Token inválido' });
     }
-    req.user = user;
-    next();
+    req.user = user; // Anexar dados do usuário decodificado ao request
+    next(); // Prosseguir para o próximo middleware/handler
   });
 };
 

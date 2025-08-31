@@ -32,7 +32,7 @@ INSERT INTO creators (user_id, channel_name, channel_description, subscriber_cou
 ((SELECT id FROM users WHERE username = 'maria_tech'), 'Maria Tech Academy', 'Aprenda desenvolvimento frontend e backend', 8750, 890000, 'maria-tech', true),
 ((SELECT id FROM users WHERE username = 'carlos_games'), 'Carlos Games BR', 'Reviews de jogos e gameplay ao vivo', 45200, 3200000, 'carlos-games', true),
 ((SELECT id FROM users WHERE username = 'ana_cozinha'), 'Ana Receitas', 'Receitas fáceis e deliciosas para o dia a dia', 28900, 2100000, 'ana-receitas', true)
-ON CONFLICT (user_id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 -- Inserir conteúdo de exemplo
 INSERT INTO content (creator_id, title, description, video_url, thumbnail_url, duration, category_id, view_count, like_count, tags, is_featured) VALUES
@@ -53,7 +53,7 @@ INSERT INTO subscriptions (subscriber_id, creator_id) VALUES
 ((SELECT id FROM users WHERE username = 'viewer2'), (SELECT id FROM creators WHERE channel_name = 'Maria Tech Academy')),
 ((SELECT id FROM users WHERE username = 'viewer2'), (SELECT id FROM creators WHERE channel_name = 'Ana Receitas')),
 ((SELECT id FROM users WHERE username = 'joao_silva'), (SELECT id FROM creators WHERE channel_name = 'Carlos Games BR'))
-ON CONFLICT DO NOTHING;
+ON CONFLICT (subscriber_id, creator_id) DO NOTHING;
 
 -- Inserir reações de exemplo
 INSERT INTO content_reactions (user_id, content_id, reaction_type) VALUES
@@ -61,7 +61,7 @@ INSERT INTO content_reactions (user_id, content_id, reaction_type) VALUES
 ((SELECT id FROM users WHERE username = 'viewer2'), (SELECT id FROM content WHERE title = 'Introdução ao React em 10 minutos'), 'like'),
 ((SELECT id FROM users WHERE username = 'viewer1'), (SELECT id FROM content WHERE title = 'Review: The Last of Us Part II'), 'like'),
 ((SELECT id FROM users WHERE username = 'viewer2'), (SELECT id FROM content WHERE title = 'CSS Grid vs Flexbox'), 'like')
-ON CONFLICT DO NOTHING;
+ON CONFLICT (user_id, content_id) DO NOTHING;
 
 -- Inserir comentários de exemplo
 INSERT INTO comments (user_id, content_id, comment_text) VALUES
@@ -85,7 +85,7 @@ INSERT INTO playlist_items (playlist_id, content_id, position) VALUES
 ((SELECT id FROM playlists WHERE title = 'Melhores Reviews 2024'), (SELECT id FROM content WHERE title = 'Review: The Last of Us Part II'), 1),
 ((SELECT id FROM playlists WHERE title = 'Receitas Rápidas'), (SELECT id FROM content WHERE title = 'Bolo de Chocolate Fácil'), 1),
 ((SELECT id FROM playlists WHERE title = 'Receitas Rápidas'), (SELECT id FROM content WHERE title = 'Macarrão à Carbonara'), 2)
-ON CONFLICT DO NOTHING;
+ON CONFLICT (playlist_id, content_id) DO NOTHING;
 
 -- Atualizar contadores após inserção dos dados
 UPDATE creators SET subscriber_count = (

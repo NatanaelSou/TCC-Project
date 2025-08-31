@@ -142,16 +142,16 @@ CREATE TABLE IF NOT EXISTS notifications (
 );
 
 -- Índices para otimização de performance
-CREATE INDEX idx_content_creator_id ON content(creator_id);
-CREATE INDEX idx_content_category_id ON content(category_id);
-CREATE INDEX idx_content_created_at ON content(created_at DESC);
-CREATE INDEX idx_subscriptions_subscriber_id ON subscriptions(subscriber_id);
-CREATE INDEX idx_subscriptions_creator_id ON subscriptions(creator_id);
-CREATE INDEX idx_comments_content_id ON comments(content_id);
-CREATE INDEX idx_comments_user_id ON comments(user_id);
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_users_username ON users(username);
-CREATE INDEX idx_creators_user_id ON creators(user_id);
+CREATE INDEX IF NOT EXISTS idx_content_creator_id ON content(creator_id);
+CREATE INDEX IF NOT EXISTS idx_content_category_id ON content(category_id);
+CREATE INDEX IF NOT EXISTS idx_content_created_at ON content(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_subscriber_id ON subscriptions(subscriber_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_creator_id ON subscriptions(creator_id);
+CREATE INDEX IF NOT EXISTS idx_comments_content_id ON comments(content_id);
+CREATE INDEX IF NOT EXISTS idx_comments_user_id ON comments(user_id);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_creators_user_id ON creators(user_id);
 
 -- Função para atualizar updated_at automaticamente
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -163,6 +163,12 @@ END;
 $$ language 'plpgsql';
 
 -- Triggers para atualizar updated_at
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+DROP TRIGGER IF EXISTS update_creators_updated_at ON creators;
+DROP TRIGGER IF EXISTS update_content_updated_at ON content;
+DROP TRIGGER IF EXISTS update_comments_updated_at ON comments;
+DROP TRIGGER IF EXISTS update_playlists_updated_at ON playlists;
+
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_creators_updated_at BEFORE UPDATE ON creators FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_content_updated_at BEFORE UPDATE ON content FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

@@ -13,12 +13,12 @@
 - [x] Criar estrutura de pastas: controllers, models, routes, middleware, config
 
 ### 3. Instalar Dependências Necessárias
-- [ ] Instalar `express` para framework web
-- [ ] Instalar `pg` para driver PostgreSQL
-- [ ] Instalar `cors` para permitir requisições do frontend
-- [ ] Instalar `dotenv` para variáveis de ambiente
-- [ ] Instalar `bcryptjs` para hash de senhas
-- [ ] Instalar `jsonwebtoken` para autenticação JWT
+- [x] Instalar `express` para framework web
+- [x] Instalar `pg` para driver PostgreSQL
+- [x] Instalar `cors` para permitir requisições do frontend
+- [x] Instalar `dotenv` para variáveis de ambiente
+- [x] Instalar `bcryptjs` para hash de senhas
+- [x] Instalar `jsonwebtoken` para autenticação JWT
 
 ### 4. Criar Módulo de Conexão com Banco de Dados
 - [x] Criar arquivo `backend/config/database.js` para configuração da conexão
@@ -48,8 +48,17 @@
 - [x] Documentar variáveis de ambiente necessárias
 - [x] Fornecer comandos para inicializar banco e servidor
 
+## 9. Adicionar Comentários em Português aos Arquivos Backend
+- [x] Adicionar comentários detalhados em português ao `backend/server.js`
+- [x] Melhorar comentários em português ao `backend/config/database.js`
+- [x] Adicionar comentários detalhados em português ao `backend/routes/users.js`
+- [x] Melhorar comentários em português ao `backend/models/index.js`
+
 ## Status Atual
 - [x] Plano aprovado pelo usuário
 - [x] Backend completamente implementado e testado
 - [x] Scripts de configuração e teste criados
 - [x] Documentação completa fornecida
+- [x] Problema de carregamento do .env corrigido
+- [x] Problema de ON CONFLICT no seed.sql corrigido
+- [ ] Adicionando comentários em português aos arquivos backend
