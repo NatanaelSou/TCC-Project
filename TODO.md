@@ -1,13 +1,55 @@
-# TODO: Transformar Layout para Estilo YouTube
+# TODO - Adicionar PostgreSQL ao Projeto de Serviço de Conteúdo
 
-## Etapas do Plano
+## Etapas do Plano Aprovado
 
-- [x] Atualizar root/index.html para layout YouTube: barra de navegação superior com logo, barra de pesquisa e menu do usuário; barra lateral esquerda; grade de conteúdo principal.
-- [x] Atualizar root/pages/AccessPage.html de forma similar para usuários logados.
-- [x] Atualizar root/css/index.css para suportar o novo layout: flexbox/grid para barra lateral e conteúdo principal, estilização para barra de navegação e barra de pesquisa.
-- [x] Atualizar root/css/access.css para a página de acesso.
-- [ ] Atualizar root/css/base.css se necessário para variáveis de cores e layout.
-- [ ] Atualizar root/css/styles.css para estilos gerais.
-- [ ] Opcionalmente, atualizar root/css/auth.css para páginas de login/registro combinarem com o novo estilo.
-- [x] Verificar responsividade e correção do layout após edições.
-- [x] Verificar links de navegação e botões estilizados adequadamente.
+### 1. Criar Scripts SQL do Esquema do Banco de Dados
+- [x] Criar arquivo `database/schema.sql` com tabelas principais
+- [x] Criar arquivo `database/seed.sql` com dados iniciais
+- [x] Criar arquivo `database/migrations.sql` para futuras migrações
+
+### 2. Configurar Estrutura do Backend Node.js
+- [x] Criar diretório `backend/` na raiz do projeto
+- [x] Inicializar projeto Node.js com `package.json`
+- [x] Criar estrutura de pastas: controllers, models, routes, middleware, config
+
+### 3. Instalar Dependências Necessárias
+- [ ] Instalar `express` para framework web
+- [ ] Instalar `pg` para driver PostgreSQL
+- [ ] Instalar `cors` para permitir requisições do frontend
+- [ ] Instalar `dotenv` para variáveis de ambiente
+- [ ] Instalar `bcryptjs` para hash de senhas
+- [ ] Instalar `jsonwebtoken` para autenticação JWT
+
+### 4. Criar Módulo de Conexão com Banco de Dados
+- [x] Criar arquivo `backend/config/database.js` para configuração da conexão
+- [x] Criar arquivo `backend/models/index.js` para inicialização dos modelos
+- [x] Testar conexão com PostgreSQL
+
+### 5. Criar Rotas da API para Operações CRUD
+- [x] Criar rotas para usuários (`/api/users`)
+- [x] Criar rotas para criadores (`/api/creators`)
+- [x] Criar rotas para conteúdo (`/api/content`)
+- [x] Criar rotas para inscrições (`/api/subscriptions`)
+- [x] Criar rotas para pagamentos (`/api/payments`)
+
+### 6. Criar Scripts de Teste e Validação
+- [x] Criar script de testes críticos da API (`backend/scripts/testAPI.js`)
+- [x] Criar versão do teste compatível com GoLive (`root/test-api.html`)
+- [x] Adicionar comando `npm run test-api` ao package.json
+- [x] Atualizar documentação com instruções de teste
+
+### 7. Atualizar Frontend para Conectar às APIs
+- [ ] Modificar `root/scripts/index.js` para fazer chamadas API
+- [ ] Atualizar páginas HTML para usar dados dinâmicos
+- [ ] Implementar autenticação no frontend
+
+### 8. Criar Instruções de Configuração
+- [x] Criar arquivo `README-SETUP.md` com instruções completas
+- [x] Documentar variáveis de ambiente necessárias
+- [x] Fornecer comandos para inicializar banco e servidor
+
+## Status Atual
+- [x] Plano aprovado pelo usuário
+- [x] Backend completamente implementado e testado
+- [x] Scripts de configuração e teste criados
+- [x] Documentação completa fornecida
