@@ -1,50 +1,110 @@
-<!-- Esse é o arquivo principal do site (página inicial) -->
+<!-- Esse é o arquivo principal do site (página inicial) com layout estilo YouTube -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <!-- Configurações básicas da página -->
     <meta charset="UTF-8"> <!-- Define o conjunto de caracteres -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configuração para dispositivos móveis -->
-    <title>Venda de Conteúdos</title> <!-- Título que aparece na aba do navegador -->
+    <title>Conteúdo Premium - Plataforma de Conteúdo</title> <!-- Título que aparece na aba do navegador -->
     <link rel="stylesheet" href="css/index.css"> <!-- Conecta com o arquivo de estilos CSS -->
 </head>
 <body>
-    <!-- Cabeçalho do site -->
-    <header>
-        <h1>Conteúdo Premium</h1>
-        <!-- Menu de navegação principal -->
-        <nav>
-            <a href="#">Início</a> |
-            <a href="#">Criadores</a> |
-            <a href="#">Assinaturas</a> |
-            <a href="pages/login.html">Login</a> | <!-- Link para página de login -->
-            <a href="pages/registro.html">Registrar</a> <!-- Link para página de registro -->
-        </nav>
+    <!-- Barra de navegação superior estilo YouTube -->
+    <header class="top-nav">
+        <!-- Logo e menu hambúrguer -->
+        <div class="nav-left">
+            <button class="menu-btn" id="menu-toggle">☰</button> <!-- Botão para abrir/fechar sidebar -->
+            <div class="logo">
+                <h1>Conteúdo Premium</h1>
+            </div>
+        </div>
+        <!-- Barra de pesquisa central -->
+        <div class="nav-center">
+            <input type="text" placeholder="Buscar conteúdos..." class="search-input">
+            <button class="search-btn">🔍</button>
+        </div>
+        <!-- Menu do usuário -->
+        <div class="nav-right">
+            <button class="user-btn">👤</button> <!-- Ícone de usuário -->
+            <a href="pages/login.html" class="login-link">Login</a>
+        </div>
     </header>
-    <!-- Conteúdo principal da página -->
-    <main>
-        <!-- Seção de destaques -->
-        <section>
-            <h2>Destaques</h2>
-            <ul>
-                <li>Criador 1 - Conteúdo exclusivo</li>
-                <li>Criador 2 - Conteúdo especial</li>
-                <li>Criador 3 - Novidades semanais</li>
-            </ul>
-        </section>
-        <!-- Seção explicativa -->
-        <section>
-            <h2>Como Funciona</h2>
-            <ol>
-                <li>Crie uma conta ou faça login</li>
-                <li>Escolha seu criador favorito</li>
-                <li>Assine para acessar conteúdos exclusivos</li>
-            </ol>
-        </section>
-    </main>
+
+    <!-- Container principal com sidebar e conteúdo -->
+    <div class="main-container">
+        <!-- Barra lateral esquerda com navegação -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link active">🏠 Início</a>
+                <a href="#" class="sidebar-link">🔥 Em Alta</a>
+                <a href="#" class="sidebar-link">📺 Assinaturas</a>
+                <a href="#" class="sidebar-link">👥 Criadores</a>
+                <a href="#" class="sidebar-link">📚 Biblioteca</a>
+                <a href="#" class="sidebar-link">⚙️ Configurações</a>
+            </nav>
+        </aside>
+
+        <!-- Conteúdo principal -->
+        <main class="content">
+            <!-- Grade de conteúdos em destaque -->
+            <section class="content-grid">
+                <!-- Card de conteúdo individual -->
+                <div class="content-card">
+                    <div class="thumbnail">
+                        <img src="https://via.placeholder.com/320x180?text=Conteúdo+1" alt="Thumbnail">
+                        <span class="duration">10:30</span>
+                    </div>
+                    <div class="card-info">
+                        <h3>Criador 1 - Conteúdo Exclusivo</h3>
+                        <p>Conteúdo premium disponível para assinantes</p>
+                        <div class="meta">
+                            <span>Criador 1</span> • <span>1.2K visualizações</span> • <span>2 dias atrás</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="thumbnail">
+                        <img src="https://via.placeholder.com/320x180?text=Conteúdo+2" alt="Thumbnail">
+                        <span class="duration">15:45</span>
+                    </div>
+                    <div class="card-info">
+                        <h3>Criador 2 - Conteúdo Especial</h3>
+                        <p>Novidades semanais para seus seguidores</p>
+                        <div class="meta">
+                            <span>Criador 2</span> • <span>850 visualizações</span> • <span>5 dias atrás</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="thumbnail">
+                        <img src="https://via.placeholder.com/320x180?text=Conteúdo+3" alt="Thumbnail">
+                        <span class="duration">8:20</span>
+                    </div>
+                    <div class="card-info">
+                        <h3>Criador 3 - Atualizações Recentes</h3>
+                        <p>Conteúdo fresco e exclusivo</p>
+                        <div class="meta">
+                            <span>Criador 3</span> • <span>2.5K visualizações</span> • <span>1 semana atrás</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Adicionar mais cards conforme necessário -->
+            </section>
+        </main>
+    </div>
+
     <!-- Rodapé da página -->
     <footer>
         <p>&copy; 2025 Conteúdo Premium. Todos os direitos reservados.</p>
     </footer>
+
+    <!-- Script simples para toggle da sidebar -->
+    <script>
+        // Função para alternar a visibilidade da sidebar
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open'); // Adiciona/remove classe 'open'
+        });
+    </script>
 </body>
 </html>

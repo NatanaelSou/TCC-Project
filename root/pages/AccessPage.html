@@ -1,5 +1,6 @@
+<!-- Página da área de conteúdo para usuários logados com layout estilo YouTube -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <!-- Configurações básicas da página -->
     <meta charset="UTF-8">
@@ -9,55 +10,113 @@
     <link rel="stylesheet" href="../css/access.css">
 </head>
 <body>
-    <!-- Cabeçalho com navegação da área logada -->
-    <header>
-        <h1>Área de Conteúdo Premium</h1>
-        <!-- Menu de navegação da área logada -->
-        <nav>
-            <a href="../index.html">Home</a> |
-            <a href="#perfil">Meu Perfil</a> |
-            <a href="#biblioteca">Minha Biblioteca</a> |
-            <a href="#logout">Sair</a>
-        </nav>
+    <!-- Barra de navegação superior estilo YouTube -->
+    <header class="top-nav">
+        <!-- Logo e menu hambúrguer -->
+        <div class="nav-left">
+            <button class="menu-btn" id="menu-toggle">☰</button> <!-- Botão para abrir/fechar sidebar -->
+            <div class="logo">
+                <h1>Conteúdo Premium</h1>
+            </div>
+        </div>
+        <!-- Barra de pesquisa central -->
+        <div class="nav-center">
+            <input type="text" placeholder="Buscar meus conteúdos..." class="search-input">
+            <button class="search-btn">🔍</button>
+        </div>
+        <!-- Menu do usuário -->
+        <div class="nav-right">
+            <button class="user-btn">👤</button> <!-- Ícone de usuário -->
+            <a href="#logout" class="logout-link">Sair</a>
+        </div>
     </header>
 
-    <!-- Conteúdo principal -->
-    <main>
-        <!-- Grade de conteúdos disponíveis -->
-        <section id="content-grid">
-            <h2>Meus Conteúdos</h2>
-            <!-- Lista de conteúdos do usuário -->
-            <div class="content-list">
-                <!-- Item de conteúdo individual -->
-                <div class="content-item">
-                    <h3>Título do Conteúdo 1</h3>
-                    <p>Descrição do conteúdo premium</p>
-                    <button>Acessar</button>
-                </div>
-                <div class="content-item">
-                    <h3>Título do Conteúdo 2</h3>
-                    <p>Descrição do conteúdo premium</p>
-                    <button>Acessar</button>
-                </div>
-            </div>
-        </section>
+    <!-- Container principal com sidebar e conteúdo -->
+    <div class="main-container">
+        <!-- Barra lateral esquerda com navegação -->
+        <aside class="sidebar" id="sidebar">
+            <nav class="sidebar-nav">
+                <a href="../index.html" class="sidebar-link">🏠 Início</a>
+                <a href="#" class="sidebar-link active">📺 Meus Conteúdos</a>
+                <a href="#" class="sidebar-link">📚 Minha Biblioteca</a>
+                <a href="#" class="sidebar-link">👤 Meu Perfil</a>
+                <a href="#" class="sidebar-link">💳 Assinaturas</a>
+                <a href="#" class="sidebar-link">⚙️ Configurações</a>
+            </nav>
+        </aside>
 
-        <!-- Seção de assinaturas ativas -->
-        <section id="subscriptions">
-            <h2>Minhas Assinaturas</h2>
-            <!-- Lista de assinaturas ativas -->
-            <div class="subscription-list">
-                <div class="subscription-item">
-                    <h3>Criador 1</h3>
-                    <p>Assinatura ativa até: 30/09/2025</p>
+        <!-- Conteúdo principal -->
+        <main class="content">
+            <!-- Seção de conteúdos do usuário -->
+            <section class="user-content">
+                <h2>Meus Conteúdos</h2>
+                <!-- Grade de conteúdos disponíveis -->
+                <div class="content-grid">
+                    <!-- Card de conteúdo individual -->
+                    <div class="content-card">
+                        <div class="thumbnail">
+                            <img src="https://via.placeholder.com/320x180?text=Meu+Conteúdo+1" alt="Thumbnail">
+                            <span class="duration">12:45</span>
+                        </div>
+                        <div class="card-info">
+                            <h3>Título do Meu Conteúdo 1</h3>
+                            <p>Conteúdo premium acessível</p>
+                            <div class="meta">
+                                <span>Criador 1</span> • <span>Assistido</span> • <span>2 dias atrás</span>
+                            </div>
+                        </div>
+                        <button class="access-btn">Acessar</button>
+                    </div>
+                    <div class="content-card">
+                        <div class="thumbnail">
+                            <img src="https://via.placeholder.com/320x180?text=Meu+Conteúdo+2" alt="Thumbnail">
+                            <span class="duration">8:30</span>
+                        </div>
+                        <div class="card-info">
+                            <h3>Título do Meu Conteúdo 2</h3>
+                            <p>Conteúdo exclusivo para assinantes</p>
+                            <div class="meta">
+                                <span>Criador 2</span> • <span>Não assistido</span> • <span>1 semana atrás</span>
+                            </div>
+                        </div>
+                        <button class="access-btn">Acessar</button>
+                    </div>
+                    <!-- Adicionar mais cards conforme necessário -->
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
+
+            <!-- Seção de assinaturas ativas -->
+            <section class="subscriptions">
+                <h2>Minhas Assinaturas</h2>
+                <!-- Lista de assinaturas ativas -->
+                <div class="subscription-grid">
+                    <div class="subscription-card">
+                        <h3>Criador 1</h3>
+                        <p>Assinatura ativa até: 30/09/2025</p>
+                        <button class="manage-btn">Gerenciar</button>
+                    </div>
+                    <div class="subscription-card">
+                        <h3>Criador 3</h3>
+                        <p>Assinatura ativa até: 15/10/2025</p>
+                        <button class="manage-btn">Gerenciar</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <!-- Rodapé da página -->
     <footer>
         <p>&copy; 2025 Conteúdo Premium. Todos os direitos reservados.</p>
     </footer>
+
+    <!-- Script simples para toggle da sidebar -->
+    <script>
+        // Função para alternar a visibilidade da sidebar
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open'); // Adiciona/remove classe 'open'
+        });
+    </script>
 </body>
 </html>

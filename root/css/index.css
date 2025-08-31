@@ -1,43 +1,228 @@
 /* Importa os estilos base compartilhados */
 @import 'base.css';
 
-/* Estilização do cabeçalho da página inicial */
-header {
+/* Estilização da barra de navegação superior estilo YouTube */
+.top-nav {
+    display: flex; /* Layout flexível para alinhar elementos */
+    align-items: center; /* Alinha verticalmente ao centro */
+    justify-content: space-between; /* Espaça os elementos */
     background-color: var(--card-bg);
-    padding: 20px 0;
-    text-align: center;
-    margin-bottom: 30px;
+    padding: 10px 20px;
+    position: fixed; /* Fixa no topo da página */
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
 }
 
-/* Estilo da navegação principal */
-nav {
-    margin-top: 15px;
+/* Lado esquerdo da navegação: menu e logo */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espaço entre elementos */
 }
 
-/* Espaçamento e estilo dos links na navegação */
-nav a {
-    margin: 0 10px;
+/* Botão do menu hambúrguer */
+.menu-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* Logo da plataforma */
+.logo h1 {
+    font-size: 18px;
+    margin: 0;
+    color: var(--secondary-color);
+}
+
+/* Centro da navegação: barra de pesquisa */
+.nav-center {
+    display: flex;
+    align-items: center;
+    flex: 1; /* Ocupa o espaço disponível */
+    max-width: 600px; /* Largura máxima */
+    margin: 0 20px;
+}
+
+/* Campo de entrada da pesquisa */
+.search-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #333;
+    border-radius: 20px 0 0 20px; /* Bordas arredondadas à esquerda */
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+/* Botão de pesquisa */
+.search-btn {
+    padding: 8px 15px;
+    background-color: var(--secondary-color);
+    border: 1px solid #333;
+    border-left: none;
+    border-radius: 0 20px 20px 0; /* Bordas arredondadas à direita */
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* Lado direito da navegação: usuário e login */
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Botão do usuário */
+.user-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 5px;
+}
+
+/* Link de login */
+.login-link {
+    color: var(--secondary-color);
+    text-decoration: none;
     padding: 5px 10px;
     border-radius: 5px;
 }
 
-/* Estilo das seções de conteúdo */
-section {
+/* Container principal com sidebar e conteúdo */
+.main-container {
+    display: flex; /* Layout flexível */
+    margin-top: 60px; /* Espaço para a nav fixa */
+}
+
+/* Barra lateral esquerda */
+.sidebar {
+    width: 240px; /* Largura fixa */
     background-color: var(--card-bg);
-    padding: 30px;
-    margin-bottom: 30px;
+    padding: 20px 0;
+    position: fixed; /* Fixa à esquerda */
+    top: 60px; /* Abaixo da nav */
+    left: 0;
+    height: calc(100vh - 60px); /* Altura total menos nav */
+    overflow-y: auto; /* Rolagem se necessário */
+    transition: transform 0.3s ease; /* Animação de abertura/fechamento */
+}
+
+/* Navegação da sidebar */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Links da sidebar */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 16px;
+    gap: 10px; /* Espaço entre ícone e texto */
+}
+
+/* Efeito hover nos links da sidebar */
+.sidebar-link:hover {
+    background-color: var(--hover-color);
+    color: var(--bg-color);
+}
+
+/* Link ativo da sidebar */
+.sidebar-link.active {
+    background-color: var(--secondary-color);
+    color: var(--bg-color);
+}
+
+/* Conteúdo principal */
+.content {
+    flex: 1; /* Ocupa o espaço restante */
+    padding: 20px;
+    margin-left: 240px; /* Espaço para a sidebar */
+}
+
+/* Grade de conteúdos */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Grade responsiva */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Card de conteúdo individual */
+.content-card {
+    background-color: var(--card-bg);
     border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease; /* Animação ao passar o mouse */
+    cursor: pointer;
 }
 
-/* Estilo das listas */
-ul, ol {
-    margin-left: 20px;
-    margin-top: 15px;
+/* Efeito hover no card */
+.content-card:hover {
+    transform: translateY(-5px);
 }
 
-/* Espaçamento dos itens da lista */
-li {
-    margin-bottom: 10px;
+/* Container da thumbnail */
+.thumbnail {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+/* Imagem da thumbnail */
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Duração do vídeo sobreposta */
+.duration {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: var(--text-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* Informações do card */
+.card-info {
+    padding: 15px;
+}
+
+/* Título do conteúdo */
+.card-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: var(--text-color);
+}
+
+/* Descrição do conteúdo */
+.card-info p {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #ccc;
+}
+
+/* Metadados: criador, visualizações, tempo */
+.meta {
+    font-size: 12px;
+    color: #999;
 }
 
 /* Estilo do rodapé */
@@ -46,4 +231,43 @@ footer {
     padding: 20px;
     background-color: var(--card-bg);
     margin-top: 50px;
+    clear: both; /* Garante que não haja flutuação */
+}
+
+/* Responsividade para dispositivos móveis */
+@media (max-width: 768px) {
+    /* Oculta a sidebar por padrão em telas pequenas */
+    .sidebar {
+        transform: translateX(-100%); /* Move para fora da tela */
+    }
+
+    /* Mostra a sidebar quando tem a classe 'open' */
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    /* Ajusta o conteúdo principal para telas pequenas */
+    .content {
+        margin-left: 0;
+    }
+
+    /* Ajusta a navegação superior para telas pequenas */
+    .top-nav {
+        padding: 10px 15px;
+    }
+
+    /* Centraliza a barra de pesquisa */
+    .nav-center {
+        margin: 0 10px;
+    }
+
+    /* Ajusta o logo */
+    .logo h1 {
+        font-size: 16px;
+    }
+
+    /* Grade de conteúdos em uma coluna para telas pequenas */
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
 }
