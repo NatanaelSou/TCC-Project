@@ -1,0 +1,36 @@
+{
+  "description": "Configuração para testes automatizados do sistema",
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "content_service",
+    "user": "postgres",
+    "password": "",
+    "maxConnections": 20,
+    "idleTimeoutMillis": 30000
+  },
+  "api": {
+    "baseUrl": "http://localhost:3001/api",
+    "timeout": 10000,
+    "retries": 3
+  },
+  "tests": {
+    "enableDatabaseTests": true,
+    "enableAPITests": true,
+    "enableLoadTests": true,
+    "concurrentRequests": 50,
+    "testDuration": 30000,
+    "outputReport": true,
+    "reportFile": "test-report.json"
+  },
+  "performance": {
+    "maxResponseTime": 1000,
+    "minRequestsPerSecond": 10,
+    "acceptableErrorRate": 0.05
+  },
+  "notifications": {
+    "emailOnFailure": false,
+    "slackWebhook": null,
+    "logLevel": "info"
+  }
+}
