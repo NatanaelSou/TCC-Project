@@ -1,54 +1,64 @@
 # Guia de Configuração - Plataforma de Serviço de Conteúdo
 
-Este guia explica como configurar e executar a plataforma de serviço de conteúdo com PostgreSQL e Node.js.
+Este guia explica como configurar e executar a plataforma de serviço de conteúdo com MySQL e Node.js.
 
 ## 📋 Pré-requisitos
 
 - **Node.js** (versão 16 ou superior)
-- **PostgreSQL** (versão 12 ou superior)
+- **MySQL** (versão 8.0 ou superior) ou **MySQL Workbench**
 - **Git** (para controle de versão)
 
-## 🗄️ Configuração do PostgreSQL
+## 🗄️ Configuração do MySQL
 
-### 1. Instalar PostgreSQL
+### 1. Instalar MySQL
 
 #### Windows:
-- Baixe e instale o PostgreSQL do site oficial: https://www.postgresql.org/download/windows/
-- Durante a instalação, anote a senha do usuário `postgres`
+- Baixe e instale o MySQL do site oficial: https://dev.mysql.com/downloads/mysql/
+- Ou instale o MySQL Workbench (recomendado): https://dev.mysql.com/downloads/workbench/
+- Durante a instalação, anote a senha do usuário `root`
 
 #### Linux (Ubuntu/Debian):
 ```bash
 sudo apt update
-sudo apt install postgresql postgresql-contrib
-sudo systemctl start postgresql
-sudo systemctl enable postgresql
+sudo apt install mysql-server
+sudo systemctl start mysql
+sudo systemctl enable mysql
+
+# Configurar senha do root (opcional)
+sudo mysql_secure_installation
 ```
 
 #### macOS:
 ```bash
-brew install postgresql
-brew services start postgresql
+brew install mysql
+brew services start mysql
+
+# Configurar senha do root
+mysql_secure_installation
 ```
 
 ### 2. Criar Banco de Dados
 
-Abra o terminal e execute os comandos SQL:
+Abra o terminal MySQL e execute os comandos SQL:
 
 ```bash
-# Conectar ao PostgreSQL como superusuário
-psql -U postgres
+# Conectar ao MySQL como root
+mysql -u root -p
 
 # Criar banco de dados
 CREATE DATABASE content_service;
 
 # Criar usuário da aplicação (opcional, mas recomendado)
-CREATE USER content_user WITH PASSWORD 'your_secure_password';
+CREATE USER 'content_user'@'localhost' IDENTIFIED BY 'your_secure_password';
 
 # Conceder permissões
-GRANT ALL PRIVILEGES ON DATABASE content_service TO content_user;
+GRANT ALL PRIVILEGES ON content_service.* TO 'content_user'@'localhost';
 
-# Sair do psql
-\q
+# Aplicar mudanças de privilégios
+FLUSH PRIVILEGES;
+
+# Sair do mysql
+EXIT;
 ```
 
 ### 3. Configurar Arquivo de Ambiente

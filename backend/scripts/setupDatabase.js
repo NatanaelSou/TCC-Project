@@ -69,29 +69,43 @@ const { pool } = require('../config/database');
 
 async function setupDatabase() {
   try {
-    console.log('🚀 Iniciando configuração do banco de dados...');
+    console.log('🚀 Iniciando configuração do banco de dados MySQL...');
 
-    // Ler arquivo do esquema
-    const schemaPath = path.join(__dirname, '../../database/schema.sql');
+    // Ler arquivo do esquema MySQL
+    const schemaPath = path.join(__dirname, '../../database/schema-mysql.sql');
     const schemaSQL = fs.readFileSync(schemaPath, 'utf8');
 
-    console.log('📄 Executando script do esquema...');
-    await pool.query(schemaSQL);
-    console.log('✅ Esquema criado com sucesso!');
+    console.log('📄 Executando script do esquema MySQL...');
+    // Para MySQL, precisamos executar múltiplas statements separadamente
+    const statements = schemaSQL.split(';').filter(stmt => stmt.trim().length > 0);
 
-    // Ler arquivo de dados iniciais
-    const seedPath = path.join(__dirname, '../../database/seed.sql');
+    for (const statement of statements) {
+      if (statement.trim()) {
+        await pool.execute(statement);
+      }
+    }
+    console.log('✅ Esquema MySQL criado com sucesso!');
+
+    // Ler arquivo de dados iniciais MySQL
+    const seedPath = path.join(__dirname, '../../database/seed-mysql.sql');
     const seedSQL = fs.readFileSync(seedPath, 'utf8');
 
-    console.log('🌱 Populando banco com dados iniciais...');
-    await pool.query(seedSQL);
-    console.log('✅ Dados iniciais inseridos com sucesso!');
+    console.log('🌱 Populando banco com dados iniciais MySQL...');
+    // Executar múltiplas statements do seed
+    const seedStatements = seedSQL.split(';').filter(stmt => stmt.trim().length > 0);
 
-    console.log('🎉 Banco de dados configurado com sucesso!');
+    for (const statement of seedStatements) {
+      if (statement.trim()) {
+        await pool.execute(statement);
+      }
+    }
+    console.log('✅ Dados iniciais MySQL inseridos com sucesso!');
+
+    console.log('🎉 Banco de dados MySQL configurado com sucesso!');
     console.log('📊 Você pode agora iniciar o servidor com: npm start');
 
   } catch (error) {
-    console.error('❌ Erro ao configurar banco de dados:', error);
+    console.error('❌ Erro ao configurar banco de dados MySQL:', error);
     process.exit(1);
   } finally {
     await pool.end();
