@@ -17,10 +17,10 @@ const { Pool } = require('pg'); // Importar classe Pool do driver PostgreSQL
 // Mantém conexões abertas para reutilização, evitando overhead de criação/destruição
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost', // Host do servidor PostgreSQL
-  port: process.env.DB_PORT || 5432, // Porta do servidor PostgreSQL (padrão 5432)
+  port: parseInt(process.env.DB_PORT, 10) || 5432, // Porta do servidor PostgreSQL (padrão 5432)
   database: process.env.DB_NAME || 'content_service', // Nome do banco de dados
   user: process.env.DB_USER || 'postgres', // Usuário do banco de dados
-  password: process.env.DB_PASSWORD || '', // Senha do usuário
+  password: String(process.env.DB_PASSWORD || ''), // Senha do usuário convertida para string
   max: 20, // Máximo de conexões simultâneas no pool
   idleTimeoutMillis: 30000, // Fechar conexões ociosas após 30 segundos
   connectionTimeoutMillis: 2000, // Timeout para estabelecimento de conexão (2 segundos)
