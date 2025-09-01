@@ -1,0 +1,604 @@
+<!-- Aqui serve para testar as APIs em caso de manutenção-->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste da API - Plataforma de Conteúdo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .test-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-running { background: #cce5ff; color: #004085; }
+        .status-success { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+
+        .test-button:hover {
+            background: #0056b3;
+        }
+
+        .test-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .run-all-button {
+            background: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .run-all-button:hover {
+            background: #218838;
+        }
+
+        .test-result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .result-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .result-info {
+            background: #cce5ff;
+            border: 1px solid #b3d7ff;
+            color: #004085;
+        }
+
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e9ecef;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #28a745;
+            transition: width 0.3s ease;
+        }
+
+        .test-input {
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .test-input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste da API - Plataforma de Conteúdo</h1>
+
+        <button id="runAllTests" class="test-button run-all-button">Executar Todos os Testes</button>
+
+        <div class="progress-bar">
+            <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+        </div>
+
+        <div id="testResults"></div>
+
+        <div id="summary" class="summary" style="display: none;">
+            <h2>📊 Resultado Final</h2>
+            <p id="summaryText"></p>
+        </div>
+    </div>
+
+    <script>
+        // Configurações da API
+        const API_BASE_URL = 'http://localhost:3001/api';
+
+        // Estado dos testes
+        let testResults = [];
+        let currentTestIndex = 0;
+        let testUser = null;
+        let testToken = null;
+        let testCreator = null;
+        let testContent = null;
+
+        // Elementos DOM
+        const testResultsDiv = document.getElementById('testResults');
+        const runAllButton = document.getElementById('runAllTests');
+        const progressFill = document.getElementById('progressFill');
+        const summaryDiv = document.getElementById('summary');
+        const summaryText = document.getElementById('summaryText');
+
+        // Função para fazer requisições HTTP
+        async function makeRequest(method, url, data = null, token = null) {
+            try {
+                const config = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+
+                if (token) {
+                    config.headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                if (data) {
+                    config.body = JSON.stringify(data);
+                }
+
+                const response = await fetch(`${API_BASE_URL}${url}`, config);
+                const responseData = await response.json();
+
+                return {
+                    success: response.ok,
+                    data: responseData,
+                    status: response.status
+                };
+            } catch (error) {
+                return {
+                    success: false,
+                    error: error.message,
+                    status: 0
+                };
+            }
+        }
+
+        // Função para atualizar status do teste
+        function updateTestStatus(testId, status, result = '') {
+            const testDiv = document.getElementById(`test-${testId}`);
+            if (!testDiv) return;
+
+            const statusElement = testDiv.querySelector('.test-status');
+            const resultElement = testDiv.querySelector('.test-result');
+
+            statusElement.className = `test-status status-${status}`;
+            statusElement.textContent = status.toUpperCase();
+
+            if (result) {
+                resultElement.className = `test-result result-${status}`;
+                resultElement.textContent = result;
+            }
+        }
+
+        // Função para criar elemento de teste
+        function createTestElement(testId, title, description) {
+            const testDiv = document.createElement('div');
+            testDiv.className = 'test-section';
+            testDiv.id = `test-${testId}`;
+
+            testDiv.innerHTML = `
+                <div class="test-header">
+                    <div class="test-title">${title}</div>
+                    <div class="test-status status-pending">PENDENTE</div>
+                </div>
+                <p>${description}</p>
+                <button class="test-button" onclick="runTest('${testId}')">Executar Teste</button>
+                <div class="test-result result-info"></div>
+            `;
+
+            return testDiv;
+        }
+
+        // Teste 1: Verificar saúde da API
+        async function testAPIHealth() {
+            updateTestStatus('health', 'running');
+
+            const result = await makeRequest('GET', '/health');
+
+            if (result.success) {
+                updateTestStatus('health', 'success',
+                    `✅ API está saudável!\n📊 Status: ${JSON.stringify(result.data, null, 2)}`);
+                return true;
+            } else {
+                updateTestStatus('health', 'error',
+                    `❌ Erro na API: ${result.error}\n📊 Status: ${result.status}`);
+                return false;
+            }
+        }
+
+        // Teste 2: Registrar novo usuário
+        async function testUserRegistration() {
+            updateTestStatus('register', 'running');
+
+            const userData = {
+                username: 'testuser_' + Date.now(),
+                email: 'test' + Date.now() + '@example.com',
+                password: 'testpassword123',
+                full_name: 'Usuário de Teste'
+            };
+
+            const result = await makeRequest('POST', '/users/register', userData);
+
+            if (result.success) {
+                testUser = result.data.user;
+                updateTestStatus('register', 'success',
+                    `✅ Usuário registrado!\n👤 Username: ${testUser.username}\n📧 Email: ${testUser.email}`);
+                return true;
+            } else {
+                updateTestStatus('register', 'error',
+                    `❌ Erro no registro: ${JSON.stringify(result.error, null, 2)}`);
+                return false;
+            }
+        }
+
+        // Teste 3: Fazer login
+        async function testUserLogin() {
+            updateTestStatus('login', 'running');
+
+            if (!testUser) {
+                updateTestStatus('login', 'error', '❌ Nenhum usuário de teste disponível');
+                return false;
+            }
+
+            const loginData = {
+                email: testUser.email,
+                password: 'testpassword123'
+            };
+
+            const result = await makeRequest('POST', '/users/login', loginData);
+
+            if (result.success) {
+                testToken = result.data.token;
+                updateTestStatus('login', 'success',
+                    `✅ Login realizado!\n🔑 Token JWT obtido\n👤 Usuário: ${result.data.user.username}`);
+                return true;
+            } else {
+                updateTestStatus('login', 'error',
+                    `❌ Erro no login: ${JSON.stringify(result.error, null, 2)}`);
+                return false;
+            }
+        }
+
+        // Teste 4: Obter perfil do usuário
+        async function testGetUserProfile() {
+            updateTestStatus('profile', 'running');
+
+            if (!testToken) {
+                updateTestStatus('profile', 'error', '❌ Nenhum token disponível');
+                return false;
+            }
+
+            const result = await makeRequest('GET', '/users/profile', null, testToken);
+
+            if (result.success) {
+                updateTestStatus('profile', 'success',
+                    `✅ Perfil obtido!\n👤 Username: ${result.data.user.username}\n📧 Email: ${result.data.user.email}`);
+                return true;
+            } else {
+                updateTestStatus('profile', 'error',
+                    `❌ Erro ao obter perfil: ${JSON.stringify(result.error, null, 2)}`);
+                return false;
+            }
+        }
+
+        // Teste 5: Criar canal de criador
+        async function testCreateCreatorChannel() {
+            updateTestStatus('creator', 'running');
+
+            if (!testToken) {
+                updateTestStatus('creator', 'error', '❌ Nenhum token disponível');
+                return false;
+            }
+
+            const channelData = {
+                channel_name: 'Canal de Teste ' + Date.now(),
+                channel_description: 'Este é um canal de teste para validação da API'
+            };
+
+            const result = await makeRequest('POST', '/creators/channel', channelData, testToken);
+
+            if (result.success) {
+                testCreator = result.data.creator;
+                updateTestStatus('creator', 'success',
+                    `✅ Canal criado!\n🎬 Nome: ${testCreator.channel_name}\n📝 Descrição: ${testCreator.channel_description}`);
+                return true;
+            } else {
+                updateTestStatus('creator', 'error',
+                    `❌ Erro ao criar canal: ${JSON.stringify(result.error, null, 2)}`);
+                return false;
+            }
+        }
+
+        // Teste 6: Criar conteúdo
+        async function testCreateContent() {
+            updateTestStatus('content', 'running');
+
+            if (!testToken || !testCreator) {
+                updateTestStatus('content', 'error', '❌ Token ou criador não disponível');
+                return false;
+            }
+
+            const contentData = {
+                title: 'Vídeo de Teste ' + Date.now(),
+                description: 'Este é um vídeo de teste para validação da API',
+                video_url: 'https://example.com/video.mp4',
+                thumbnail_url: 'https://example.com/thumbnail.jpg',
+                category_id: '550e8400-e29b-41d4-a716-446655440000',
+                tags: ['teste', 'api', 'backend']
+            };
+
+            const result = await makeRequest('POST', '/content', contentData, testToken);
+
+            if (result.success) {
+                testContent = result.data.content;
+                updateTestStatus('content', 'success',
+                    `✅ Conteúdo criado!\n🎥 Título: ${testContent.title}\n📝 Descrição: ${testContent.description}`);
+                return true;
+            } else {
+                updateTestStatus('content', 'error',
+                    `❌ Erro ao criar conteúdo: ${JSON.stringify(result.error, null, 2)}`);
+                return false;
+            }
+        }
+
+        // Teste 7: Listar conteúdo
+        async function testListContent() {
+            updateTestStatus('list', 'running');
+
+            const result = await makeRequest('GET', '/content');
+
+            if (result.success) {
+                const contentCount = result.data.content ? result.data.content.length : 0;
+                updateTestStatus('list', 'success',
+                    `✅ Conteúdo listado!\n📊 Total de itens: ${contentCount}`);
+                return true;
+            } else {
+                updateTestStatus('list', 'error',
+                    `❌ Erro ao listar conteúdo: ${JSON.stringify(result.error, null, 2)}`);
+                return false;
+            }
+        }
+
+        // Teste 8: Obter criadores populares
+        async function testGetPopularCreators() {
+            updateTestStatus('popular', 'running');
+
+            const result = await makeRequest('GET', '/creators/popular');
+
+            if (result.success) {
+                const creatorsCount = result.data.creators ? result.data.creators.length : 0;
+                updateTestStatus('popular', 'success',
+                    `✅ Criadores populares obtidos!\n📊 Total de criadores: ${creatorsCount}`);
+                return true;
+            } else {
+                updateTestStatus('popular', 'error',
+                    `❌ Erro ao obter criadores populares: ${JSON.stringify(result.error, null, 2)}`);
+                return false;
+            }
+        }
+
+        // Função para executar teste específico
+        async function runTest(testId) {
+            switch (testId) {
+                case 'health':
+                    return await testAPIHealth();
+                case 'register':
+                    return await testUserRegistration();
+                case 'login':
+                    return await testUserLogin();
+                case 'profile':
+                    return await testGetUserProfile();
+                case 'creator':
+                    return await testCreateCreatorChannel();
+                case 'content':
+                    return await testCreateContent();
+                case 'list':
+                    return await testListContent();
+                case 'popular':
+                    return await testGetPopularCreators();
+                default:
+                    return false;
+            }
+        }
+
+        // Função para executar todos os testes
+        async function runAllTests() {
+            runAllButton.disabled = true;
+            runAllButton.textContent = 'Executando Testes...';
+
+            testResults = [];
+            currentTestIndex = 0;
+
+            const tests = [
+                { id: 'health', name: 'Saúde da API' },
+                { id: 'register', name: 'Registro de Usuário' },
+                { id: 'login', name: 'Login de Usuário' },
+                { id: 'profile', name: 'Perfil do Usuário' },
+                { id: 'creator', name: 'Criar Canal' },
+                { id: 'content', name: 'Criar Conteúdo' },
+                { id: 'list', name: 'Listar Conteúdo' },
+                { id: 'popular', name: 'Criadores Populares' }
+            ];
+
+            for (let i = 0; i < tests.length; i++) {
+                const test = tests[i];
+                const success = await runTest(test.id);
+                testResults.push({ name: test.name, success });
+
+                // Atualizar barra de progresso
+                const progress = ((i + 1) / tests.length) * 100;
+                progressFill.style.width = `${progress}%`;
+
+                // Pequena pausa entre testes
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            // Mostrar resultado final
+            showSummary();
+
+            runAllButton.disabled = false;
+            runAllButton.textContent = 'Executar Todos os Testes';
+        }
+
+        // Função para mostrar resumo
+        function showSummary() {
+            const total = testResults.length;
+            const passed = testResults.filter(t => t.success).length;
+            const failed = total - passed;
+            const successRate = ((passed / total) * 100).toFixed(1);
+
+            summaryText.innerHTML = `
+                <strong>Total de testes:</strong> ${total}<br>
+                <strong>✅ Aprovados:</strong> ${passed}<br>
+                <strong>❌ Reprovados:</strong> ${failed}<br>
+                <strong>📈 Taxa de sucesso:</strong> ${successRate}%
+            `;
+
+            summaryDiv.style.display = 'block';
+
+            if (failed === 0) {
+                summaryText.innerHTML += '<br><br>🎉 Todos os testes passaram! A API está funcionando corretamente.';
+            } else {
+                summaryText.innerHTML += `<br><br>⚠️ ${failed} teste(s) falharam. Verifique os logs acima para detalhes.`;
+            }
+        }
+
+        // Inicializar página
+        function initializePage() {
+            const tests = [
+                {
+                    id: 'health',
+                    title: '🩺 Teste de Saúde da API',
+                    description: 'Verifica se a API está respondendo corretamente'
+                },
+                {
+                    id: 'register',
+                    title: '👤 Registro de Usuário',
+                    description: 'Testa o registro de um novo usuário na plataforma'
+                },
+                {
+                    id: 'login',
+                    title: '🔐 Login de Usuário',
+                    description: 'Testa o processo de autenticação do usuário'
+                },
+                {
+                    id: 'profile',
+                    title: '👤 Perfil do Usuário',
+                    description: 'Testa a obtenção do perfil do usuário logado'
+                },
+                {
+                    id: 'creator',
+                    title: '🎬 Criar Canal de Criador',
+                    description: 'Testa a criação de um canal para criadores de conteúdo'
+                },
+                {
+                    id: 'content',
+                    title: '🎥 Criar Conteúdo',
+                    description: 'Testa a criação de novo conteúdo/vídeo'
+                },
+                {
+                    id: 'list',
+                    title: '📋 Listar Conteúdo',
+                    description: 'Testa a listagem de conteúdo disponível'
+                },
+                {
+                    id: 'popular',
+                    title: '⭐ Criadores Populares',
+                    description: 'Testa a obtenção de criadores mais populares'
+                }
+            ];
+
+            tests.forEach(test => {
+                const testElement = createTestElement(test.id, test.title, test.description);
+                testResultsDiv.appendChild(testElement);
+            });
+
+            runAllButton.addEventListener('click', runAllTests);
+        }
+
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>

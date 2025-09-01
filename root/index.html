@@ -35,12 +35,13 @@
         <!-- Barra lateral esquerda com navegação -->
         <aside class="sidebar" id="sidebar">
             <nav class="sidebar-nav">
-                <a href="#" class="sidebar-link active">🏠 Início</a>
-                <a href="#" class="sidebar-link">🔥 Em Alta</a>
-                <a href="#" class="sidebar-link">📺 Assinaturas</a>
-                <a href="#" class="sidebar-link">👥 Criadores</a>
-                <a href="#" class="sidebar-link">📚 Biblioteca</a>
-                <a href="#" class="sidebar-link">⚙️ Configurações</a>
+                <a href="#" class="sidebar-link active" data-page="home">🏠 Início</a>
+                <a href="#" class="sidebar-link" data-page="trending">🔥 Em Alta</a>
+                <a href="#" class="sidebar-link" data-page="subscriptions">📺 Assinaturas</a>
+                <a href="#" class="sidebar-link" data-page="creators">👥 Criadores</a>
+                <a href="#" class="sidebar-link" data-page="library">📚 Biblioteca</a>
+                <a href="#" class="sidebar-link" data-page="settings">⚙️ Configurações</a>
+                <a href="#" class="sidebar-link" data-page="user">👤 Usuário</a>
             </nav>
         </aside>
 
@@ -98,13 +99,43 @@
         <p>&copy; 2025 Conteúdo Premium. Todos os direitos reservados.</p>
     </footer>
 
-    <!-- Script simples para toggle da sidebar -->
-    <script>
-        // Função para alternar a visibilidade da sidebar
-        document.getElementById('menu-toggle').addEventListener('click', function() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open'); // Adiciona/remove classe 'open'
-        });
-    </script>
+    <!-- Scripts -->
+    <script src="js/navigation.js"></script>
+
+    <!-- Estilos para notificações -->
+    <style>
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            font-weight: 500;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            background-color: #dc3545;
+        }
+
+        .notification.success {
+            background-color: #28a745;
+        }
+
+        .notification.warning {
+            background-color: #ffc107;
+            color: #000;
+        }
+    </style>
 </body>
 </html>

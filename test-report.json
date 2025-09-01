@@ -1,0 +1,45 @@
+{
+  "timestamp": "2025-08-31T23:20:41.727Z",
+  "summary": {
+    "totalTests": 3,
+    "passedTests": 1,
+    "failedTests": 2,
+    "successRate": 33.33333333333333
+  },
+  "database": {
+    "success": false,
+    "timestamp": "2025-08-31T23:20:42.148Z"
+  },
+  "api": {
+    "success": true,
+    "timestamp": "2025-08-31T23:20:42.621Z"
+  },
+  "load": {
+    "success": false,
+    "timestamp": "2025-08-31T23:20:50.885Z"
+  },
+  "recommendations": [
+    {
+      "type": "database",
+      "priority": "high",
+      "message": "Problemas críticos no banco de dados - verificar conexão, estrutura e dados",
+      "actions": [
+        "Verificar configuração do PostgreSQL",
+        "Executar migrations pendentes",
+        "Verificar integridade dos dados",
+        "Corrigir constraints e índices"
+      ]
+    },
+    {
+      "type": "performance",
+      "priority": "medium",
+      "message": "Problemas de performance detectados",
+      "actions": [
+        "Otimizar queries do banco de dados",
+        "Implementar cache onde apropriado",
+        "Configurar pool de conexões",
+        "Considerar load balancer para produção"
+      ]
+    }
+  ]
+}
