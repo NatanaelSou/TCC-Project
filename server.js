@@ -49,12 +49,22 @@ app.get('/api/users', (req, res) => {
 
 app.post('/api/users', (req, res) => {
   const { name, email, password } = req.body;
-  // Inserir usuário
-  db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, password], (err, result) => {
+  // Verificar se o email já está cadastrado
+  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
     if (err) {
-      res.status(500).json({ error: 'Erro ao criar usuário' });
+      res.status(500).json({ error: 'Erro ao verificar usuário' });
+    } else if (results.length > 0) {
+      // Email já cadastrado
+      res.status(409).json({ error: 'Conta já cadastrada com este email' }); // Statement para conta já cadastrada
     } else {
-      res.json({ id: result.insertId, message: 'Usuário criado' });
+      // Inserir usuário
+      db.query('INSERT INTO users (name, email, password) VALUES (?, ?, ?)', [name, email, password], (err, result) => {
+        if (err) {
+          res.status(500).json({ error: 'Erro ao criar usuário' });
+        } else {
+          res.json({ id: result.insertId, message: 'Usuário criado' });
+        }
+      });
     }
   });
 });
