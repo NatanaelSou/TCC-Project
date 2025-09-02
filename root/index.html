@@ -1,141 +1,87 @@
-<!-- Esse é o arquivo principal do site (página inicial) com layout estilo YouTube -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <!-- Configurações básicas da página -->
-    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Configuração para dispositivos móveis -->
-    <title>Conteúdo Premium - Plataforma de Conteúdo</title> <!-- Título que aparece na aba do navegador -->
-    <link rel="stylesheet" href="css/index.css"> <!-- Conecta com o arquivo de estilos CSS -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviço de Conteúdo Premium</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Barra de navegação superior estilo YouTube -->
-    <header class="top-nav">
-        <!-- Logo e menu hambúrguer -->
-        <div class="nav-left">
-            <button class="menu-btn" id="menu-toggle">☰</button> <!-- Botão para abrir/fechar sidebar -->
-            <div class="logo">
-                <h1>Conteúdo Premium</h1>
-            </div>
-        </div>
-        <!-- Barra de pesquisa central -->
-        <div class="nav-center">
-            <input type="text" placeholder="Buscar conteúdos..." class="search-input">
-            <button class="search-btn">🔍</button>
-        </div>
-        <!-- Menu do usuário -->
-        <div class="nav-right">
-            <button class="user-btn">👤</button> <!-- Ícone de usuário -->
-            <a href="pages/login.html" class="login-link">Login</a>
+    <!-- Cabeçalho -->
+    <header>
+        <div class="container">
+            <h1>Serviço de Conteúdo Premium</h1>
+            <nav>
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#content">Conteúdo</a></li>
+                    <li><a href="#profile">Perfil</a></li>
+                    <li><a href="#login">Login</a></li>
+                </ul>
+            </nav>
         </div>
     </header>
 
-    <!-- Container principal com sidebar e conteúdo -->
-    <div class="main-container">
-        <!-- Barra lateral esquerda com navegação -->
-        <aside class="sidebar" id="sidebar">
-            <nav class="sidebar-nav">
-                <a href="#" class="sidebar-link active" data-page="home">🏠 Início</a>
-                <a href="#" class="sidebar-link" data-page="trending">🔥 Em Alta</a>
-                <a href="#" class="sidebar-link" data-page="subscriptions">📺 Assinaturas</a>
-                <a href="#" class="sidebar-link" data-page="creators">👥 Criadores</a>
-                <a href="#" class="sidebar-link" data-page="library">📚 Biblioteca</a>
-                <a href="#" class="sidebar-link" data-page="settings">⚙️ Configurações</a>
-                <a href="#" class="sidebar-link" data-page="user">👤 Usuário</a>
-            </nav>
-        </aside>
-
-        <!-- Conteúdo principal -->
-        <main class="content">
-            <!-- Grade de conteúdos em destaque -->
-            <section class="content-grid">
-                <!-- Card de conteúdo individual -->
-                <div class="content-card">
-                    <div class="thumbnail">
-                        <img src="https://via.placeholder.com/320x180?text=Conteúdo+1" alt="Thumbnail">
-                        <span class="duration">10:30</span>
-                    </div>
-                    <div class="card-info">
-                        <h3>Criador 1 - Conteúdo Exclusivo</h3>
-                        <p>Conteúdo premium disponível para assinantes</p>
-                        <div class="meta">
-                            <span>Criador 1</span> • <span>1.2K visualizações</span> • <span>2 dias atrás</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="content-card">
-                    <div class="thumbnail">
-                        <img src="https://via.placeholder.com/320x180?text=Conteúdo+2" alt="Thumbnail">
-                        <span class="duration">15:45</span>
-                    </div>
-                    <div class="card-info">
-                        <h3>Criador 2 - Conteúdo Especial</h3>
-                        <p>Novidades semanais para seus seguidores</p>
-                        <div class="meta">
-                            <span>Criador 2</span> • <span>850 visualizações</span> • <span>5 dias atrás</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="content-card">
-                    <div class="thumbnail">
-                        <img src="https://via.placeholder.com/320x180?text=Conteúdo+3" alt="Thumbnail">
-                        <span class="duration">8:20</span>
-                    </div>
-                    <div class="card-info">
-                        <h3>Criador 3 - Atualizações Recentes</h3>
-                        <p>Conteúdo fresco e exclusivo</p>
-                        <div class="meta">
-                            <span>Criador 3</span> • <span>2.5K visualizações</span> • <span>1 semana atrás</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Adicionar mais cards conforme necessário -->
+    <!-- Conteúdo Principal -->
+    <main>
+        <div class="container">
+            <section id="home">
+                <h2>Bem-vindo ao Serviço de Conteúdo Premium</h2>
+                <p>Descubra e apoie criadores de conteúdo exclusivo.</p>
+                <button id="registerBtn" class="btn">Registrar-se</button>
+                <button id="loginBtn" class="btn">Entrar</button>
             </section>
-        </main>
+
+            <section id="content">
+                <h2>Conteúdo Disponível</h2>
+                <div class="content-grid" id="contentGrid">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
+            </section>
+
+            <section id="profile" class="hidden">
+                <h2>Seu Perfil</h2>
+                <div id="userProfile">
+                    <!-- Perfil do usuário será carregado dinamicamente -->
+                </div>
+                <button id="logoutBtn" class="btn">Sair</button>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Login/Registro -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="loginForm">
+                <h2>Entrar</h2>
+                <form id="loginFormEl">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPassword" placeholder="Senha" required>
+                    <button type="submit" class="btn">Entrar</button>
+                </form>
+                <p>Não tem conta? <a href="#" id="switchToRegister">Registrar-se</a></p>
+            </div>
+            <div id="registerForm" class="hidden">
+                <h2>Registrar-se</h2>
+                <form id="registerFormEl">
+                    <input type="text" id="registerName" placeholder="Nome" required>
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                    <input type="password" id="registerPassword" placeholder="Senha" required>
+                    <button type="submit" class="btn">Registrar</button>
+                </form>
+                <p>Já tem conta? <a href="#" id="switchToLogin">Entrar</a></p>
+            </div>
+        </div>
     </div>
 
-    <!-- Rodapé da página -->
+    <!-- Rodapé -->
     <footer>
-        <p>&copy; 2025 Conteúdo Premium. Todos os direitos reservados.</p>
+        <div class="container">
+            <p>&copy; 2023 Serviço de Conteúdo Premium. Todos os direitos reservados.</p>
+        </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/navigation.js"></script>
-
-    <!-- Estilos para notificações -->
-    <style>
-        .notification {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background-color: var(--secondary-color);
-            color: var(--bg-color);
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 10000;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            font-weight: 500;
-            max-width: 300px;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification.error {
-            background-color: #dc3545;
-        }
-
-        .notification.success {
-            background-color: #28a745;
-        }
-
-        .notification.warning {
-            background-color: #ffc107;
-            color: #000;
-        }
-    </style>
+    <script src="scripts/index.js"></script>
 </body>
 </html>

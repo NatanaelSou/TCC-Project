@@ -1,0 +1,29 @@
+Instruções para corrigir autenticação MySQL e criar banco de dados para o projeto:
+
+1. Acesse o MySQL como administrador (exemplo no terminal):
+   mysql -u root -p
+
+2. Altere o modo de autenticação do usuário root para mysql_native_password:
+   ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'sua_senha';
+   FLUSH PRIVILEGES;
+
+3. Crie o banco de dados e as tabelas usando o arquivo db_schema.sql:
+   source caminho/para/db_schema.sql;
+
+4. Verifique se o banco foi criado corretamente:
+   SHOW DATABASES;
+   USE tcc_project;
+   SHOW TABLES;
+
+5. No arquivo server.js, configure a conexão MySQL com as credenciais corretas:
+   const db = mysql.createConnection({
+     host: 'localhost',
+     user: 'root',
+     password: 'sua_senha',
+     database: 'tcc_project'
+   });
+
+6. Reinicie o servidor Node.js:
+   npm start
+
+Após esses passos, o servidor deve conectar corretamente ao MySQL e a API estará funcional.

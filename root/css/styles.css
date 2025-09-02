@@ -1,73 +1,326 @@
-/* Estilização do site */
-:root {
-    --primary-color: #141416;
-    --secondary-color: #ff424d;
-    --text-color: #ffffff;
-    --bg-color: #0a0a0b;
-    --card-bg: #1c1c1e;
-}
-
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: 'Inter', sans-serif;
+/* Reset e configurações básicas */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
+    color: #e0e0e0;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    min-height: 100vh;
+}
+
+/* Container centralizado */
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 20px;
 }
 
-.creator-card {
-    background: var(--card-bg);
+/* Cabeçalho */
+header {
+    background: #2c2a4a;
+    color: #fff;
+    padding: 1.5rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+header h1 {
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+}
+
+nav ul {
+    list-style: none;
+    float: right;
+}
+
+nav ul li {
+    display: inline;
+    margin-left: 25px;
+}
+
+nav a {
+    color: #c0b9ff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #fff;
+    border-bottom: 2px solid #7f7aff;
+}
+
+/* Conteúdo principal */
+main {
+    padding: 40px 0;
+}
+
+/* Seção Home - Hero */
+#home {
+    text-align: center;
+    padding: 80px 20px 60px;
+    background: rgba(44, 42, 74, 0.85);
     border-radius: 12px;
-    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    margin-bottom: 50px;
+}
+
+#home h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #fff;
     margin-bottom: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
 }
 
-.subscribe-button {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
+#home p {
+    font-size: 1.2rem;
+    color: #d1d1e9;
+    margin-bottom: 30px;
+}
+
+/* Botões principais */
+.btn {
+    background: #7f7aff;
+    color: #fff;
     border: none;
-    border-radius: 25px;
-    padding: 12px 24px;
-    font-weight: bold;
+    padding: 12px 28px;
     cursor: pointer;
-    transition: opacity 0.2s;
+    border-radius: 30px;
+    font-size: 18px;
+    margin: 10px 15px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(127, 122, 255, 0.6);
+    transition: background 0.3s ease, transform 0.3s ease;
 }
 
-.subscribe-button:hover {
-    opacity: 0.9;
+.btn:hover {
+    background: #5a57d1;
+    transform: translateY(-3px);
 }
 
+/* Grid de conteúdo */
 .content-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
 }
 
-.profile-header {
+/* Cards de conteúdo */
+.content-card {
+    background: #3a3a6e;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.7);
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    color: #e0e0e0;
     display: flex;
-    align-items: center;
-    gap: 15px;
+    flex-direction: column;
 }
 
-.profile-image {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
+.content-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 25px rgba(127, 122, 255, 0.8);
+}
+
+.content-card img {
+    width: 100%;
+    height: 220px;
     object-fit: cover;
+    border-bottom: 2px solid #7f7aff;
 }
 
-.pricing-tier {
-    background: linear-gradient(145deg, var(--card-bg), var(--primary-color));
+.content-card h3 {
+    padding: 20px 20px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #c0b9ff;
+}
+
+.content-card p {
+    padding: 0 20px 15px;
+    flex-grow: 1;
+    font-size: 1rem;
+    color: #d1d1e9;
+}
+
+.content-card .price {
+    padding: 15px 20px;
+    font-weight: 700;
+    color: #ff6f91;
+    font-size: 1.2rem;
+}
+
+/* Botão de assinatura dentro do card */
+.subscribe-btn {
+    background: #ff6f91;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 25px;
+    margin: 15px 20px 20px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.6);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.subscribe-btn:hover {
+    background: #e04e6f;
+    transform: translateY(-3px);
+}
+
+/* Seção Perfil */
+#profile {
+    background: #2c2a4a;
+    padding: 30px 20px;
     border-radius: 12px;
-    padding: 20px;
-    margin: 10px 0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    color: #c0b9ff;
+    margin-bottom: 50px;
+}
+
+#profile h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Rodapé */
+footer {
+    background: #2c2a4a;
+    color: #c0b9ff;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 40px;
+    font-size: 0.9rem;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.7);
+}
+
+/* Classe para ocultar elementos */
+.hidden {
+    display: none;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(20, 20, 40, 0.85);
+}
+
+.modal-content {
+    background-color: #3a3a6e;
+    margin: 12% auto;
+    padding: 30px 25px;
+    border: none;
+    width: 90%;
+    max-width: 420px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+    color: #e0e0e0;
+}
+
+.close {
+    color: #c0b9ff;
+    float: right;
+    font-size: 30px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #fff;
+}
+
+/* Formulários */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    margin: 12px 0;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 0 0 8px #7f7aff;
+}
+
+.subscribe-btn {
+    background: #ff6f91;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 25px;
+    margin-top: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(255, 111, 145, 0.6);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.subscribe-btn:hover {
+    background: #e04e6f;
+    transform: translateY(-3px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    nav ul {
+        float: none;
+        text-align: center;
+        margin-top: 10px;
+    }
+    nav ul li {
+        display: block;
+        margin: 12px 0;
+    }
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+    .modal-content {
+        width: 95%;
+        margin: 25% auto;
+    }
+    #home {
+        padding: 60px 15px 40px;
+    }
+    header h1 {
+        font-size: 1.5rem;
+    }
+    .btn {
+        font-size: 16px;
+        padding: 10px 20px;
+        margin: 8px 10px;
+    }
 }
