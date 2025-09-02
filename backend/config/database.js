@@ -1,29 +1,31 @@
 // =====================================================================================
-// CONFIGURAÇÃO DE CONEXÃO COM BANCO DE DADOS POSTGRESQL
+// CONFIGURAÇÃO DE CONEXÃO COM BANCO DE DADOS MYSQL
 // =====================================================================================
-// Este arquivo gerencia a conexão e pool de conexões com o banco de dados PostgreSQL.
+// Este arquivo gerencia a conexão e pool de conexões com o banco de dados MySQL.
 // Responsável por:
 // - Configurar pool de conexões para otimização de performance
 // - Gerenciar eventos de conexão e desconexão
 // - Fornecer funções utilitárias para execução de queries
 // - Implementar middleware para transações de banco de dados
 
-const { Pool } = require('pg'); // Importar classe Pool do driver PostgreSQL
+const mysql = require('mysql2/promise'); // Importar mysql2 para suporte a promises
 
 // =====================================================================================
 // CONFIGURAÇÃO DO POOL DE CONEXÕES
 // =====================================================================================
 // Pool de conexões otimiza o uso de recursos do banco de dados
 // Mantém conexões abertas para reutilização, evitando overhead de criação/destruição
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost', // Host do servidor PostgreSQL
-  port: parseInt(process.env.DB_PORT, 10) || 5432, // Porta do servidor PostgreSQL (padrão 5432)
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost', // Host do servidor MySQL
+  port: parseInt(process.env.DB_PORT, 10) || 3306, // Porta do servidor MySQL (padrão 3306)
   database: process.env.DB_NAME || 'content_service', // Nome do banco de dados
-  user: process.env.DB_USER || 'postgres', // Usuário do banco de dados
+  user: process.env.DB_USER || 'root', // Usuário do banco de dados
   password: String(process.env.DB_PASSWORD || ''), // Senha do usuário convertida para string
-  max: 20, // Máximo de conexões simultâneas no pool
-  idleTimeoutMillis: 30000, // Fechar conexões ociosas após 30 segundos
-  connectionTimeoutMillis: 2000, // Timeout para estabelecimento de conexão (2 segundos)
+  waitForConnections: true,
+  connectionLimit: 20, // Máximo de conexões simultâneas no pool
+  queueLimit: 0,
+  acquireTimeout: 60000, // Timeout para adquirir conexão (60 segundos)
+  timeout: 60000, // Timeout geral (60 segundos)
 });
 
 // =====================================================================================
@@ -50,16 +52,16 @@ pool.on('error', (err, client) => {
 // Executa verificações básicas para garantir que o banco está acessível
 async function connectDB() {
   try {
-    // Obter cliente do pool para teste de conexão
-    const client = await pool.connect();
-    console.log('✅ Conexão com PostgreSQL estabelecida com sucesso');
+    // Obter conexão do pool para teste de conexão
+    const connection = await pool.getConnection();
+    console.log('✅ Conexão com MySQL estabelecida com sucesso');
 
     // Executar query simples para verificar funcionalidade do banco
-    const result = await client.query('SELECT NOW()');
-    console.log('🕒 Hora do servidor PostgreSQL:', result.rows[0].now);
+    const [rows] = await connection.execute('SELECT NOW() as current_time');
+    console.log('🕒 Hora do servidor MySQL:', rows[0].current_time);
 
-    // Liberar cliente de volta ao pool
-    client.release();
+    // Liberar conexão de volta ao pool
+    connection.release();
     return true;
   } catch (error) {
     console.error('❌ Erro ao conectar ao banco de dados:', error.message);
@@ -88,32 +90,32 @@ async function query(text, params) {
   }
 }
 
-// Função para obter cliente personalizado do pool com funcionalidades extras
-// - Adiciona logging automático para todas as queries do cliente
+// Função para obter conexão personalizada do pool com funcionalidades extras
+// - Adiciona logging automático para todas as queries da conexão
 // - Sobrescreve método release para logging de desconexão
-// - Retorna cliente pronto para uso em operações complexas
+// - Retorna conexão pronta para uso em operações complexas
 async function getClient() {
-  const client = await pool.connect(); // Obter cliente do pool
-  const query = client.query; // Salvar referência original do método query
-  const release = client.release; // Salvar referência original do método release
+  const connection = await pool.getConnection(); // Obter conexão do pool
+  const execute = connection.execute; // Salvar referência original do método execute
+  const release = connection.release; // Salvar referência original do método release
 
-  // Monkey patch: sobrescrever método query para adicionar logging
-  client.query = (...args) => {
+  // Monkey patch: sobrescrever método execute para adicionar logging
+  connection.execute = (...args) => {
     const start = Date.now();
-    return query.apply(client, args).then(res => {
+    return execute.apply(connection, args).then(res => {
       const duration = Date.now() - start;
-      console.log('📊 Query do cliente executada em', duration, 'ms:', args[0]);
+      console.log('📊 Query da conexão executada em', duration, 'ms:', args[0]);
       return res;
     });
   };
 
   // Monkey patch: sobrescrever método release para adicionar logging
-  client.release = () => {
-    console.log('🔌 Cliente liberado de volta ao pool');
-    return release.apply(client); // Chamar método original
+  connection.release = () => {
+    console.log('🔌 Conexão liberada de volta ao pool');
+    return release.apply(connection); // Chamar método original
   };
 
-  return client; // Retornar cliente personalizado
+  return connection; // Retornar conexão personalizada
 }
 
 // Função para fechar o pool de conexões de forma graciosa
@@ -132,19 +134,19 @@ async function closePool() {
 // Função utilitária para executar operações dentro de uma transação
 // - Garante atomicidade das operações (tudo ou nada)
 // - Faz rollback automático em caso de erro
-// - Libera cliente automaticamente após uso
+// - Libera conexão automaticamente após uso
 async function withTransaction(callback) {
-  const client = await getClient(); // Obter cliente personalizado
+  const connection = await getClient(); // Obter conexão personalizada
   try {
-    await client.query('BEGIN'); // Iniciar transação
-    const result = await callback(client); // Executar operações da callback
-    await client.query('COMMIT'); // Confirmar transação se tudo OK
+    await connection.execute('START TRANSACTION'); // Iniciar transação MySQL
+    const result = await callback(connection); // Executar operações da callback
+    await connection.execute('COMMIT'); // Confirmar transação se tudo OK
     return result; // Retornar resultado das operações
   } catch (error) {
-    await client.query('ROLLBACK'); // Desfazer transação em caso de erro
+    await connection.execute('ROLLBACK'); // Desfazer transação em caso de erro
     throw error; // Re-throw erro para tratamento superior
   } finally {
-    client.release(); // Sempre liberar cliente de volta ao pool
+    connection.release(); // Sempre liberar conexão de volta ao pool
   }
 }
 

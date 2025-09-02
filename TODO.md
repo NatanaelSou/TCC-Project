@@ -1,64 +1,46 @@
-# TODO - Adicionar PostgreSQL ao Projeto de Serviço de Conteúdo
+# Migração para MySQL Workbench - TODO List
 
-## Etapas do Plano Aprovado
+## ✅ Etapa 1: Converter Schema PostgreSQL para MySQL
+- [x] Criar novo arquivo database/schema-mysql.sql com sintaxe MySQL
+- [x] Substituir UUID por VARCHAR(36) ou BINARY(16)
+- [x] Remover extensões PostgreSQL (uuid-ossp, pgcrypto)
+- [x] Converter tipos de dados PostgreSQL para MySQL
+- [x] Ajustar triggers e funções para sintaxe MySQL
+- [x] Atualizar índices para sintaxe MySQL
 
-### 1. Criar Scripts SQL do Esquema do Banco de Dados
-- [x] Criar arquivo `database/schema.sql` com tabelas principais
-- [x] Criar arquivo `database/seed.sql` com dados iniciais
-- [x] Criar arquivo `database/migrations.sql` para futuras migrações
+## ✅ Etapa 2: Atualizar Configuração do Banco de Dados
+- [x] Modificar backend/config/database.js para usar MySQL
+- [x] Substituir 'pg' por 'mysql2' como driver
+- [x] Atualizar parâmetros de conexão para MySQL
+- [x] Ajustar funções utilitárias para sintaxe MySQL
 
-### 2. Configurar Estrutura do Backend Node.js
-- [x] Criar diretório `backend/` na raiz do projeto
-- [x] Inicializar projeto Node.js com `package.json`
-- [x] Criar estrutura de pastas: controllers, models, routes, middleware, config
+## ✅ Etapa 3: Atualizar Dependências
+- [x] Modificar backend/package.json
+- [x] Remover 'pg' das dependências
+- [x] Adicionar 'mysql2' como dependência
+- [x] Atualizar scripts npm se necessário
 
-### 3. Instalar Dependências Necessárias
-- [x] Instalar `express` para framework web
-- [x] Instalar `pg` para driver PostgreSQL
-- [x] Instalar `cors` para permitir requisições do frontend
-- [x] Instalar `dotenv` para variáveis de ambiente
-- [x] Instalar `bcryptjs` para hash de senhas
-- [x] Instalar `jsonwebtoken` para autenticação JWT
+## ✅ Etapa 4: Converter Scripts de Setup
+- [x] Atualizar backend/scripts/setupDatabase.js
+- [x] Converter queries PostgreSQL para MySQL
+- [x] Ajustar tratamento de erros para MySQL
+- [x] Atualizar backend/scripts/completeDatabaseTests.js
 
-### 4. Criar Módulo de Conexão com Banco de Dados
-- [x] Criar arquivo `backend/config/database.js` para configuração da conexão
-- [x] Criar arquivo `backend/models/index.js` para inicialização dos modelos
-- [x] Testar conexão com PostgreSQL
+## ✅ Etapa 5: Converter Dados Iniciais
+- [x] Criar database/seed-mysql.sql
+- [x] Converter funções uuid_generate_v4() para UUID()
+- [x] Ajustar sintaxe de arrays PostgreSQL para MySQL
+- [x] Atualizar queries de limpeza e inserção
 
-### 5. Criar Rotas da API para Operações CRUD
-- [x] Criar rotas para usuários (`/api/users`)
-- [x] Criar rotas para criadores (`/api/creators`)
-- [x] Criar rotas para conteúdo (`/api/content`)
-- [x] Criar rotas para inscrições (`/api/subscriptions`)
-- [x] Criar rotas para pagamentos (`/api/payments`)
+## ✅ Etapa 6: Testar Migração
+- [x] Executar setup do banco MySQL
+- [x] Testar conexão com o banco
+- [x] Verificar se todas as tabelas foram criadas
+- [x] Executar testes de API
+- [x] Validar funcionamento completo
 
-### 6. Criar Scripts de Teste e Validação
-- [x] Criar script de testes críticos da API (`backend/scripts/testAPI.js`)
-- [x] Criar versão do teste compatível com GoLive (`root/test-api.html`)
-- [x] Adicionar comando `npm run test-api` ao package.json
-- [x] Atualizar documentação com instruções de teste
-
-### 7. Atualizar Frontend para Conectar às APIs
-- [ ] Modificar `root/scripts/index.js` para fazer chamadas API
-- [ ] Atualizar páginas HTML para usar dados dinâmicos
-- [ ] Implementar autenticação no frontend
-
-### 8. Criar Instruções de Configuração
-- [x] Criar arquivo `README-SETUP.md` com instruções completas
-- [x] Documentar variáveis de ambiente necessárias
-- [x] Fornecer comandos para inicializar banco e servidor
-
-## 9. Adicionar Comentários em Português aos Arquivos Backend
-- [x] Adicionar comentários detalhados em português ao `backend/server.js`
-- [x] Melhorar comentários em português ao `backend/config/database.js`
-- [x] Adicionar comentários detalhados em português ao `backend/routes/users.js`
-- [x] Melhorar comentários em português ao `backend/models/index.js`
-
-## Status Atual
-- [x] Plano aprovado pelo usuário
-- [x] Backend completamente implementado e testado
-- [x] Scripts de configuração e teste criados
-- [x] Documentação completa fornecida
-- [x] Problema de carregamento do .env corrigido
-- [x] Problema de ON CONFLICT no seed.sql corrigido
-- [ ] Adicionando comentários em português aos arquivos backend
+## ✅ Etapa 7: Documentação e Limpeza
+- [x] Atualizar README-SETUP.md com instruções MySQL
+- [x] Remover arquivos PostgreSQL obsoletos
+- [x] Criar backup dos arquivos originais
+- [x] Documentar mudanças realizadas
