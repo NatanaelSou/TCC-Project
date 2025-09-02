@@ -14,34 +14,55 @@
         <!-- Formulário de registro -->
         <div class="form-register">
             <h2>Criar Conta</h2>
-            
-            <form action="login.html">
+
+            <!-- Área para mensagens de erro/sucesso -->
+            <div id="message" class="message" style="display: none;"></div>
+
+            <form id="registerForm">
                 <!-- Campo para nome de usuário -->
                 <div class="form-group">
                     <label for="username">Nome de Usuário:</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" required minlength="3" maxlength="50">
+                    <small class="form-hint">3-50 caracteres, apenas letras, números e underscore</small>
+                </div>
+
+                <!-- Campo para nome completo -->
+                <div class="form-group">
+                    <label for="full_name">Nome Completo:</label>
+                    <input type="text" id="full_name" name="full_name" minlength="2" maxlength="100">
+                    <small class="form-hint">Opcional, 2-100 caracteres</small>
                 </div>
 
                 <!-- Campo para email -->
                 <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="email" id="email" name="email" required>
+                    <small class="form-hint">Digite um email válido</small>
                 </div>
 
                 <!-- Campo para senha -->
                 <div class="form-group">
                     <label for="password">Senha:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" required minlength="6">
+                    <small class="form-hint">Mínimo 6 caracteres</small>
                 </div>
 
                 <!-- Campo para confirmar senha -->
                 <div class="form-group">
                     <label for="confirm-password">Confirmar Senha:</label>
                     <input type="password" id="confirm-password" name="confirm-password" required>
+                    <small class="form-hint">Digite a senha novamente</small>
+                </div>
+
+                <!-- Campo para bio -->
+                <div class="form-group">
+                    <label for="bio">Bio (Opcional):</label>
+                    <textarea id="bio" name="bio" rows="3" maxlength="500" placeholder="Conte um pouco sobre você..."></textarea>
+                    <small class="form-hint">Máximo 500 caracteres</small>
                 </div>
 
                 <!-- Botão para criar conta -->
-                <button type="submit">Criar Conta</button>
+                <button type="submit" id="registerBtn">Criar Conta</button>
             </form>
 
             <!-- Links de navegação -->
@@ -51,5 +72,341 @@
             </div>
         </div>
     </div>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        /**
+         * Script para gerenciar o formulário de registro
+         * Integra com a API de registro de usuários
+         */
+
+        // Elementos do DOM
+        const registerForm = document.getElementById('registerForm');
+        const usernameInput = document.getElementById('username');
+        const fullNameInput = document.getElementById('full_name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const bioTextarea = document.getElementById('bio');
+        const registerBtn = document.getElementById('registerBtn');
+        const messageDiv = document.getElementById('message');
+
+        // Estado do formulário
+        let isSubmitting = false;
+
+        /**
+         * Mostra mensagem para o usuário
+         */
+        function showMessage(message, type = 'info') {
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+
+            // Esconder mensagem automaticamente após 5 segundos
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        /**
+         * Define estado de carregamento do botão
+         */
+        function setLoading(loading) {
+            isSubmitting = loading;
+            registerBtn.disabled = loading;
+            registerBtn.textContent = loading ? 'Criando conta...' : 'Criar Conta';
+        }
+
+        /**
+         * Valida nome de usuário
+         */
+        function validateUsername(username) {
+            if (!username) return 'Nome de usuário é obrigatório';
+            if (username.length < 3) return 'Nome de usuário deve ter pelo menos 3 caracteres';
+            if (username.length > 50) return 'Nome de usuário deve ter no máximo 50 caracteres';
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) return 'Nome de usuário pode conter apenas letras, números e underscore';
+            return null;
+        }
+
+        /**
+         * Valida email
+         */
+        function validateEmail(email) {
+            if (!email) return 'Email é obrigatório';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) return 'Email deve ser válido';
+            return null;
+        }
+
+        /**
+         * Valida senha
+         */
+        function validatePassword(password) {
+            if (!password) return 'Senha é obrigatória';
+            if (password.length < 6) return 'Senha deve ter pelo menos 6 caracteres';
+            return null;
+        }
+
+        /**
+         * Valida confirmação de senha
+         */
+        function validateConfirmPassword(password, confirmPassword) {
+            if (!confirmPassword) return 'Confirmação de senha é obrigatória';
+            if (password !== confirmPassword) return 'As senhas não coincidem';
+            return null;
+        }
+
+        /**
+         * Valida nome completo
+         */
+        function validateFullName(fullName) {
+            if (fullName && fullName.length < 2) return 'Nome completo deve ter pelo menos 2 caracteres';
+            if (fullName && fullName.length > 100) return 'Nome completo deve ter no máximo 100 caracteres';
+            return null;
+        }
+
+        /**
+         * Valida bio
+         */
+        function validateBio(bio) {
+            if (bio && bio.length > 500) return 'Bio deve ter no máximo 500 caracteres';
+            return null;
+        }
+
+        /**
+         * Valida todos os campos do formulário
+         */
+        function validateForm() {
+            const username = usernameInput.value.trim();
+            const fullName = fullNameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            const bio = bioTextarea.value.trim();
+
+            // Validações
+            let error = validateUsername(username);
+            if (error) {
+                showMessage(error, 'error');
+                usernameInput.focus();
+                return false;
+            }
+
+            error = validateFullName(fullName);
+            if (error) {
+                showMessage(error, 'error');
+                fullNameInput.focus();
+                return false;
+            }
+
+            error = validateEmail(email);
+            if (error) {
+                showMessage(error, 'error');
+                emailInput.focus();
+                return false;
+            }
+
+            error = validatePassword(password);
+            if (error) {
+                showMessage(error, 'error');
+                passwordInput.focus();
+                return false;
+            }
+
+            error = validateConfirmPassword(password, confirmPassword);
+            if (error) {
+                showMessage(error, 'error');
+                confirmPasswordInput.focus();
+                return false;
+            }
+
+            error = validateBio(bio);
+            if (error) {
+                showMessage(error, 'error');
+                bioTextarea.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Manipula submissão do formulário
+         */
+        async function handleRegister(event) {
+            event.preventDefault();
+
+            if (isSubmitting) return;
+
+            if (!validateForm()) return;
+
+            const userData = {
+                username: usernameInput.value.trim(),
+                email: emailInput.value.trim(),
+                password: passwordInput.value,
+                full_name: fullNameInput.value.trim() || null,
+                bio: bioTextarea.value.trim() || null
+            };
+
+            setLoading(true);
+            showMessage('Criando sua conta...', 'info');
+
+            try {
+                const result = await window.authService.register(userData);
+
+                if (result.success) {
+                    showMessage('Conta criada com sucesso! Redirecionando para login...', 'success');
+
+                    // Redirecionar para a página de login após um breve delay
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro inesperado no registro:', error);
+                showMessage('Erro inesperado. Tente novamente.', 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        /**
+         * Verifica se o usuário já está logado
+         */
+        function checkExistingLogin() {
+            if (window.authService.isAuthenticated()) {
+                showMessage('Você já está logado. Redirecionando...', 'info');
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1500);
+                return true;
+            }
+            return false;
+        }
+
+        // Event listeners
+        registerForm.addEventListener('submit', handleRegister);
+
+        // Verificar login existente quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aguardar um momento para os serviços serem inicializados
+            setTimeout(() => {
+                checkExistingLogin();
+            }, 100);
+        });
+
+        // Estilos CSS adicionais
+        const style = document.createElement('style');
+        style.textContent = `
+            .message {
+                padding: 12px;
+                margin-bottom: 15px;
+                border-radius: 4px;
+                font-weight: 500;
+                text-align: center;
+            }
+
+            .message.success {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+
+            .message.error {
+                background-color: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+
+            .message.info {
+                background-color: #d1ecf1;
+                color: #0c5460;
+                border: 1px solid #bee5eb;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 500;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+                font-family: inherit;
+            }
+
+            .form-group input:focus,
+            .form-group textarea:focus {
+                outline: none;
+                border-color: #007bff;
+                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+
+            .form-hint {
+                display: block;
+                margin-top: 4px;
+                font-size: 12px;
+                color: #6c757d;
+            }
+
+            button[type="submit"] {
+                width: 100%;
+                padding: 12px;
+                background-color: #28a745;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            button[type="submit"]:hover:not(:disabled) {
+                background-color: #218838;
+            }
+
+            button[type="submit"]:disabled {
+                background-color: #6c757d;
+                cursor: not-allowed;
+            }
+
+            .form-footer {
+                margin-top: 20px;
+                text-align: center;
+            }
+
+            .form-footer p {
+                margin: 5px 0;
+            }
+
+            .form-footer a {
+                color: #007bff;
+                text-decoration: none;
+            }
+
+            .form-footer a:hover {
+                text-decoration: underline;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>

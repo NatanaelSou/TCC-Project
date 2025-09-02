@@ -13,7 +13,7 @@ Este guia explica como configurar e executar a plataforma de serviço de conteú
 ### 1. Instalar PostgreSQL
 
 #### Windows:
-- Baixe e instale o PostgreSQL do site oficial: https://www.postgresql.org/download/windows/
+- Baixe e instale o PostgreSQL do site oficial: <https://www.postgresql.org/download/windows/>
 - Durante a instalação, anote a senha do usuário `postgres`
 
 #### Linux (Ubuntu/Debian):

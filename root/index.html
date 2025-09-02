@@ -101,6 +101,20 @@
 
     <!-- Scripts -->
     <script src="js/navigation.js"></script>
+    <script src="scripts/updateUserUI.js"></script>
+    <script>
+        // Script para redirecionar usuário baseado no estado de login
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Verificando estado de autenticação...');
+            if (window.authService.isAuthenticated()) {
+                console.log('Usuário autenticado, redirecionando para dashboard.html');
+                // Se estiver logado, redirecionar para dashboard.html (ou outra página)
+                window.location.href = 'pages/dashboard.html';
+            } else {
+                console.log('Usuário não autenticado, permanecendo na index.html');
+            }
+        });
+    </script>
 
     <!-- Estilos para notificações -->
     <style>

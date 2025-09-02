@@ -77,8 +77,18 @@ app.use(helmet());
 // Configuração CORS - Permite requisições do frontend
 // - origin: Define quais domínios podem fazer requisições (padrão: localhost:3000)
 // - credentials: Permite envio de cookies e headers de autenticação
+const allowedOrigins = [process.env.FRONTEND_URL || 'http://localhost:3000', 'http://127.0.0.1:5500'];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function(origin, callback) {
+    // Permitir requisições sem origin (ex: curl, postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'A política CORS não permite acesso deste domínio.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
 

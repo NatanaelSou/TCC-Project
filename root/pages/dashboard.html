@@ -1,0 +1,41 @@
+<!-- Página dashboard para usuários logados -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard - Conteúdo Premium</title>
+    <link rel="stylesheet" href="../css/index.css" />
+</head>
+<body>
+    <header class="top-nav">
+        <div class="nav-left">
+            <button class="menu-btn" id="menu-toggle">☰</button>
+            <div class="logo">
+                <h1>Conteúdo Premium</h1>
+            </div>
+        </div>
+        <div class="nav-center">
+            <input type="text" placeholder="Buscar conteúdos..." class="search-input" />
+            <button class="search-btn">🔍</button>
+        </div>
+        <div class="nav-right" id="user-menu">
+            <!-- Será atualizado pelo script -->
+        </div>
+    </header>
+
+    <main class="content">
+        <h2>Bem-vindo ao seu Dashboard</h2>
+        <p>Aqui você pode gerenciar sua conta e conteúdos.</p>
+        <!-- Conteúdo do dashboard -->
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Conteúdo Premium. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="../js/navigation.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../scripts/updateUserUI.js"></script>
+</body>
+</html>

@@ -1,23 +1,27 @@
 # Sistema de Navegação do Site
 
 ## 📋 Descrição
+
 Este projeto implementa um sistema completo de navegação para uma plataforma de conteúdo premium, similar ao YouTube, com funcionalidades avançadas de JavaScript.
 
 ## 🚀 Funcionalidades Implementadas
 
 ### ✅ Navegação Principal
+
 - **Menu lateral responsivo** com toggle para dispositivos móveis
 - **7 seções principais**: Início, Em Alta, Assinaturas, Criadores, Biblioteca, Configurações, Usuário
 - **Navegação dinâmica** sem recarregar a página
 - **Indicadores visuais** para página ativa
 
 ### ✅ Sistema de Notificações
+
 - **4 tipos de notificações**: Padrão, Sucesso, Erro, Aviso
 - **Animações suaves** de entrada e saída
 - **Posicionamento fixo** no canto superior direito
 - **Auto-remoção** após 3 segundos
 
 ### ✅ Funcionalidades Interativas
+
 - **Barra de pesquisa** com funcionalidade de busca
 - **Cards de conteúdo** clicáveis com informações detalhadas
 - **Cards de criadores** com botão de seguir/deixar de seguir
@@ -25,6 +29,7 @@ Este projeto implementa um sistema completo de navegação para uma plataforma d
 - **Abas organizadas** na biblioteca e perfil do usuário
 
 ### ✅ Conteúdo Dinâmico
+
 - **Geração automática** de cards de conteúdo
 - **Informações simuladas** de criadores e vídeos
 - **Estados de autenticação** (logado/não logado)
@@ -32,7 +37,7 @@ Este projeto implementa um sistema completo de navegação para uma plataforma d
 
 ## 📁 Estrutura dos Arquivos
 
-```
+```text
 root/
 ├── js/
 │   └── navigation.js          # Arquivo JavaScript principal
@@ -53,6 +58,7 @@ root/
 ## 📖 Como Usar
 
 ### 1. Estrutura Básica
+
 ```html
 <!-- HTML necessário -->
 <header class="top-nav">
@@ -82,6 +88,7 @@ root/
 ```
 
 ### 2. JavaScript
+
 ```javascript
 // Inicializar a navegação
 document.addEventListener('DOMContentLoaded', function() {
@@ -90,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
 ```
 
 ### 3. Notificações
+
 ```javascript
 // Mostrar notificações
 showNotification('Mensagem de sucesso!', 'success');
@@ -101,12 +109,14 @@ showNotification('Mensagem padrão!');
 ## 🎯 Principais Componentes
 
 ### Classe `SiteNavigation`
+
 - **Construtor**: Inicializa elementos e eventos
 - **Eventos**: Gerencia cliques e interações
 - **Navegação**: Controla mudança entre páginas
 - **Conteúdo**: Gera HTML dinâmico para cada seção
 
 ### Função `showNotification`
+
 - **Parâmetros**: mensagem e tipo (opcional)
 - **Animações**: Transições CSS suaves
 - **Auto-gerenciamento**: Remove automaticamente
@@ -114,6 +124,7 @@ showNotification('Mensagem padrão!');
 ## 🔧 Personalização
 
 ### Adicionar Nova Página
+
 ```javascript
 // No método loadPage()
 case 'nova-pagina':
@@ -122,6 +133,7 @@ case 'nova-pagina':
 ```
 
 ### Modificar Notificações
+
 ```css
 .notification {
     /* Personalizar cores, tamanhos, etc. */
@@ -134,6 +146,7 @@ case 'nova-pagina':
 ## 📝 Comentários e Documentação
 
 Todo o código está **totalmente comentado em português**, incluindo:
+
 - Descrições de classes e métodos
 - Explicações de algoritmos
 - Comentários inline para funcionalidades complexas
@@ -168,6 +181,7 @@ Para o funcionamento completo, são necessários os seguintes estilos CSS:
 ## 🚀 Demonstração
 
 Para testar as funcionalidades:
+
 1. Abra o arquivo `demo.html` em um navegador
 2. Clique nos botões de notificação
 3. Navegue para `index.html` para ver a navegação completa
@@ -186,6 +200,7 @@ Para testar as funcionalidades:
 ## 🤝 Contribuição
 
 Para contribuir com melhorias:
+
 1. Faça um fork do projeto
 2. Crie uma branch para sua feature
 3. Commit suas mudanças

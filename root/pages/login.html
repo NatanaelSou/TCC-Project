@@ -1,6 +1,6 @@
 <!-- Página de login do usuário -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <!-- Configurações básicas da página -->
     <meta charset="UTF-8">
@@ -12,24 +12,251 @@
     <!-- Container principal do formulário de login -->
     <div class="login-container">
         <h2>Login</h2>
+
+        <!-- Área para mensagens de erro/sucesso -->
+        <div id="message" class="message" style="display: none;"></div>
+
         <!-- Formulário que será enviado quando o usuário fizer login -->
-        <form action="AccessPage.html" method="GET">
+        <form id="loginForm">
             <!-- Campo para email -->
-            <div>
+            <div class="form-group">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
             </div>
             <!-- Campo para senha -->
-            <div>
+            <div class="form-group">
                 <label for="password">Senha:</label>
                 <input type="password" id="password" name="password" required>
             </div>
             <!-- Botão para enviar o formulário -->
-            <button type="submit">Entrar</button>
+            <button type="submit" id="loginBtn">Entrar</button>
         </form>
+
         <!-- Links de navegação -->
         <p>Não tem uma conta? <a href="registro.html">Registre-se</a></p>
         <p><a href="../index.html">Voltar para Home</a></p>
     </div>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        /**
+         * Script para gerenciar o formulário de login
+         * Integra com a API de autenticação
+         */
+
+        // Elementos do DOM
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const messageDiv = document.getElementById('message');
+
+        // Estado do formulário
+        let isSubmitting = false;
+
+        /**
+         * Mostra mensagem para o usuário
+         */
+        function showMessage(message, type = 'info') {
+            messageDiv.textContent = message;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+
+            // Esconder mensagem automaticamente após 5 segundos
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        /**
+         * Define estado de carregamento do botão
+         */
+        function setLoading(loading) {
+            isSubmitting = loading;
+            loginBtn.disabled = loading;
+            loginBtn.textContent = loading ? 'Entrando...' : 'Entrar';
+        }
+
+        /**
+         * Valida dados do formulário
+         */
+        function validateForm() {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!email) {
+                showMessage('Por favor, digite seu email.', 'error');
+                emailInput.focus();
+                return false;
+            }
+
+            if (!password) {
+                showMessage('Por favor, digite sua senha.', 'error');
+                passwordInput.focus();
+                return false;
+            }
+
+            // Validação básica de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showMessage('Por favor, digite um email válido.', 'error');
+                emailInput.focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Manipula submissão do formulário
+         */
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            if (isSubmitting) return;
+
+            if (!validateForm()) return;
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            setLoading(true);
+            showMessage('Fazendo login...', 'info');
+
+            try {
+                const result = await window.authService.login(email, password);
+
+                if (result.success) {
+                    showMessage('Login realizado com sucesso! Redirecionando...', 'success');
+
+                    // Redirecionar para a página inicial após um breve delay
+                    setTimeout(() => {
+                        window.location.href = '../index.html';
+                    }, 1500);
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Erro inesperado no login:', error);
+                showMessage('Erro inesperado. Tente novamente.', 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        /**
+         * Verifica se o usuário já está logado
+         */
+        function checkExistingLogin() {
+            if (window.authService.isAuthenticated()) {
+                showMessage('Você já está logado. Redirecionando...', 'info');
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1500);
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Permite login com Enter
+         */
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !isSubmitting) {
+                handleLogin(event);
+            }
+        }
+
+        // Event listeners
+        loginForm.addEventListener('submit', handleLogin);
+        emailInput.addEventListener('keypress', handleKeyPress);
+        passwordInput.addEventListener('keypress', handleKeyPress);
+
+        // Verificar login existente quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aguardar um momento para os serviços serem inicializados
+            setTimeout(() => {
+                checkExistingLogin();
+            }, 100);
+        });
+
+        // Estilos CSS adicionais para as mensagens
+        const style = document.createElement('style');
+        style.textContent = `
+            .message {
+                padding: 12px;
+                margin-bottom: 15px;
+                border-radius: 4px;
+                font-weight: 500;
+                text-align: center;
+            }
+
+            .message.success {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+
+            .message.error {
+                background-color: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+
+            .message.info {
+                background-color: #d1ecf1;
+                color: #0c5460;
+                border: 1px solid #bee5eb;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 500;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                font-size: 16px;
+            }
+
+            .form-group input:focus {
+                outline: none;
+                border-color: #007bff;
+                box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+            }
+
+            button[type="submit"] {
+                width: 100%;
+                padding: 12px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            button[type="submit"]:hover:not(:disabled) {
+                background-color: #0056b3;
+            }
+
+            button[type="submit"]:disabled {
+                background-color: #6c757d;
+                cursor: not-allowed;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 </body>
 </html>

@@ -47,7 +47,8 @@ npm run test-api         # Testes básicos da API
 
 Valida a integridade completa do banco de dados PostgreSQL:
 
-#### ✅ Testes Executados:
+#### ✅ Testes Executados
+
 - **Conexão com BD** - Verifica se consegue conectar ao PostgreSQL
 - **Estrutura das Tabelas** - Confirma que todas as tabelas necessárias existem
 - **Dados Iniciais** - Valida se os dados de seed foram inseridos corretamente
@@ -60,7 +61,8 @@ Valida a integridade completa do banco de dados PostgreSQL:
 - **Performance de Queries** - Tempo de resposta de queries complexas
 - **Casos de Erro** - Tratamento adequado de erros 404, 400, etc.
 
-#### 📈 Métricas Coletadas:
+#### 📈 Métricas Coletadas
+
 - Tempo de resposta médio
 - Taxa de sucesso das operações
 - Número de registros por tabela
@@ -70,7 +72,8 @@ Valida a integridade completa do banco de dados PostgreSQL:
 
 Testes funcionais dos endpoints REST:
 
-#### ✅ Funcionalidades Testadas:
+#### ✅ Funcionalidades Testadas
+
 - Registro de usuário
 - Login e autenticação JWT
 - Perfil do usuário
@@ -84,13 +87,15 @@ Testes funcionais dos endpoints REST:
 
 Avalia a performance sob carga:
 
-#### ✅ Cenários de Teste:
+#### ✅ Cenários de Teste
+
 - **Carga de Leitura** - Múltiplas requisições GET simultâneas
 - **Carga Mista** - Combinação de diferentes tipos de operação
 - **Carga Contínua** - Teste prolongado de stress
 - **Dados Grandes** - Manipulação de grandes volumes de dados
 
-#### 📊 Métricas de Performance:
+#### 📊 Métricas de Performance
+
 - Tempo de resposta médio, mínimo e máximo
 - Percentis P95 e P99
 - Taxa de erro aceitável
@@ -131,7 +136,7 @@ Após execução, um relatório detalhado é gerado em `test-report.json`:
 
 Exemplo de saída bem-sucedida:
 
-```
+```text
 🚀 INICIANDO SUITE COMPLETA DE TESTES
 ================================================================================
 Testando: Banco de Dados, API e Performance
@@ -212,26 +217,31 @@ Personalize o comportamento dos testes através do arquivo `backend/test-config.
 ### Problemas Comuns e Soluções
 
 #### ❌ "Conexão com Banco de Dados" falha
+
 - Verifique se PostgreSQL está rodando
 - Confirme credenciais no arquivo de configuração
 - Teste conexão manual: `psql -h localhost -U postgres -d content_service`
 
 #### ❌ "Estrutura das Tabelas" falha
+
 - Execute setup do banco: `npm run setup-db`
 - Verifique se migrations foram aplicadas
 - Confirme schema no arquivo `database/schema.sql`
 
 #### ❌ "Dados Iniciais" falha
+
 - Execute seed do banco: `npm run seed-db`
 - Verifique se arquivo `database/seed.sql` existe
 - Confirme que tabelas foram criadas antes do seed
 
 #### ❌ Testes de API falham
+
 - Verifique se servidor está rodando: `npm run dev`
 - Confirme porta 3001 não está ocupada
 - Teste endpoint manual: `curl http://localhost:3001/api/health`
 
 #### ❌ Performance ruim nos testes de carga
+
 - Aumente recursos do PostgreSQL (memória, conexões)
 - Otimize queries com índices
 - Considere cache (Redis) para produção
