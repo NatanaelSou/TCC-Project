@@ -1,32 +1,35 @@
 const express = require('express');
-const mysql = require('mysql');
+const http = require('http');
+const socketIo = require('socket.io');
 const cors = require('cors');
+const path = require('path');
+require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+const port = process.env.PORT || 3000;
+
+// Importar rotas
+const authRoutes = require('./routes/auth');
+const creatorRoutes = require('./routes/creators');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Servir arquivos estáticos da pasta root
 app.use(express.static('root'));
+app.use('/uploads', express.static('public/uploads'));
 
-// Conexão com MySQL (placeholder)
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '512200Balatro@',
-  database: 'tcc_project'
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error('Erro ao conectar ao MySQL:', err);
-  } else {
-    console.log('Conectado ao MySQL');
-  }
-});
+// Conexão com MySQL
+const db = require('./config/database');
 
 // Rotas básicas
 app.get('/', (req, res) => {
@@ -113,7 +116,44 @@ app.post('/api/subscriptions', (req, res) => {
   });
 });
 
+// Usar rotas de autenticação
+app.use('/api/auth', authRoutes);
+
+// Usar rotas de criadores
+app.use('/api/creators', creatorRoutes);
+
+// Socket.io para funcionalidades em tempo real
+io.on('connection', (socket) => {
+  console.log('Novo cliente conectado:', socket.id);
+
+  // Entrar em sala de criador
+  socket.on('join-creator-room', (creatorId) => {
+    socket.join(`creator-${creatorId}`);
+    console.log(`Cliente ${socket.id} entrou na sala do criador ${creatorId}`);
+  });
+
+  // Entrar em transmissão ao vivo
+  socket.on('join-live-stream', (streamId) => {
+    socket.join(`stream-${streamId}`);
+    console.log(`Cliente ${socket.id} entrou na transmissão ${streamId}`);
+  });
+
+  // Notificações em tempo real
+  socket.on('send-notification', (data) => {
+    io.to(`creator-${data.creatorId}`).emit('new-notification', data);
+  });
+
+  // Chat em tempo real
+  socket.on('send-message', (data) => {
+    io.to(`creator-${data.creatorId}`).emit('new-message', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Cliente desconectado:', socket.id);
+  });
+});
+
 // Iniciar servidor
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
 });
