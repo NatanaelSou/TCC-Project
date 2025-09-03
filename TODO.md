@@ -1,31 +1,13 @@
-# TODO List for Premium Content-Selling Service
+# TODO: Adicionar Interações e Animações aos Botões de Categoria
 
-## Backend Setup
+## Passos a Completar
 
-- [x] Criar package.json para o backend Node.js
-- [x] Instalar dependências (Express, MySQL, etc.)
-- [x] Criar servidor Express básico
-- [x] Configurar conexão com MySQL
-- [x] Criar endpoints da API (ex: /users, /content, /subscriptions)
+- [x] Atualizar CSS em root/css/styles.css para adicionar efeitos de hover e transições aprimoradas aos botões .tag
+- [x] Modificar JS em root/scripts/index.js para adicionar animação de clique na função toggleFilterTag
+- [ ] Testar as animações no navegador para garantir funcionamento correto
 
-## Frontend Setup
+## Detalhes
 
-- [x] Criar estrutura HTML básica em root/index.html
-- [x] Adicionar CSS responsivo em root/css/styles.css
-- [x] Implementar JavaScript para interatividade em root/scripts/index.js
-- [x] Integrar chamadas da API no frontend
-- [x] Adicionar formulários de login e registro
-- [x] Implementar seção de perfil do usuário
-- [x] Adicionar funcionalidade de assinar criadores
-- [ ] Melhorar carregamento dinâmico de conteúdo (filtros, paginação)
-
-## Database
-
-- [x] Criar esquema do banco de dados MySQL
-- [x] Implementar consultas SQL nos endpoints
-
-## Testing
-
-- [ ] Testar endpoints da API
-- [ ] Testar responsividade do frontend
-- [ ] Verificar integração frontend-backend
+- **CSS**: Adicionar transform scale no hover, melhorar transições para background e transform.
+- **JS**: Adicionar classe temporária para animação de clique (ex: scale down briefly).
+- **Comentários**: Adicionar comentários em português conforme solicitado.
