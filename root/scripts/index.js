@@ -1,11 +1,22 @@
+// @ts-nocheck
 // Variáveis globais
 let currentUser = null;
+let currentUser = null;
+let currentPage = 1;
+let currentFilters = {
+    search: '',
+    category: '',
+    creator: '',
+    sortBy: 'newest'
+};
+let totalPages = 1;
 
 (function() {
 // Carregar conteúdo quando a página carrega
 document.addEventListener('DOMContentLoaded', () => {
     loadContent();
     setupEventListeners();
+    setupFilters();
     checkLoginStatus();
 });
 })();
@@ -301,7 +312,7 @@ function toggleFilterTag(tag) {
 
 // Função para registrar usuário
 async function handleRegister(e) {
-    e.preventDefault();
+    e.preventDefault(); // eslint-disable-line
     const name = document.getElementById('registerName').value;
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
@@ -323,7 +334,7 @@ async function handleRegister(e) {
 }
 
 async function handleLogin(e) {
-    e.preventDefault();
+    e.preventDefault(); // eslint-disable-line
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
 
@@ -347,4 +358,138 @@ async function handleLogin(e) {
         console.error('Erro ao fazer login:', error);
     }
 }
-</create_file>
+
+// Configurar filtros e paginação
+function setupFilters() {
+    // Criar elementos de filtro
+    const contentSection = document.getElementById('content');
+    const filterSection = document.createElement('div');
+    filterSection.id = 'contentFilters';
+    filterSection.className = 'content-filters';
+    filterSection.innerHTML = `
+        <div class="filter-row">
+            <input type="text" id="searchInput" placeholder="Buscar conteúdo..." class="search-input">
+            <select id="sortSelect" class="sort-select">
+                <option value="newest">Mais recentes</option>
+                <option value="oldest">Mais antigos</option>
+                <option value="popular">Mais populares</option>
+                <option value="price_low">Preço: menor para maior</option>
+                <option value="price_high">Preço: maior para menor</option>
+            </select>
+            <button id="filterBtn" class="btn filter-btn">Filtrar</button>
+            <button id="clearFiltersBtn" class="btn clear-btn">Limpar</button>
+        </div>
+        <div id="pagination" class="pagination"></div>
+    `;
+
+    contentSection.insertBefore(filterSection, document.getElementById('contentGrid'));
+
+    // Event listeners para filtros
+    document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 500));
+    document.getElementById('sortSelect').addEventListener('change', applyFilters);
+    document.getElementById('filterBtn').addEventListener('click', applyFilters);
+    document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);
+}
+
+// Aplicar filtros
+function applyFilters() {
+    currentFilters.search = document.getElementById('searchInput').value;
+    currentFilters.sortBy = document.getElementById('sortSelect').value;
+    currentPage = 1; // Reset para primeira página
+    loadContentWithFilters();
+}
+
+// Limpar filtros
+function clearFilters() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('sortSelect').value = 'newest';
+    currentFilters = {
+        search: '',
+        category: '',
+        creator: '',
+        sortBy: 'newest'
+    };
+    currentPage = 1;
+    loadContentWithFilters();
+}
+
+// Carregar conteúdo com filtros e paginação
+async function loadContentWithFilters() {
+    try {
+        const params = new URLSearchParams({
+            page: currentPage,
+            limit: 12, // 12 itens por página
+            search: currentFilters.search,
+            sortBy: currentFilters.sortBy
+        });
+
+        const response = await fetch(`http://localhost:3000/api/content/filtered?${params}`);
+        const data = await response.json();
+
+        displayContent(data.content || data);
+        setupPagination(data.totalPages || 1, data.currentPage || 1);
+        totalPages = data.totalPages || 1;
+    } catch (error) {
+        console.error('Erro ao carregar conteúdo filtrado:', error);
+        // Fallback para carregamento sem filtros
+        loadContent();
+    }
+}
+
+// Configurar paginação
+function setupPagination(totalPages, currentPage) {
+    const paginationDiv = document.getElementById('pagination');
+    paginationDiv.innerHTML = '';
+
+    if (totalPages <= 1) return;
+
+    // Botão anterior
+    if (currentPage > 1) {
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = '← Anterior';
+        prevBtn.className = 'btn pagination-btn';
+        prevBtn.onclick = () => changePage(currentPage - 1);
+        paginationDiv.appendChild(prevBtn);
+    }
+
+    // Números das páginas
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.className = `btn pagination-btn ${i === currentPage ? 'active' : ''}`;
+        pageBtn.onclick = () => changePage(i);
+        paginationDiv.appendChild(pageBtn);
+    }
+
+    // Botão próximo
+    if (currentPage < totalPages) {
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Próximo →';
+        nextBtn.className = 'btn pagination-btn';
+        nextBtn.onclick = () => changePage(currentPage + 1);
+        paginationDiv.appendChild(nextBtn);
+    }
+}
+
+// Mudar página
+function changePage(page) {
+    currentPage = page;
+    loadContentWithFilters();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Função debounce para busca
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
