@@ -1,53 +1,82 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Serviço de Conteúdo Premium</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-    <!-- Cabeçalho -->
-    <header>
-        <div class="container">
-            <h1>Serviço de Conteúdo Premium</h1>
-            <nav>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="24" height="24" fill="black" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="black"/></svg>
+            </div>
+            <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="#home">Início</a></li>
-                    <li><a href="#content">Conteúdo</a></li>
-                    <li><a href="#profile">Perfil</a></li>
-                    <li><a href="#login">Login</a></li>
+                    <li class="active"><span class="icon">🏠</span><span class="label">Página inicial</span></li>
+                    <li><span class="icon">🔍</span><span class="label">Explorar</span></li>
+                    <li><span class="icon">💬</span><span class="label">Comunidade</span></li>
+                    <li><span class="icon">🔔</span><span class="label">Notificações</span></li>
+                    <li><span class="icon">⚙️</span><span class="label">Configurações</span></li>
                 </ul>
             </nav>
-        </div>
-    </header>
+            <div class="sidebar-creator-prompt">
+                <div class="prompt-header">
+                    <strong>Seja um criador</strong>
+                    <button class="close-prompt" aria-label="Fechar">×</button>
+                </div>
+                <p>Crie uma assinatura para seus fãs e receba para criar da forma que quiser.</p>
+                <button class="btn subscribe-btn">Comece agora mesmo</button>
+            </div>
+            <div class="sidebar-user-profile">
+                <div class="user-avatar">U</div>
+                <div class="user-info">
+                    <div class="user-name">Uu</div>
+                    <div class="user-role">Membro</div>
+                </div>
+                <button class="user-menu-btn" aria-label="Menu do usuário">⋮</button>
+            </div>
+        </aside>
 
-    <!-- Conteúdo Principal -->
-    <main>
-        <div class="container">
-            <section id="home">
-                <h2>Bem-vindo ao Serviço de Conteúdo Premium</h2>
-                <p>Descubra e apoie criadores de conteúdo exclusivo.</p>
-                <button id="registerBtn" class="btn">Registrar-se</button>
-                <button id="loginBtn" class="btn">Entrar</button>
-            </section>
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Top bar -->
+            <div class="top-bar">
+                <input type="search" placeholder="Buscar criadores ou tópicos" class="search-input" />
+            </div>
 
-            <section id="content">
-                <h2>Conteúdo Disponível</h2>
-                <div class="content-grid" id="contentGrid">
-                    <!-- Conteúdo será carregado dinamicamente -->
+            <!-- Filter tags -->
+            <div class="filter-tags">
+                <button class="tag active">Tudo</button>
+                <button class="tag">Cultura pop <span class="remove-tag">×</span></button>
+                <button class="tag">Comédia</button>
+                <button class="tag">Jogos de RPG</button>
+                <button class="tag">Crimes reais</button>
+                <button class="tag">Tutoriais de arte</button>
+                <button class="tag">Artesanato</button>
+                <button class="tag">Ilustração</button>
+                <button class="tag">Música</button>
+            </div>
+
+            <!-- Principais criadores -->
+            <section class="creator-section">
+                <h2>Principais criadores <button class="scroll-left" aria-label="Scroll left">‹</button><button class="scroll-right" aria-label="Scroll right">›</button></h2>
+                <div class="creator-cards scroll-container" id="topCreators">
+                    <!-- Creator cards will be dynamically loaded here -->
                 </div>
             </section>
 
-            <section id="profile" class="hidden">
-                <h2>Seu Perfil</h2>
-                <div id="userProfile">
-                    <!-- Perfil do usuário será carregado dinamicamente -->
+            <!-- Em alta esta semana -->
+            <section class="creator-section">
+                <h2>Em alta esta semana <button class="scroll-left" aria-label="Scroll left">‹</button><button class="scroll-right" aria-label="Scroll right">›</button></h2>
+                <div class="creator-cards scroll-container" id="trendingCreators">
+                    <!-- Trending creator cards will be dynamically loaded here -->
                 </div>
-                <button id="logoutBtn" class="btn">Sair</button>
             </section>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <!-- Modal de Login/Registro -->
     <div id="authModal" class="modal">
@@ -56,8 +85,8 @@
             <div id="loginForm">
                 <h2>Entrar</h2>
                 <form id="loginFormEl">
-                    <input type="email" id="loginEmail" placeholder="Email" required>
-                    <input type="password" id="loginPassword" placeholder="Senha" required>
+                    <input type="email" id="loginEmail" placeholder="Email" required />
+                    <input type="password" id="loginPassword" placeholder="Senha" required />
                     <button type="submit" class="btn">Entrar</button>
                 </form>
                 <p>Não tem conta? <a href="#" id="switchToRegister">Registrar-se</a></p>
@@ -65,9 +94,9 @@
             <div id="registerForm" class="hidden">
                 <h2>Registrar-se</h2>
                 <form id="registerFormEl">
-                    <input type="text" id="registerName" placeholder="Nome" required>
-                    <input type="email" id="registerEmail" placeholder="Email" required>
-                    <input type="password" id="registerPassword" placeholder="Senha" required>
+                    <input type="text" id="registerName" placeholder="Nome" required />
+                    <input type="email" id="registerEmail" placeholder="Email" required />
+                    <input type="password" id="registerPassword" placeholder="Senha" required />
                     <button type="submit" class="btn">Registrar</button>
                 </form>
                 <p>Já tem conta? <a href="#" id="switchToLogin">Entrar</a></p>
