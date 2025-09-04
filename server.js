@@ -203,6 +203,14 @@ app.use('/api/payments', paymentRoutes);
 // Usar rotas de upload
 app.use('/api/uploads', uploadRoutes);
 
+// Usar rotas de dashboard
+const dashboardRoutes = require('./routes/dashboard');
+app.use('/api/dashboard', dashboardRoutes);
+
+// Usar rotas de assinante
+const subscriberRoutes = require('./routes/subscriber');
+app.use('/api/subscriber', subscriberRoutes);
+
 // Socket.io para funcionalidades em tempo real
 io.on('connection', (socket) => {
   console.log('Novo cliente conectado:', socket.id);

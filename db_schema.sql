@@ -136,3 +136,55 @@ CREATE TABLE live_streams (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (creator_id) REFERENCES users(id)
 );
+
+-- Atualizar tabela de perfil do criador existente
+ALTER TABLE creator_profiles
+ADD COLUMN display_name VARCHAR(100),
+ADD COLUMN bio TEXT,
+ADD COLUMN profile_image VARCHAR(500),
+ADD COLUMN is_verified BOOLEAN DEFAULT FALSE;
+
+-- Atualizar tabela de comentários existente
+ALTER TABLE comments
+ADD COLUMN parent_id INT NULL,
+ADD COLUMN is_premium BOOLEAN DEFAULT FALSE,
+ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ADD FOREIGN KEY (parent_id) REFERENCES comments(id);
+
+-- Tabela de likes/curtidas
+CREATE TABLE likes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    content_id INT,
+    user_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (content_id) REFERENCES content(id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    UNIQUE KEY unique_like (content_id, user_id)
+);
+
+-- Tabela de métodos de pagamento do usuário
+CREATE TABLE user_payment_methods (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    gateway VARCHAR(50) NOT NULL,
+    gateway_customer_id VARCHAR(255),
+    last_four VARCHAR(4),
+    card_brand VARCHAR(50),
+    expiry_month INT,
+    expiry_year INT,
+    is_default BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Tabela de logs de atividade
+CREATE TABLE activity_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    action VARCHAR(100) NOT NULL,
+    details JSON,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

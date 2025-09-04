@@ -216,7 +216,7 @@ body {
 .filter-tags {
     display: flex;
     gap: 10px;
-    margin-bottom: 25px;
+    margin-bottom: 60px; /* aumentei o espaçamento inferior para evitar sobreposição */
     overflow-x: auto;
     padding-bottom: 5px;
 }

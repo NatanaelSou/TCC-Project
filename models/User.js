@@ -8,9 +8,10 @@ class User {
         this.name = data.name;
         this.email = data.email;
         this.password = data.password;
-        this.role = data.role || 'subscriber';
+        this.role = data.role || 'subscriber'; // 'subscriber', 'creator', 'admin'
         this.avatar = data.avatar;
         this.bio = data.bio;
+        this.is_verified = data.is_verified || false;
         this.created_at = data.created_at;
         this.updated_at = data.updated_at;
     }
