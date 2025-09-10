@@ -217,7 +217,7 @@ class Content {
     static async canUserAccess(userId, contentId) {
         return new Promise((resolve, reject) => {
             // Primeiro, verificar se o conteúdo é público
-            const sql1 = `SELECT is_premium, tier_id FROM content WHERE id = ?`;
+            const sql1 = `SELECT is_premium, tier_id, creator_id FROM content WHERE id = ?`;
             db.query(sql1, [contentId], (err, results) => {
                 if (err) {
                     reject(err);
@@ -237,6 +237,12 @@ class Content {
                     return;
                 }
 
+                // Se o usuário é o criador do conteúdo, permitir acesso
+                if (content.creator_id === userId) {
+                    resolve(true);
+                    return;
+                }
+
                 // Se é premium, verificar se usuário está inscrito no tier
                 if (content.tier_id) {
                     const sql2 = `SELECT COUNT(*) as count FROM subscriptions WHERE user_id = ? AND tier_id = ? AND status = 'active'`;
@@ -251,6 +257,63 @@ class Content {
                 } else {
                     resolve(false);
                 }
+            });
+        });
+    }
+
+    // Buscar conteúdo acessível para um usuário (baseado em assinaturas e conteúdo público)
+    static async findAccessibleContent(userId, options = {}) {
+        return new Promise((resolve, reject) => {
+            // Buscar conteúdo público + conteúdo premium onde usuário tem assinatura ativa
+            const sql = `
+                SELECT DISTINCT c.*, t.name as tier_name, u.name as creator_name
+                FROM content c
+                LEFT JOIN tiers t ON c.tier_id = t.id
+                LEFT JOIN users u ON c.creator_id = u.id
+                LEFT JOIN subscriptions s ON c.tier_id = s.tier_id AND s.user_id = ? AND s.status = 'active'
+                WHERE (c.is_premium = false OR s.id IS NOT NULL OR c.creator_id = ?)
+                ORDER BY c.created_at DESC
+                LIMIT ?
+            `;
+
+            const limit = options.limit || 50;
+
+            db.query(sql, [userId, userId, limit], (err, results) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                const content = results.map(row => new Content(row));
+                resolve(content);
+            });
+        });
+    }
+
+    // Buscar conteúdo premium disponível para um usuário
+    static async findPremiumContentForUser(userId, options = {}) {
+        return new Promise((resolve, reject) => {
+            const sql = `
+                SELECT c.*, t.name as tier_name, u.name as creator_name
+                FROM content c
+                LEFT JOIN tiers t ON c.tier_id = t.id
+                LEFT JOIN users u ON c.creator_id = u.id
+                LEFT JOIN subscriptions s ON c.tier_id = s.tier_id AND s.user_id = ? AND s.status = 'active'
+                WHERE c.is_premium = true AND (s.id IS NOT NULL OR c.creator_id = ?)
+                ORDER BY c.created_at DESC
+                LIMIT ?
+            `;
+
+            const limit = options.limit || 50;
+
+            db.query(sql, [userId, userId, limit], (err, results) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                const content = results.map(row => new Content(row));
+                resolve(content);
             });
         });
     }

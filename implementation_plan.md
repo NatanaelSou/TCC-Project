@@ -1,187 +1,120 @@
-# Implementation Plan for Premium Content Platform - Remaining Tasks
+# Implementation Plan
 
 ## Overview
-Complete the Patreon-like premium content platform by implementing payment integration, file uploads, subscriber management, content access control, real-time features, frontend enhancements, testing, security, and deployment. The platform currently has a solid backend foundation with JWT authentication, comprehensive database schema, and basic frontend functionality.
+Implement a comprehensive subscription-based content platform for creators, building upon the existing Node.js backend with MySQL database. The platform will feature creator dashboards, subscriber feeds, payment integration, and content management. The current codebase has a solid foundation with authentication, user management, and basic content models, requiring expansion to full-featured screens and functionalities.
 
 ## Types
-Define data structures for new features and enhancements.
+Define data structures for enhanced platform features including creator profiles, content tiers, subscriptions, and payment processing.
 
-### Payment Types
-- PaymentGateway: { id, name, config, is_active }
-- WebhookEvent: { id, gateway, event_type, payload, processed_at }
-- Refund: { id, payment_id, amount, reason, status }
-
-### File Upload Types
-- FileUpload: { id, user_id, filename, original_name, mime_type, size, path, uploaded_at }
-- MediaProcessing: { id, file_id, status, processed_at, metadata }
-
-### Subscription Management Types
-- SubscriptionPlan: { id, tier_id, features, billing_cycle }
-- UpgradeDowngrade: { id, subscription_id, from_tier_id, to_tier_id, effective_date }
-
-### Content Access Types
-- AccessRule: { id, content_id, tier_id, user_role, conditions }
-- ContentFilter: { category, creator, tier, date_range, search_term }
+- User roles: 'subscriber', 'creator', 'admin'
+- Content types: 'text', 'image', 'video', 'audio', 'live'
+- Subscription statuses: 'active', 'cancelled', 'paused', 'expired'
+- Payment gateways: 'mercadopago', 'paypal', 'stripe'
+- Notification types: 'new_content', 'subscription', 'payment', 'comment'
 
 ## Files
-Detailed breakdown of new files and modifications needed.
+### New Files to Create:
+- `routes/dashboard.js` - Creator dashboard routes
+- `routes/subscriber.js` - Subscriber feed and profile routes
+- `controllers/dashboardController.js` - Dashboard logic
+- `controllers/subscriberController.js` - Subscriber functionality
+- `models/CreatorProfile.js` - Creator profile management
+- `models/Notification.js` - Notification system
+- `models/Payment.js` - Payment processing
+- `models/LiveStream.js` - Live streaming features
+- `middleware/upload.js` - File upload middleware
+- `public/uploads/` - Directory for content uploads
+- `views/dashboard.html` - Creator dashboard UI
+- `views/subscriber-feed.html` - Subscriber content feed
+- `views/creator-profile.html` - Public creator profile
+- `views/payment-checkout.html` - Payment processing UI
+- `views/settings.html` - User settings page
+- `views/admin.html` - Admin panel (optional)
 
-### New Files
-- `controllers/paymentController.js`: Payment processing logic
-- `controllers/subscriberController.js`: Subscriber management
-- `controllers/contentController.js`: Content access control
-- `routes/payments.js`: Payment API routes
-- `routes/subscribers.js`: Subscriber API routes
-- `routes/content.js`: Content management routes
-- `middleware/upload.js`: File upload middleware
-- `middleware/rateLimit.js`: Rate limiting middleware
-- `models/Payment.js`: Payment model
-- `models/Notification.js`: Notification model
-- `models/LiveStream.js`: Live streaming model
-- `utils/payment/mercadopago.js`: Mercado Pago integration
-- `utils/payment/paypal.js`: PayPal integration
-- `utils/fileUpload.js`: File handling utilities
-- `utils/validation.js`: Input validation utilities
-- `public/uploads/`: Upload directory structure
-- `tests/unit/`: Unit test files
-- `tests/integration/`: Integration test files
-- `tests/e2e/`: End-to-end test files
+### Existing Files to Modify:
+- `server.js` - Add new routes and middleware
+- `models/User.js` - Add role field and profile methods
+- `models/Content.js` - Add tier restrictions and access control
+- `models/Subscription.js` - Add payment integration and renewal logic
+- `controllers/authController.js` - Add social login options
+- `controllers/creatorController.js` - Expand with analytics and management
+- `controllers/paymentController.js` - Implement gateway integrations
+- `root/index.html` - Update landing page with creator examples
+- `root/css/styles.css` - Add responsive design for new screens
+- `root/scripts/index.js` - Add dynamic content loading and interactions
+- `db_schema.sql` - Add missing tables for profiles, notifications, live streams
 
-### Modified Files
-- `root/index.html`: Add creator dashboard, tier management sections
-- `root/css/styles.css`: Add styles for new components
-- `root/scripts/index.js`: Add dynamic content loading with filters/pagination
-- `server.js`: Add new middleware and routes
-- `package.json`: Add new dependencies
-- `models/Content.js`: Add access control methods
-- `models/Subscription.js`: Add management methods
+### Configuration Files:
+- `config/database.js` - Ensure proper MySQL connection
+- `.env` - Add environment variables for payment keys and secrets
 
 ## Functions
-New and modified functions for enhanced functionality.
+### New Functions:
+- `CreatorProfile.create()` - Create creator profile with banner and bio
+- `Notification.send()` - Send notifications to users
+- `Payment.process()` - Handle payment processing with gateways
+- `LiveStream.start()` - Initialize live streaming session
+- `Content.checkAccess()` - Verify user access to premium content
+- `Subscription.renew()` - Automatic subscription renewal
+- `User.updateProfile()` - Update user profile information
+- `Tier.validateCapacity()` - Check tier subscriber limits
 
-### New Functions
-- `paymentController.processPayment()`: Handle payment processing
-- `paymentController.handleWebhook()`: Process payment webhooks
-- `subscriberController.upgradeSubscription()`: Handle tier upgrades
-- `subscriberController.cancelSubscription()`: Handle subscription cancellation
-- `contentController.checkAccess()`: Verify content access permissions
-- `contentController.filterContent()`: Apply content filters
-- `uploadMiddleware.processFile()`: Handle file uploads
-- `loadContentWithFilters()`: Frontend content loading with filters
-- `setupPagination()`: Frontend pagination setup
-
-### Modified Functions
-- `loadContent()`: Add filtering and pagination support
-- `displayContent()`: Support for filtered content display
-- `handleLogin()`: Update to use JWT authentication
-- `subscribeToCreator()`: Update to handle tier selection
+### Modified Functions:
+- `User.create()` - Add role assignment and profile creation
+- `Content.create()` - Add file upload and tier assignment
+- `Subscription.create()` - Integrate with payment processing
+- `AuthController.login()` - Add social login support
 
 ## Classes
-Object-oriented approach for complex business logic.
+### New Classes:
+- `CreatorProfile` - Manages creator public profiles and settings
+- `Notification` - Handles user notifications and messaging
+- `Payment` - Processes payments and manages transactions
+- `LiveStream` - Manages live streaming functionality
+- `UploadManager` - Handles file uploads and storage
 
-### New Classes
-- `PaymentService`: Unified payment gateway interface
-- `FileUploadService`: File processing and validation
-- `SubscriptionManager`: Subscription lifecycle management
-- `ContentAccessControl`: Content permission system
-- `NotificationService`: Real-time notification handling
-- `LiveStreamManager`: Live streaming functionality
+### Modified Classes:
+- `User` - Add role management and profile associations
+- `Content` - Add access control and tier restrictions
+- `Subscription` - Add payment integration and renewal logic
+- `Tier` - Add subscriber capacity management
 
 ## Dependencies
-New packages for enhanced functionality.
+### New Packages:
+- `passport` and `passport-google-oauth20` - Social login
+- `stripe` - Additional payment gateway
+- `multer` - File upload handling
+- `sharp` - Image processing
+- `socket.io-client` - Real-time features for frontend
+- `nodemailer` - Email notifications
+- `firebase-admin` - Push notifications
+- `aws-sdk` - Cloud storage integration
 
-### New Dependencies
-- `mercadopago`: ^1.5.15
-- `paypal-rest-sdk`: ^1.8.1
-- `multer`: ^1.4.5-lts.1
-- `sharp`: ^0.32.6
-- `ffmpeg-static`: ^5.2.0
-- `helmet`: ^7.0.0
-- `express-rate-limit`: ^6.7.0
-- `joi`: ^17.9.2
-- `jest`: ^29.7.0
-- `supertest`: ^6.3.3
-- `cypress`: ^12.17.3
-- `nodemailer`: ^6.9.7
-- `redis`: ^4.6.7
-- `dotenv`: ^16.3.1
+### Version Updates:
+- Update existing packages to latest stable versions
+- Ensure compatibility with Node.js 18+
 
 ## Testing
-Comprehensive testing strategy.
+### Test Files:
+- `tests/auth.test.js` - Authentication tests
+- `tests/content.test.js` - Content management tests
+- `tests/payment.test.js` - Payment processing tests
+- `tests/subscription.test.js` - Subscription logic tests
 
-### Unit Tests
-- Model validation and business logic tests
-- Controller method tests
-- Utility function tests
-- Middleware tests
-
-### Integration Tests
-- API endpoint tests with database interactions
-- Payment flow tests
-- File upload tests
-- Authentication flow tests
-
-### End-to-End Tests
-- Complete user registration and login flow
-- Content creation and subscription flow
-- Payment processing flow
+### Integration Tests:
+- User registration and login flow
+- Content creation and access control
+- Payment processing and subscription activation
 - Creator dashboard functionality
 
 ## Implementation Order
-Logical sequence to minimize conflicts and ensure smooth development.
-
-1. **Dynamic Content Loading Enhancement**
-   - Add filters and pagination to frontend
-   - Update backend API to support filtering
-   - Implement search functionality
-
-2. **Payment Integration**
-   - Set up Mercado Pago integration
-   - Set up PayPal integration
-   - Create payment controller and routes
-   - Add webhook handling
-
-3. **File Upload System**
-   - Implement multer middleware
-   - Add file validation and processing
-   - Create upload utilities
-   - Add image/video processing
-
-4. **Subscriber Management**
-   - Create subscriber controller
-   - Implement subscription upgrade/downgrade
-   - Add subscription cancellation
-   - Create personalized content feed
-
-5. **Content Access Control**
-   - Implement subscription-based access
-   - Add content filtering and search
-   - Create content analytics
-
-6. **Real-time Features Enhancement**
-   - Implement live streaming
-   - Add real-time chat
-   - Enhance notification system
-
-7. **Frontend Enhancements**
-   - Create creator dashboard
-   - Add tier management interface
-   - Implement content upload interface
-   - Add subscription management UI
-
-8. **Security & Performance**
-   - Add input validation and sanitization
-   - Implement rate limiting
-   - Add security headers
-   - Optimize database queries
-
-9. **Testing Implementation**
-   - Unit tests for all components
-   - Integration tests for API endpoints
-   - End-to-end tests for critical flows
-
-10. **Deployment & Production**
-    - Set up production environment
-    - Configure monitoring and logging
-    - Set up CI/CD pipeline
-    - Add backup and recovery procedures
+1. Database schema updates and new models
+2. Authentication enhancements (social login)
+3. Creator profile and dashboard implementation
+4. Content management and upload system
+5. Subscription and payment integration
+6. Subscriber feed and access control
+7. Notification system
+8. Live streaming features (optional)
+9. Admin panel (optional)
+10. Frontend UI polish and responsive design

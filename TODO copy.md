@@ -1,13 +1,13 @@
 # Implementation Progress
 
 ## Database & Models
-- [x] Update db_schema.sql with missing tables
-- [x] Create CreatorProfile model
-- [x] Create Notification model
-- [x] Create Payment model
-- [x] Create LiveStream model
-- [x] Update User model with roles
-- [x] Update Content model with access control
+- [ ] Update db_schema.sql with missing tables
+- [ ] Create CreatorProfile model
+- [ ] Create Notification model
+- [ ] Create Payment model
+- [ ] Create LiveStream model
+- [ ] Update User model with roles
+- [ ] Update Content model with access control
 
 ## Authentication
 - [ ] Add social login (Google, GitHub)
@@ -15,16 +15,16 @@
 - [ ] Add password reset functionality
 
 ## Creator Features
-- [x] Create dashboard routes and controller
-- [x] Implement creator profile management
+- [ ] Create dashboard routes and controller
+- [ ] Implement creator profile management
 - [ ] Add content upload system
 - [ ] Create tier management
-- [x] Add analytics and statistics
+- [ ] Add analytics and statistics
 
 ## Subscriber Features
-- [x] Create subscriber feed
-- [x] Implement content access control
-- [x] Add subscription management
+- [ ] Create subscriber feed
+- [ ] Implement content access control
+- [ ] Add subscription management
 - [ ] Create payment checkout
 
 ## Payment Integration
@@ -34,7 +34,7 @@
 - [ ] Add subscription renewal logic
 
 ## Frontend Updates
-- [x] Update landing page with creator examples
+- [ ] Update landing page with creator examples
 - [ ] Create dashboard UI
 - [ ] Create subscriber feed UI
 - [ ] Add payment forms
