@@ -1,41 +1,82 @@
 import 'package:flutter/material.dart';
 
-void main() { runApp(const MyApp()); } // Inicializa Aplicativo
+// ---------- Inicializa aplicação ----------
+void main() {
+  runApp(const MyApp());
+}
 
-//
+// Aplicação
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'App Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      // Página inicial do app
-      home: const MyHomePage(title: 'App Demo'),
+      debugShowCheckedModeBanner: false,
+      title: 'Conteúdo Premio',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const HomePage(),
     );
   }
 }
 
-//
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
+// ---------- Pagina da Aplicação ----------
 
-  final String title;
+// Pagina Inicial
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Barra superior do app
+
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
+        title: const Text(
+          "",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+        backgroundColor: Colors.black, // cor de fundo
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              // ação do botão no header
+            },
+          ),
+        ],
       ),
-      // Corpo vazio
-      body: const Center(
-        child: Text(''), // Aqui você pode adicionar conteúdo futuramente
+      
+      body: Center(
+        child: ElevatedButton(
+          child: const Text("Ir para a Segunda Página"),
+          onPressed: () {
+            // Aqui acontece a navegação 👇
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SecondPage()),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+// Pagina Segundaria
+class SecondPage extends StatelessWidget {
+  const SecondPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Segunda Página")),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text("Voltar"),
+          onPressed: () {
+            Navigator.pop(context); // Volta para a tela anterior
+          },
+        ),
       ),
     );
   }
