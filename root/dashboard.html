@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard - Serviço de Conteúdo Premium</title>
+    <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg width="24" height="24" fill="black" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="black"/></svg>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><span class="icon">🏠</span><span class="label">Página inicial</span></li>
+                    <li><span class="icon">🔍</span><span class="label">Explorar</span></li>
+                    <li><span class="icon">💬</span><span class="label">Comunidade</span></li>
+                    <li><span class="icon">🔔</span><span class="label">Notificações</span></li>
+                    <li><span class="icon">⚙️</span><span class="label">Configurações</span></li>
+                </ul>
+            </nav>
+            <div class="sidebar-creator-prompt">
+                <div class="prompt-header">
+                    <strong>Seja um criador</strong>
+                    <button class="close-prompt" aria-label="Fechar">×</button>
+                </div>
+                <p>Crie uma assinatura para seus fãs e receba para criar da forma que quiser.</p>
+                <button class="btn subscribe-btn">Comece agora mesmo</button>
+            </div>
+            <div class="sidebar-user-profile">
+                <div class="user-avatar">U</div>
+                <div class="user-info">
+                    <div class="user-name">Uu</div>
+                    <div class="user-role">Membro</div>
+                </div>
+                <button class="user-menu-btn" aria-label="Menu do usuário">⋮</button>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Top bar -->
+            <div class="top-bar">
+                <input type="search" placeholder="Buscar criadores ou tópicos" class="search-input" />
+            </div>
+
+            <!-- Filter tags -->
+            <div class="filter-tags">
+                <button class="tag active">Tudo</button>
+                <button class="tag">Cultura pop <span class="remove-tag">×</span></button>
+                <button class="tag">Comédia</button>
+                <button class="tag">Jogos de RPG</button>
+                <button class="tag">Crimes reais</button>
+                <button class="tag">Tutoriais de arte</button>
+                <button class="tag">Artesanato</button>
+                <button class="tag">Ilustração</button>
+                <button class="tag">Música</button>
+            </div>
+
+            <!-- Principais criadores -->
+            <section class="creator-section">
+                <h2>Principais criadores <button class="scroll-left" aria-label="Scroll left">‹</button><button class="scroll-right" aria-label="Scroll right">›</button></h2>
+                <div class="creator-cards scroll-container" id="topCreators">
+                    <!-- Creator cards will be dynamically loaded here -->
+                </div>
+            </section>
+
+            <!-- Em alta esta semana -->
+            <section class="creator-section">
+                <h2>Em alta esta semana <button class="scroll-left" aria-label="Scroll left">‹</button><button class="scroll-right" aria-label="Scroll right">›</button></h2>
+                <div class="creator-cards scroll-container" id="trendingCreators">
+                    <!-- Trending creator cards will be dynamically loaded here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Serviço de Conteúdo Premium. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="scripts/dashboard.js"></script>
+</body>
+</html>

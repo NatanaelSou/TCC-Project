@@ -1,0 +1,146 @@
+/* Reset e configurações básicas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap');
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
+    color: #000;
+    background: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Auth Container */
+.auth-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    text-align: center;
+    border: 2px solid #000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.logo svg {
+    margin-right: 10px;
+    fill: #000;
+}
+
+.auth-card h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #000;
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #000;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #ff6f91;
+    box-shadow: 0 0 8px rgba(255, 111, 145, 0.3);
+}
+
+/* Buttons */
+.btn {
+    background: #ff6f91;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    cursor: pointer;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background: #e04e6f;
+    transform: translateY(-3px);
+}
+
+.btn-primary {
+    background: #ff6f91;
+}
+
+/* Links */
+.auth-link,
+.back-link {
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.auth-link a,
+.back-link a {
+    color: #ff6f91;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-link a:hover,
+.back-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 10px;
+    }
+
+    .auth-card {
+        padding: 30px 20px;
+    }
+
+    .auth-card h1 {
+        font-size: 1.8rem;
+    }
+}

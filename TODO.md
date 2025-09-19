@@ -1,47 +1,35 @@
-# Implementation Progress
+# TODO List for Frontend Modularization
 
-## Database & Models
-- [x] Update db_schema.sql with missing tables
-- [x] Create CreatorProfile model
-- [x] Create Notification model
-- [x] Create Payment model
-- [x] Create LiveStream model
-- [x] Update User model with roles
-- [x] Update Content model with access control
+## Step 1: Create New HTML Files
+- [ ] Create `root/landing.html` with clean, modern landing page design (hero section, features, login/register buttons)
+- [ ] Create `root/login.html` with login form and link to register
+- [ ] Create `root/register.html` with register form and link to login
+- [ ] Create `root/dashboard.html` with sidebar, main content, and navigation (based on current index.html)
 
-## Authentication
-- [ ] Add social login (Google, GitHub)
-- [ ] Update auth routes
-- [ ] Add password reset functionality
+## Step 2: Create New JavaScript Files
+- [ ] Create `root/scripts/landing.js` for landing page interactions (button clicks to navigate)
+- [ ] Create `root/scripts/auth.js` for shared authentication logic (handleLogin, handleRegister, session management)
+- [ ] Create `root/scripts/dashboard.js` for dashboard functionality (content loading, sidebar navigation, community)
 
-## Creator Features
-- [x] Create dashboard routes and controller
-- [x] Implement creator profile management
-- [ ] Add content upload system
-- [ ] Create tier management
-- [x] Add analytics and statistics
+## Step 3: Create New CSS Files
+- [ ] Create `root/css/landing.css` for landing page styles (hero, features, etc.)
+- [ ] Create `root/css/auth.css` for login/register page styles (forms)
+- [ ] Create `root/css/dashboard.css` for dashboard styles (sidebar, main content)
 
-## Subscriber Features
-- [x] Create subscriber feed
-- [x] Implement content access control
-- [x] Add subscription management
-- [ ] Create payment checkout
+## Step 4: Modify Existing Files
+- [ ] Modify `root/index.html` to redirect to landing.html or dashboard.html based on session
+- [ ] Split `root/scripts/index.js` into landing.js, auth.js, dashboard.js; remove dynamic switching
+- [ ] Split `root/css/styles.css` into landing.css, auth.css, dashboard.css; keep shared styles if needed
 
-## Payment Integration
-- [ ] Integrate MercadoPago
-- [ ] Add PayPal support
-- [ ] Implement Stripe (optional)
-- [ ] Add subscription renewal logic
+## Step 5: Implement Page Content and Logic
+- [ ] Implement landing page content and interactions
+- [ ] Implement login/register forms and validation
+- [ ] Implement dashboard content loading and navigation
+- [ ] Add session checks and redirects on each page
 
-## Frontend Updates
-- [x] Update landing page with creator examples
-- [ ] Create dashboard UI
-- [ ] Create subscriber feed UI
-- [ ] Add payment forms
-- [ ] Implement responsive design
-
-## Additional Features
-- [ ] Notification system
-- [ ] Live streaming (optional)
-- [ ] Admin panel (optional)
-- [ ] SEO and discoverability
+## Step 6: Testing and Polish
+- [ ] Test navigation flow: landing → login/register → dashboard
+- [ ] Test session handling and logout
+- [ ] Ensure responsive design across pages
+- [ ] Add Portuguese comments to code
+- [ ] Optimize performance (lazy load if needed)
