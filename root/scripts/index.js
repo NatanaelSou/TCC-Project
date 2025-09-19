@@ -99,7 +99,8 @@ function setupEventListeners() {
             } else if (choice === '2') {
                 logout();
             } else if (choice === '3') {
-                alert('Configurações: Em desenvolvimento.');
+                // Navegar para a página de configurações
+                window.location.href = 'settings.html';
             }
         });
     }

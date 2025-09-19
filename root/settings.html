@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Configurações - Serviço de Conteúdo Premium</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        /* Estilos específicos para a página de configurações */
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #fff;
+        }
+        .sidebar {
+            width: 240px;
+            background-color: #1e1e1e;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar li {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            color: #bbb;
+            font-weight: 500;
+        }
+        .sidebar li.active, .sidebar li:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        .sidebar li .icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        main {
+            flex-grow: 1;
+            padding: 24px;
+            box-sizing: border-box;
+            background-color: #181818;
+        }
+        h1 {
+            margin-top: 0;
+            font-weight: 700;
+            font-size: 2rem;
+            margin-bottom: 24px;
+        }
+        .tabs {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #333;
+        }
+        .tab {
+            padding-bottom: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #bbb;
+            border-bottom: 3px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .tab.active {
+            color: #1e90ff;
+            border-color: #1e90ff;
+        }
+        .tab-content {
+            background-color: #222;
+            padding: 24px;
+            border-radius: 12px;
+            max-width: 600px;
+        }
+        .profile-avatar {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a5acd, #836fff);
+            color: white;
+            font-size: 48px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #333;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid #181818;
+        }
+        .avatar-upload input[type="file"] {
+            display: none;
+        }
+        label.avatar-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            color: #fff;
+            font-size: 18px;
+        }
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="password"] {
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            border: none;
+            background-color: #333;
+            color: #fff;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        form button {
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        form button:hover {
+            background-color: #3ea0ff;
+        }
+        .error-message {
+            background-color: #6b1e1e;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <ul>
+            <li><span class="icon">🏠</span> Página inicial</li>
+            <li><span class="icon">🔍</span> Explorar</li>
+            <li><span class="icon">💬</span> Comunidade</li>
+            <li><span class="icon">🔔</span> Notificações</li>
+            <li class="active"><span class="icon">⚙️</span> Configurações</li>
+        </ul>
+    </aside>
+    <main>
+        <h1>Configurações</h1>
+        <nav class="tabs">
+            <div class="tab active" data-tab="basic-info">Informações básicas</div>
+            <div class="tab" data-tab="account">Conta</div>
+            <div class="tab" data-tab="email-notifications">Notificações por e-mail</div>
+            <div class="tab" data-tab="subscriptions">Assinaturas</div>
+            <div class="tab" data-tab="more">Mais ▼</div>
+        </nav>
+        <section class="tab-content" id="basic-info">
+            <div class="error-message" id="errorMessage" style="display:none;">Insira um país de residência válido</div>
+            <div class="profile-avatar" id="profileAvatar">
+                U
+                <div class="avatar-upload">
+                    <label for="avatarInput" class="avatar-upload-label" title="Alterar avatar">📷</label>
+                    <input type="file" id="avatarInput" accept="image/*" />
+                </div>
+            </div>
+            <form id="profileForm">
+                <label for="displayName">Nome exibido</label>
+                <input type="text" id="displayName" name="displayName" value="Uu" required />
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" value="enzoalencarteixeira447@gmail.com" required />
+                <button type="submit">Salvar alterações</button>
+            </form>
+        </section>
+        <section class="tab-content" id="account" style="display:none;">
+            <p>Conteúdo da aba Conta (em desenvolvimento)</p>
+        </section>
+        <section class="tab-content" id="email-notifications" style="display:none;">
+            <p>Conteúdo da aba Notificações por e-mail (em desenvolvimento)</p>
+        </section>
+        <section class="tab-content" id="subscriptions" style="display:none;">
+            <p>Conteúdo da aba Assinaturas (em desenvolvimento)</p>
+        </section>
+        <section class="tab-content" id="more" style="display:none;">
+            <p>Conteúdo da aba Mais (em desenvolvimento)</p>
+        </section>
+    </main>
+    <script>
+        // Lógica para troca de abas
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                tabContents.forEach(content => {
+                    content.style.display = content.id === tab.dataset.tab ? 'block' : 'none';
+                });
+            });
+        });
+
+        // Atualizar avatar ao selecionar arquivo
+        const avatarInput = document.getElementById('avatarInput');
+        const profileAvatar = document.getElementById('profileAvatar');
+
+        avatarInput.addEventListener('change', () => {
+            const file = avatarInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    profileAvatar.style.backgroundImage = `url(${e.target.result})`;
+                    profileAvatar.textContent = '';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Enviar formulário de perfil
+        const profileForm = document.getElementById('profileForm');
+        const errorMessage = document.getElementById('errorMessage');
+
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorMessage.style.display = 'none';
+
+            const displayName = document.getElementById('displayName').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            if (!displayName || !email) {
+                errorMessage.textContent = 'Nome e e-mail são obrigatórios.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/users/update', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: displayName, email })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    errorMessage.textContent = data.error || 'Erro ao atualizar perfil.';
+                    errorMessage.style.display = 'block';
+                    return;
+                }
+
+                alert('Perfil atualizado com sucesso!');
+            } catch (error) {
+                errorMessage.textContent = 'Erro ao atualizar perfil.';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

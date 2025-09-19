@@ -86,7 +86,7 @@ class AuthController {
     // Atualizar perfil
     static async updateProfile(req, res) {
         try {
-            const allowedFields = ['name', 'bio', 'avatar'];
+            const allowedFields = ['name', 'bio', 'avatar', 'email'];
             const updateData = {};
 
             allowedFields.forEach(field => {
