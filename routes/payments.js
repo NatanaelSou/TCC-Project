@@ -4,6 +4,7 @@ const router = express.Router();
 const paymentController = require('../controllers/paymentController');
 const auth = require('../middleware/auth');
 
+
 // Rotas protegidas (requerem autenticação)
 router.post('/mercadopago', auth, paymentController.createMercadoPagoPreference);
 router.post('/paypal', auth, paymentController.createPayPalPayment);

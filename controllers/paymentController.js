@@ -4,9 +4,17 @@ const paypal = require('paypal-rest-sdk');
 const db = require('../config/database');
 
 // Configurar Mercado Pago
-mercadopago.configure({
-  access_token: process.env.MERCADO_PAGO_ACCESS_TOKEN
-});
+if (mercadopago && typeof mercadopago.configure === 'function') {
+  mercadopago.configure({
+    access_token: process.env.MERCADO_PAGO_ACCESS_TOKEN
+  });
+} else if (mercadopago && mercadopago.config) {
+  // Para versões mais recentes do SDK Mercado Pago
+  mercadopago.configurations = mercadopago.configurations || {};
+  mercadopago.configurations.access_token = process.env.MERCADO_PAGO_ACCESS_TOKEN;
+} else {
+  console.warn('Mercado Pago SDK não suporta método configure. Verifique a versão do pacote.');
+}
 
 // Configurar PayPal
 paypal.configure({
