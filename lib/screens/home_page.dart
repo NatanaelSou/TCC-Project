@@ -19,6 +19,8 @@ import 'login_screen.dart';
 
 // Tela Principal - Widget
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -28,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   // Estado da Sidebar e Página Atual
   bool sidebarExpanded = true; // Controla se a sidebar está expandida ou retraída
   int currentPageIndex = 0; // Índice da página atual (0 = Home, 1 = Explorar, etc.)
+  bool showCreatorPrompt = true; // Controla se o prompt de se tornar criador deve ser exibido
 
   // Estado dos filtros ativos (múltiplos filtros podem ser selecionados)
   List<String> activeFilters = ['Tudo']; // Categorias de filtro selecionadas atualmente
@@ -189,8 +192,17 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 // Prompt para se tornar criador ou botão de logout
-                if (!userState.isLoggedIn)
-                  SidebarPrompt(onPressed: _showLoginModal),
+                if (!userState.isLoggedIn && sidebarExpanded && showCreatorPrompt)
+                  SidebarPrompt(
+                    onPressed: _showLoginModal,
+                    expanded: sidebarExpanded,
+                    onClose: () {
+                      // Fecha o prompt quando X é clicado
+                      setState(() {
+                        showCreatorPrompt = false;
+                      });
+                    },
+                  ),
                 if (userState.isLoggedIn)
                   TextButton(
                     onPressed: () {
@@ -329,54 +341,4 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Widget SidebarPrompt
-class SidebarPrompt extends StatelessWidget {
-  final VoidCallback? onPressed;
-  const SidebarPrompt({this.onPressed});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: AppColors.sidebarPromptBg,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.sidebarPromptShadow,
-            blurRadius: 12,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Seja um criador',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              IconButton(icon: Icon(Icons.close), onPressed: () {}),
-            ],
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Crie uma assinatura para seus fãs e receba para criar da forma que quiser.',
-          ),
-          SizedBox(height: 12),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.btnSecondary,
-              shape: StadiumBorder(),
-            ),
-            onPressed: onPressed,
-            child: Text('Comece agora mesmo'),
-          ),
-        ],
-      ),
-    );
-  }
-}

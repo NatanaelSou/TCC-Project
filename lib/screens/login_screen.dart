@@ -12,7 +12,7 @@ import '../user_state.dart';
 // Tela de Login
 class LoginScreen extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
-  const LoginScreen({this.onLoginSuccess, Key? key}) : super(key: key);
+  const LoginScreen({this.onLoginSuccess, super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
