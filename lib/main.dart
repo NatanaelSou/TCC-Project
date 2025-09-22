@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 // Serviços e Estado
 import 'services/api_service.dart';
-import 'screens/home_page.dart';
+import 'screens/landing_page.dart';
 import 'user_state.dart';
 
 // Ponto de entrada
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App Flutter + Node.js + mySQL',
-      home: HomePage(),
+      home: LandingPage(),
     );
   }
 }

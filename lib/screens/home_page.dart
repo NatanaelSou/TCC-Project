@@ -1,6 +1,7 @@
 // lib/screens/home_page.dart
 //
-// Packages
+// Tela principal da aplicação
+// Contém a sidebar de navegação e o conteúdo principal com filtros funcionais
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,8 +26,11 @@ class HomePage extends StatefulWidget {
 // Tela Principal - Estado
 class _HomePageState extends State<HomePage> {
   // Estado da Sidebar e Página Atual
-  bool sidebarExpanded = true;
-  int currentPageIndex = 0;
+  bool sidebarExpanded = true; // Controla se a sidebar está expandida ou retraída
+  int currentPageIndex = 0; // Índice da página atual (0 = Home, 1 = Explorar, etc.)
+
+  // Estado dos filtros ativos (múltiplos filtros podem ser selecionados)
+  List<String> activeFilters = ['Tudo']; // Categorias de filtro selecionadas atualmente
 
   // Alterna o estado da sidebar
   void _toggleSidebar() {
@@ -55,6 +59,30 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  // Função para lidar com mudança de filtro (múltiplos filtros)
+  void _onFilterChanged(String filter) {
+    setState(() {
+      if (filter == 'Tudo') {
+        // Se "Tudo" for selecionado, limpa todos os outros filtros
+        activeFilters = ['Tudo'];
+      } else {
+        // Remove "Tudo" se outro filtro for selecionado
+        activeFilters.remove('Tudo');
+
+        // Adiciona ou remove o filtro da lista
+        if (activeFilters.contains(filter)) {
+          activeFilters.remove(filter);
+          // Se nenhum filtro estiver ativo, volta para "Tudo"
+          if (activeFilters.isEmpty) {
+            activeFilters = ['Tudo'];
+          }
+        } else {
+          activeFilters.add(filter);
+        }
+      }
+    });
   }
 
   // Construção do Widget
@@ -181,7 +209,7 @@ class _HomePageState extends State<HomePage> {
           // Conteúdo principal
           Expanded(
             child: Container(
-              color: Colors.grey[100],
+              color: const Color(0xFFF5F5F5),
               child: IndexedStack(
                 index: currentPageIndex,
                 children: [
@@ -220,28 +248,81 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // Tags de filtro
+          // Tags de filtro - Sistema de filtragem funcional por categoria
+          // Cada tag é clicável e altera o estado do filtro ativo
+          // Quando uma tag é clicada, chama _onFilterChanged para atualizar o estado
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                FilterTag(label: 'Tudo', active: true),
-                FilterTag(label: 'Cultura pop'),
-                FilterTag(label: 'Comédia'),
-                FilterTag(label: 'Jogos de RPG'),
-                FilterTag(label: 'Crimes reais'),
-                FilterTag(label: 'Tutoriais de arte'),
-                FilterTag(label: 'Artesanato'),
-                FilterTag(label: 'Ilustração'),
-                FilterTag(label: 'Música'),
+                // Filtro "Tudo" - mostra todo o conteúdo disponível
+                FilterTag(
+                  label: 'Tudo',
+                  active: activeFilters.contains('Tudo'),
+                  onTap: () => _onFilterChanged('Tudo'),
+                ),
+                // Filtro "Cultura pop" - filtra conteúdo relacionado a cultura pop
+                FilterTag(
+                  label: 'Cultura pop',
+                  active: activeFilters.contains('Cultura pop'),
+                  onTap: () => _onFilterChanged('Cultura pop'),
+                ),
+                // Filtro "Comédia" - filtra conteúdo de comédia e humor
+                FilterTag(
+                  label: 'Comédia',
+                  active: activeFilters.contains('Comédia'),
+                  onTap: () => _onFilterChanged('Comédia'),
+                ),
+                // Filtro "Jogos de RPG" - filtra conteúdo de jogos de RPG
+                FilterTag(
+                  label: 'Jogos de RPG',
+                  active: activeFilters.contains('Jogos de RPG'),
+                  onTap: () => _onFilterChanged('Jogos de RPG'),
+                ),
+                // Filtro "Crimes reais" - filtra conteúdo sobre crimes reais
+                FilterTag(
+                  label: 'Crimes reais',
+                  active: activeFilters.contains('Crimes reais'),
+                  onTap: () => _onFilterChanged('Crimes reais'),
+                ),
+                // Filtro "Tutoriais de arte" - filtra conteúdo de tutoriais de arte
+                FilterTag(
+                  label: 'Tutoriais de arte',
+                  active: activeFilters.contains('Tutoriais de arte'),
+                  onTap: () => _onFilterChanged('Tutoriais de arte'),
+                ),
+                // Filtro "Artesanato" - filtra conteúdo de artesanato e DIY
+                FilterTag(
+                  label: 'Artesanato',
+                  active: activeFilters.contains('Artesanato'),
+                  onTap: () => _onFilterChanged('Artesanato'),
+                ),
+                // Filtro "Ilustração" - filtra conteúdo de ilustração
+                FilterTag(
+                  label: 'Ilustração',
+                  active: activeFilters.contains('Ilustração'),
+                  onTap: () => _onFilterChanged('Ilustração'),
+                ),
+                // Filtro "Música" - filtra conteúdo relacionado a música
+                FilterTag(
+                  label: 'Música',
+                  active: activeFilters.contains('Música'),
+                  onTap: () => _onFilterChanged('Música'),
+                ),
               ],
             ),
           ),
           SizedBox(height: 30),
-          // Seções de criadores
-          CreatorSection(title: 'Principais criadores'),
+          // Seções de criadores com filtros ativos (múltiplos filtros)
+          CreatorSection(
+            title: 'Principais criadores',
+            activeFilters: activeFilters,
+          ),
           SizedBox(height: 20),
-          CreatorSection(title: 'Em alta esta semana'),
+          CreatorSection(
+            title: 'Em alta esta semana',
+            activeFilters: activeFilters,
+          ),
         ],
       ),
     );

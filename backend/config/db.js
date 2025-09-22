@@ -3,8 +3,8 @@ const mysql = require('mysql2');
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'passnat',
-  database: 'flutter_app'
+  password: '512200Balatro@',
+  database: 'tcc_project'
 });
 
 connection.connect(err => {
