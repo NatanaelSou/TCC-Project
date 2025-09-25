@@ -1,42 +1,62 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+import '../models/user.dart';
+import 'http_service.dart';
 
-class AuthService {
-  final String baseUrl = 'http://localhost:3000/api';
+/// Classe de serviço para autenticação
+/// Gerencia login e registro de usuários com tratamento robusto de erros
+class AuthService extends HttpService {
+  /// Realiza login do usuário
+  /// @param userNameOrEmail Nome de usuário ou email
+  /// @param password Senha do usuário
+  /// @returns Instância de User
+  /// @throws HttpException em caso de erro
+  Future<User> login(String userNameOrEmail, String password) async {
+    try {
+      final response = await post('/worker-login', {
+        'userNameOrEmail': userNameOrEmail.trim(),
+        'password': password.trim(),
+      });
 
-  // Login
-  Future<Map<String, dynamic>> login(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao fazer login');
+      final data = handleResponse(response, 'login') as Map<String, dynamic>;
+      if (data['user'] != null) {
+        return User.fromJson(data['user'] as Map<String, dynamic>);
+      } else {
+        throw HttpException('Dados do usuário não encontrados na resposta');
+      }
+    } catch (e) {
+      if (e is HttpException) {
+        rethrow;
+      }
+      throw HttpException('Erro inesperado: ${e.toString()}');
     }
   }
 
-  // Registro de usuário
-  Future<Map<String, dynamic>> register(String email, String password,
-      {String? name}) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-        if (name != null) 'name': name,
-      }),
-    );
+  /// Registra um novo usuário
+  /// @param email Email do usuário
+  /// @param password Senha do usuário
+  /// @param name Nome opcional do usuário
+  /// @returns Instância de User criado
+  /// @throws HttpException em caso de erro
+  Future<User> register(String email, String password, {String? name}) async {
+    try {
+      final body = {
+        'email': email.trim(),
+        'password': password.trim(),
+        if (name != null && name.isNotEmpty) 'name': name.trim(),
+      };
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      // 201 criado ou 200 OK
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Falha ao registrar usuário');
+      final response = await post('/register', body);
+
+      final data = handleResponse(response, 'registro') as Map<String, dynamic>;
+      if (data['user'] != null) {
+        return User.fromJson(data['user'] as Map<String, dynamic>);
+      } else {
+        throw HttpException('Dados do usuário não encontrados na resposta');
+      }
+    } catch (e) {
+      if (e is HttpException) {
+        rethrow;
+      }
+      throw HttpException('Erro inesperado: ${e.toString()}');
     }
   }
 }

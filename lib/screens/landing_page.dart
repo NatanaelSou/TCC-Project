@@ -319,7 +319,7 @@ class _LandingPageState extends State<LandingPage> {
       },
       {
         'icon': Icons.people,
-        'title': 'Comunidade Ativa',
+        'title': 'Comunidade\nAtiva',
         'description': 'Interaja com outros fãs e criadores em chats e fóruns dedicados.',
       },
       {
@@ -375,7 +375,7 @@ class _LandingPageState extends State<LandingPage> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -542,7 +542,7 @@ class _LandingPageState extends State<LandingPage> {
   // Modal de Login
   Widget _buildLoginModal() {
     return Container(
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withValues(alpha: 0.5),
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width > 768 ? 400 : MediaQuery.of(context).size.width * 0.9,
@@ -715,7 +715,7 @@ class _LandingPageState extends State<LandingPage> {
   // Modal de Registro
   Widget _buildRegisterModal() {
     return Container(
-      color: Colors.black.withOpacity(0.5),
+      color: Colors.black.withValues(alpha: 0.5),
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width > 768 ? 400 : MediaQuery.of(context).size.width * 0.9,

@@ -1,7 +1,3 @@
-// lib/screens/home_page.dart
-//
-// Tela principal da aplicação
-// Contém a sidebar de navegação e o conteúdo principal com filtros funcionais
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,12 +8,13 @@ import '../widgets/creator_section.dart';
 
 // Serviços e Estado
 import '../user_state.dart';
+import '../utils/filter_manager.dart';
 import '../constants.dart';
 
 // Telas
 import 'login_screen.dart';
 
-// Tela Principal - Widget
+/// Tela principal da aplicação com navegação e filtros
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -25,31 +22,36 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-// Tela Principal - Estado
 class _HomePageState extends State<HomePage> {
-  // Estado da Sidebar e Página Atual
-  bool sidebarExpanded = true; // Controla se a sidebar está expandida ou retraída
-  int currentPageIndex = 0; // Índice da página atual (0 = Home, 1 = Explorar, etc.)
-  bool showCreatorPrompt = true; // Controla se o prompt de se tornar criador deve ser exibido
+  // Estado da interface
+  bool _sidebarExpanded = true;
+  int _currentPageIndex = 0;
+  bool _showCreatorPrompt = true;
 
-  // Estado dos filtros ativos (múltiplos filtros podem ser selecionados)
-  List<String> activeFilters = ['Tudo']; // Categorias de filtro selecionadas atualmente
+  // Lista de páginas disponíveis
+  static const List<String> _pageTitles = [
+    'Página inicial',
+    'Explorar',
+    'Comunidade',
+    'Notificações',
+    'Configurações',
+  ];
 
-  // Alterna o estado da sidebar
+  /// Alterna o estado da sidebar
   void _toggleSidebar() {
-    setState(() => sidebarExpanded = !sidebarExpanded);
+    setState(() => _sidebarExpanded = !_sidebarExpanded);
   }
 
-  // Mostra o modal de login/Registrar-se
+  /// Mostra o modal de login/registro
   void _showLoginModal() async {
     await showDialog(
       context: context,
       builder: (context) => Dialog(
-        insetPadding: EdgeInsets.all(20), // espaço das bordas da tela
+        insetPadding: EdgeInsets.all(AppDimensions.spacingLarge),
         child: Padding(
-          padding: EdgeInsets.all(20),
+          padding: EdgeInsets.all(AppDimensions.spacingLarge),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // tamanho baseado no conteúdo
+            mainAxisSize: MainAxisSize.min,
             children: [
               LoginScreen(
                 onLoginSuccess: () {
@@ -64,35 +66,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Função para lidar com mudança de filtro (múltiplos filtros)
-  void _onFilterChanged(String filter) {
-    setState(() {
-      if (filter == 'Tudo') {
-        // Se "Tudo" for selecionado, limpa todos os outros filtros
-        activeFilters = ['Tudo'];
-      } else {
-        // Remove "Tudo" se outro filtro for selecionado
-        activeFilters.remove('Tudo');
-
-        // Adiciona ou remove o filtro da lista
-        if (activeFilters.contains(filter)) {
-          activeFilters.remove(filter);
-          // Se nenhum filtro estiver ativo, volta para "Tudo"
-          if (activeFilters.isEmpty) {
-            activeFilters = ['Tudo'];
-          }
-        } else {
-          activeFilters.add(filter);
-        }
-      }
-    });
-  }
-
   // Construção do Widget
   @override
   Widget build(BuildContext context) {
-    // Estado do Usuário
+    // Estado do Usuário e Filtros
     final userState = Provider.of<UserState>(context);
+    final filterManager = Provider.of<FilterManager>(context);
 
     // Layout Principal
     return Scaffold(
@@ -101,9 +80,9 @@ class _HomePageState extends State<HomePage> {
           // Sidebar
           AnimatedContainer(
             duration: Duration(milliseconds: 300),
-            width: sidebarExpanded ? 250 : 70,
+            width: _sidebarExpanded ? 250 : 70,
             color: AppColors.sidebar,
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(AppDimensions.spacingLarge),
             child: Column(
               children: [
                 // Toggle sidebar
@@ -111,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                   alignment: Alignment.centerRight,
                   child: IconButton(
                     icon: Icon(
-                      sidebarExpanded
+                      _sidebarExpanded
                           ? Icons.arrow_back_ios
                           : Icons.arrow_forward_ios,
                       color: Colors.white,
@@ -119,8 +98,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: _toggleSidebar,
                   ),
                 ),
-                SizedBox(height: 10), // espaço
-                // Avatar -> sera troacado por Titulo e Logotipo do App
+                SizedBox(height: AppDimensions.spacingSmall),
                 // Avatar do usuário
                 GestureDetector(
                   onTap: userState.isLoggedIn ? null : _showLoginModal,
@@ -137,9 +115,9 @@ class _HomePageState extends State<HomePage> {
                 ),
 
                 // Nome do usuário
-                if (sidebarExpanded && userState.isLoggedIn)
+                if (_sidebarExpanded && userState.isLoggedIn)
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: EdgeInsets.only(top: AppDimensions.spacingSmall),
                     child: Text(
                       userState.name ?? 'Usuário',
                       style: TextStyle(
@@ -148,58 +126,57 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                SizedBox(height: 20), // espaço
+                SizedBox(height: AppDimensions.spacingLarge),
                 // Itens da Sidebar
                 Expanded(
                   child: ListView(
                     children: [
                       SidebarItem(
                         icon: Icons.home,
-                        label: 'Página inicial',
-                        active: currentPageIndex == 0,
-                        onTap: () => setState(() => currentPageIndex = 0),
-                        expanded: sidebarExpanded,
+                        label: _pageTitles[0],
+                        active: _currentPageIndex == 0,
+                        onTap: () => setState(() => _currentPageIndex = 0),
+                        expanded: _sidebarExpanded,
                       ),
                       SidebarItem(
                         icon: Icons.search,
-                        label: 'Explorar',
-                        active: currentPageIndex == 1,
-                        onTap: () => setState(() => currentPageIndex = 1),
-                        expanded: sidebarExpanded,
+                        label: _pageTitles[1],
+                        active: _currentPageIndex == 1,
+                        onTap: () => setState(() => _currentPageIndex = 1),
+                        expanded: _sidebarExpanded,
                       ),
                       SidebarItem(
                         icon: Icons.chat,
-                        label: 'Comunidade',
-                        active: currentPageIndex == 2,
-                        onTap: () => setState(() => currentPageIndex = 2),
-                        expanded: sidebarExpanded,
+                        label: _pageTitles[2],
+                        active: _currentPageIndex == 2,
+                        onTap: () => setState(() => _currentPageIndex = 2),
+                        expanded: _sidebarExpanded,
                       ),
                       SidebarItem(
                         icon: Icons.notifications,
-                        label: 'Notificações',
-                        active: currentPageIndex == 3,
-                        onTap: () => setState(() => currentPageIndex = 3),
-                        expanded: sidebarExpanded,
+                        label: _pageTitles[3],
+                        active: _currentPageIndex == 3,
+                        onTap: () => setState(() => _currentPageIndex = 3),
+                        expanded: _sidebarExpanded,
                       ),
                       SidebarItem(
                         icon: Icons.settings,
-                        label: 'Configurações',
-                        active: currentPageIndex == 4,
-                        onTap: () => setState(() => currentPageIndex = 4),
-                        expanded: sidebarExpanded,
+                        label: _pageTitles[4],
+                        active: _currentPageIndex == 4,
+                        onTap: () => setState(() => _currentPageIndex = 4),
+                        expanded: _sidebarExpanded,
                       ),
                     ],
                   ),
                 ),
                 // Prompt para se tornar criador ou botão de logout
-                if (!userState.isLoggedIn && sidebarExpanded && showCreatorPrompt)
+                if (!userState.isLoggedIn && _sidebarExpanded && _showCreatorPrompt)
                   SidebarPrompt(
                     onPressed: _showLoginModal,
-                    expanded: sidebarExpanded,
+                    expanded: _sidebarExpanded,
                     onClose: () {
-                      // Fecha o prompt quando X é clicado
                       setState(() {
-                        showCreatorPrompt = false;
+                        _showCreatorPrompt = false;
                       });
                     },
                   ),
@@ -221,15 +198,15 @@ class _HomePageState extends State<HomePage> {
           // Conteúdo principal
           Expanded(
             child: Container(
-              color: const Color(0xFFF5F5F5),
+              color: AppColors.background,
               child: IndexedStack(
-                index: currentPageIndex,
+                index: _currentPageIndex,
                 children: [
-                  _buildHomePage(),
-                  Center(child: Text('Explorar')),
-                  Center(child: Text('Comunidade')),
-                  Center(child: Text('Notificações')),
-                  Center(child: Text('Configurações')),
+                  _buildHomePage(filterManager),
+                  _buildPlaceholderPage('Explorar'),
+                  _buildPlaceholderPage('Comunidade'),
+                  _buildPlaceholderPage('Notificações'),
+                  _buildPlaceholderPage('Configurações'),
                 ],
               ),
             ),
@@ -239,106 +216,108 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildHomePage() {
+  /// Constrói a página inicial com filtros e seções de criadores
+  Widget _buildHomePage(FilterManager filterManager) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      padding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingExtraLarge, vertical: AppDimensions.spacingLarge),
       child: Column(
         children: [
           // Barra de busca
           Padding(
-            padding: EdgeInsets.only(bottom: 20),
+            padding: EdgeInsets.only(bottom: AppDimensions.spacingLarge),
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Buscar criadores ou tópicos',
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
+                  borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
                 ),
                 filled: true,
                 fillColor: AppColors.inputFill,
-                contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                contentPadding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingLarge),
               ),
             ),
           ),
 
-          // Tags de filtro - Sistema de filtragem funcional por categoria
-          // Cada tag é clicável e altera o estado do filtro ativo
-          // Quando uma tag é clicada, chama _onFilterChanged para atualizar o estado
+          // Tags de filtro
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
-                // Filtro "Tudo" - mostra todo o conteúdo disponível
                 FilterTag(
-                  label: 'Tudo',
-                  active: activeFilters.contains('Tudo'),
-                  onTap: () => _onFilterChanged('Tudo'),
+                  label: AppStrings.filterAll,
+                  active: filterManager.isFilterActive(AppStrings.filterAll),
+                  onTap: () => filterManager.toggleFilter(AppStrings.filterAll),
                 ),
-                // Filtro "Cultura pop" - filtra conteúdo relacionado a cultura pop
                 FilterTag(
                   label: 'Cultura pop',
-                  active: activeFilters.contains('Cultura pop'),
-                  onTap: () => _onFilterChanged('Cultura pop'),
+                  active: filterManager.isFilterActive('Cultura pop'),
+                  onTap: () => filterManager.toggleFilter('Cultura pop'),
                 ),
-                // Filtro "Comédia" - filtra conteúdo de comédia e humor
                 FilterTag(
                   label: 'Comédia',
-                  active: activeFilters.contains('Comédia'),
-                  onTap: () => _onFilterChanged('Comédia'),
+                  active: filterManager.isFilterActive('Comédia'),
+                  onTap: () => filterManager.toggleFilter('Comédia'),
                 ),
-                // Filtro "Jogos de RPG" - filtra conteúdo de jogos de RPG
                 FilterTag(
                   label: 'Jogos de RPG',
-                  active: activeFilters.contains('Jogos de RPG'),
-                  onTap: () => _onFilterChanged('Jogos de RPG'),
+                  active: filterManager.isFilterActive('Jogos de RPG'),
+                  onTap: () => filterManager.toggleFilter('Jogos de RPG'),
                 ),
-                // Filtro "Crimes reais" - filtra conteúdo sobre crimes reais
                 FilterTag(
                   label: 'Crimes reais',
-                  active: activeFilters.contains('Crimes reais'),
-                  onTap: () => _onFilterChanged('Crimes reais'),
+                  active: filterManager.isFilterActive('Crimes reais'),
+                  onTap: () => filterManager.toggleFilter('Crimes reais'),
                 ),
-                // Filtro "Tutoriais de arte" - filtra conteúdo de tutoriais de arte
                 FilterTag(
                   label: 'Tutoriais de arte',
-                  active: activeFilters.contains('Tutoriais de arte'),
-                  onTap: () => _onFilterChanged('Tutoriais de arte'),
+                  active: filterManager.isFilterActive('Tutoriais de arte'),
+                  onTap: () => filterManager.toggleFilter('Tutoriais de arte'),
                 ),
-                // Filtro "Artesanato" - filtra conteúdo de artesanato e DIY
                 FilterTag(
                   label: 'Artesanato',
-                  active: activeFilters.contains('Artesanato'),
-                  onTap: () => _onFilterChanged('Artesanato'),
+                  active: filterManager.isFilterActive('Artesanato'),
+                  onTap: () => filterManager.toggleFilter('Artesanato'),
                 ),
-                // Filtro "Ilustração" - filtra conteúdo de ilustração
                 FilterTag(
                   label: 'Ilustração',
-                  active: activeFilters.contains('Ilustração'),
-                  onTap: () => _onFilterChanged('Ilustração'),
+                  active: filterManager.isFilterActive('Ilustração'),
+                  onTap: () => filterManager.toggleFilter('Ilustração'),
                 ),
-                // Filtro "Música" - filtra conteúdo relacionado a música
                 FilterTag(
                   label: 'Música',
-                  active: activeFilters.contains('Música'),
-                  onTap: () => _onFilterChanged('Música'),
+                  active: filterManager.isFilterActive('Música'),
+                  onTap: () => filterManager.toggleFilter('Música'),
                 ),
               ],
             ),
           ),
-          SizedBox(height: 30),
-          // Seções de criadores com filtros ativos (múltiplos filtros)
+          SizedBox(height: AppDimensions.spacingExtraLarge),
+          // Seções de criadores
           CreatorSection(
             title: 'Principais criadores',
-            activeFilters: activeFilters,
+            activeFilters: filterManager.activeFilters,
           ),
-          SizedBox(height: 20),
+          SizedBox(height: AppDimensions.spacingLarge),
           CreatorSection(
             title: 'Em alta esta semana',
-            activeFilters: activeFilters,
+            activeFilters: filterManager.activeFilters,
           ),
         ],
       ),
     );
   }
+
+  /// Constrói páginas placeholder para outras seções
+  Widget _buildPlaceholderPage(String title) {
+    return Center(
+      child: Text(
+        title,
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: AppColors.textDark,
+        ),
+      ),
+    );
+  }
 }
-
-

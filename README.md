@@ -3,6 +3,15 @@
 Projeto Flutter + Node.js configurando ambiente inicial.
 Descripiton...
 
+Objetivo do MVP
+Criar uma versão mínima funcional com:
+
+- **Cadastro e login** de usuários (criadores e espectadores).
+- **Publicação de conteúdo básico** (posts de texto/imagem).
+- **Assinaturas mensais** com tiers simulados.
+- **Comunidade inicial** (chat/mural).
+- **Conteúdo gratuito mínimo** para todos os usuários.
+
 ## Estrutura do projeto
 
 ```shell
