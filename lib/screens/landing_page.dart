@@ -2,8 +2,12 @@
 //
 // Landing page principal da plataforma Premiora
 // Página inicial com design responsivo para mobile e desktop
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
+import '../services/auth_service.dart';
+import '../user_state.dart';
 import 'home_page.dart';
 
 class LandingPage extends StatefulWidget {
@@ -21,9 +25,18 @@ class _LandingPageState extends State<LandingPage> {
   final TextEditingController _loginEmailController = TextEditingController();
   final TextEditingController _loginPasswordController = TextEditingController();
 
+  // Serviço de autenticação
+  final AuthService _authService = AuthService();
+
   // Estados dos modais
   bool _showLoginModal = false;
   bool _showRegisterModal = false;
+
+  // Estados de loading e erro
+  bool _registerLoading = false;
+  String? _registerError;
+  bool _loginLoading = false;
+  String? _loginError;
 
   @override
   void dispose() {
@@ -39,6 +52,7 @@ class _LandingPageState extends State<LandingPage> {
   void _showRegisterDialog() {
     setState(() {
       _showRegisterModal = true;
+      _registerError = null;
     });
   }
 
@@ -46,6 +60,7 @@ class _LandingPageState extends State<LandingPage> {
   void _showLoginDialog() {
     setState(() {
       _showLoginModal = true;
+      _loginError = null;
     });
   }
 
@@ -539,6 +554,85 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
+  // Função para lidar com registro
+  Future<void> _handleRegister() async {
+    setState(() {
+      _registerLoading = true;
+      _registerError = null;
+    });
+    try {
+      final user = await _authService.register(
+        _registerEmailController.text,
+        _registerPasswordController.text,
+        name: _registerNameController.text,
+      );
+      if (mounted) {
+        final userState = Provider.of<UserState>(context, listen: false);
+        userState.loginWithUser(user);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    } on HttpException catch (e) {
+      if (mounted) {
+        setState(() {
+          _registerError = e.message;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _registerError = 'Erro inesperado';
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _registerLoading = false;
+        });
+      }
+    }
+  }
+
+  // Função para lidar com login
+  Future<void> _handleLogin() async {
+    setState(() {
+      _loginLoading = true;
+      _loginError = null;
+    });
+    try {
+      final user = await _authService.login(
+        _loginEmailController.text,
+        _loginPasswordController.text,
+      );
+      if (mounted) {
+        final userState = Provider.of<UserState>(context, listen: false);
+        userState.loginWithUser(user);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    } on HttpException catch (e) {
+      if (mounted) {
+        setState(() {
+          _loginError = e.message;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _loginError = 'Erro inesperado';
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loginLoading = false;
+        });
+      }
+    }
+  }
+
   // Modal de Login
   Widget _buildLoginModal() {
     return Container(
@@ -587,6 +681,22 @@ class _LandingPageState extends State<LandingPage> {
                 ),
               ),
               const SizedBox(height: 30),
+              // Exibir erro se houver
+              if (_loginError != null)
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.red[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red[200]!),
+                  ),
+                  child: Text(
+                    _loginError!,
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              if (_loginError != null) const SizedBox(height: 20),
               // Campo Email
               const Align(
                 alignment: Alignment.centerLeft,
@@ -646,12 +756,7 @@ class _LandingPageState extends State<LandingPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Navegar para a HomePage após login
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  },
+                  onPressed: _loginLoading ? null : _handleLogin,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.btnSecondary,
                     shape: RoundedRectangleBorder(
@@ -659,13 +764,15 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
-                  child: const Text(
-                    'Entrar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
+                  child: _loginLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          'Entrar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -760,6 +867,22 @@ class _LandingPageState extends State<LandingPage> {
                 ),
               ),
               const SizedBox(height: 30),
+              // Exibir erro se houver
+              if (_registerError != null)
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.red[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red[200]!),
+                  ),
+                  child: Text(
+                    _registerError!,
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              if (_registerError != null) const SizedBox(height: 20),
               // Campo Nome
               const Align(
                 alignment: Alignment.centerLeft,
@@ -846,12 +969,7 @@ class _LandingPageState extends State<LandingPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Navegar para a HomePage após registro
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  },
+                  onPressed: _registerLoading ? null : _handleRegister,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.btnSecondary,
                     shape: RoundedRectangleBorder(
@@ -859,13 +977,15 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                     padding: const EdgeInsets.symmetric(vertical: 15),
                   ),
-                  child: const Text(
-                    'Registrar',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
+                  child: _registerLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          'Registrar',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 20),

@@ -11,8 +11,8 @@ class AuthService extends HttpService {
   /// @throws HttpException em caso de erro
   Future<User> login(String userNameOrEmail, String password) async {
     try {
-      final response = await post('/worker-login', {
-        'userNameOrEmail': userNameOrEmail.trim(),
+      final response = await post('/login', {
+        'email': userNameOrEmail.trim(),
         'password': password.trim(),
       });
 
@@ -44,7 +44,7 @@ class AuthService extends HttpService {
         if (name != null && name.isNotEmpty) 'name': name.trim(),
       };
 
-      final response = await post('/register', body);
+      final response = await post('/users/register', body);
 
       final data = handleResponse(response, 'registro') as Map<String, dynamic>;
       if (data['user'] != null) {
