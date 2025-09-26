@@ -1,3 +1,4 @@
+
 - [x] Step 1: Create backend/services/userService.js with register function.
 - [x] Step 2: Add registerUser to backend/controllers/userController.js.
 - [x] Step 3: Add POST /register route to backend/routes/userRoutes.js.

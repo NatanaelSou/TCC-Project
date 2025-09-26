@@ -59,3 +59,38 @@ flutter run -d chrome # para web
 { "message": "pong" } # Saida: API mínima: /ping retorna 
 # Conexao Node.JS normal
 ```
+
+### Database Setup (MySQL)
+
+O banco de dados `tcc_project` já existe. Para configurar o acesso:
+
+1. Instale o MySQL Server se não tiver.
+
+2. Configure as credenciais no backend/config/db.js (atualmente: host: 'localhost', user: 'root', password: '512200Balatro@', database: 'tcc_project').
+
+3. Execute o schema para criar a tabela users (se necessário):
+
+   ```sql
+   -- backend/database/schema.sql
+   CREATE TABLE IF NOT EXISTS users (
+       id INT AUTO_INCREMENT PRIMARY KEY,
+       email VARCHAR(255) NOT NULL UNIQUE,
+       password VARCHAR(255) NOT NULL,
+       name VARCHAR(100)
+   );
+
+   -- Usuário de teste (senha: 123456)
+   INSERT INTO users (email, password, name) VALUES ('teste@teste.com', '123456', 'Usuário Teste')
+       ON DUPLICATE KEY UPDATE email=email;
+   ```
+
+   Use um cliente MySQL (como MySQL Workbench) para executar o schema.sql se a tabela não existir.
+
+   **Acesso ao BD:**
+   - Host: localhost
+   - Port: 3306 (padrão)
+   - User: root
+   - Password: 512200Balatro@
+   - Database: tcc_project
+
+   Nota: Em produção, use credenciais seguras e variáveis de ambiente (.env).

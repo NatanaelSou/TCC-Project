@@ -72,6 +72,34 @@ class _LandingPageState extends State<LandingPage> {
     });
   }
 
+  // Função para login de debug (apenas para teste)
+  Future<void> _handleDebugLogin() async {
+    setState(() {
+      _showLoginModal = false; // Fechar modal antes de navegar
+    });
+
+    try {
+      final user = await AuthService().debugLogin();
+      if (mounted) {
+        final userState = Provider.of<UserState>(context, listen: false);
+        userState.loginWithUser(user);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    } catch (e) {
+      // Em caso de erro, mostrar modal de login novamente
+      if (mounted) {
+        setState(() {
+          _showLoginModal = true;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro no acesso debug: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -773,6 +801,28 @@ class _LandingPageState extends State<LandingPage> {
                             fontSize: 16,
                           ),
                         ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Botão Debug (apenas para teste)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: _handleDebugLogin,
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Colors.grey),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  child: const Text(
+                    'Acesso Debug (Teste)',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),

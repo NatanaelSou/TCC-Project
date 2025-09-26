@@ -1,19 +1,5 @@
 const LoginService = require('../services/loginService');
 
-exports.loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await LoginService.checkLogin(email, password);
-    
-    if (!user) {
-      return res.status(401).json({ message: 'Usuário ou senha inválidos' });
-    }
-
-    res.json({ message: 'Login efetuado com sucesso', user });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
 // Controller de login
 exports.loginUser = async (req, res) => {
   try {
@@ -30,6 +16,25 @@ exports.loginUser = async (req, res) => {
     res.json({ message: 'Login efetuado com sucesso', user });
   } catch (err) {
     console.error('[LoginController] Erro no login:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Controller de debug login (apenas para teste)
+exports.debugLogin = async (req, res) => {
+  try {
+    console.log('[LoginController] Requisição de debug login recebida');
+    // Retorna um usuário mock para teste
+    const mockUser = {
+      id: 999,
+      email: 'debug@teste.com',
+      name: 'Usuário Debug'
+    };
+
+    console.log('[LoginController] Debug login efetuado com sucesso:', mockUser);
+    res.json({ message: 'Debug login efetuado com sucesso', user: mockUser });
+  } catch (err) {
+    console.error('[LoginController] Erro no debug login:', err);
     res.status(500).json({ error: err.message });
   }
 };

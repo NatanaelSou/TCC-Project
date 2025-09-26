@@ -59,4 +59,25 @@ class AuthService extends HttpService {
       throw HttpException('Erro inesperado: ${e.toString()}');
     }
   }
+
+  /// Login de debug (apenas para teste, sem credenciais)
+  /// @returns Instância de User mock
+  /// @throws HttpException em caso de erro
+  Future<User> debugLogin() async {
+    try {
+      final response = await post('/login/debug', {});
+
+      final data = handleResponse(response, 'debug login') as Map<String, dynamic>;
+      if (data['user'] != null) {
+        return User.fromJson(data['user'] as Map<String, dynamic>);
+      } else {
+        throw HttpException('Dados do usuário não encontrados na resposta');
+      }
+    } catch (e) {
+      if (e is HttpException) {
+        rethrow;
+      }
+      throw HttpException('Erro inesperado: ${e.toString()}');
+    }
+  }
 }
