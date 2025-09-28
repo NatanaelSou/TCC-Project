@@ -10,6 +10,7 @@ import '../widgets/creator_section.dart';
 import '../user_state.dart';
 import '../utils/filter_manager.dart';
 import '../constants.dart';
+import 'profile_page.dart';
 
 
 
@@ -74,31 +75,6 @@ class _HomePageState extends State<HomePage> {
                     onPressed: _toggleSidebar,
                   ),
                 ),
-                SizedBox(height: AppDimensions.spacingSmall),
-                // Avatar do usuário
-                CircleAvatar(
-                  radius: 24,
-                  backgroundColor: AppColors.sidebarItemActive,
-                  backgroundImage: userState.avatarUrl != null
-                      ? NetworkImage(userState.avatarUrl!)
-                      : null,
-                  child: userState.avatarUrl == null
-                      ? Icon(Icons.person, color: Colors.white)
-                      : null,
-                ),
-
-                // Nome do usuário
-                if (_sidebarExpanded && userState.isLoggedIn)
-                  Padding(
-                    padding: EdgeInsets.only(top: AppDimensions.spacingSmall),
-                    child: Text(
-                      userState.name ?? 'Usuário',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
                 SizedBox(height: AppDimensions.spacingLarge),
                 // Itens da Sidebar
                 Expanded(
@@ -160,18 +136,69 @@ class _HomePageState extends State<HomePage> {
 
           // Conteúdo principal
           Expanded(
-            child: Container(
-              color: AppColors.background,
-              child: IndexedStack(
-                index: _currentPageIndex,
-                children: [
-                  _buildHomePage(filterManager),
-                  _buildPlaceholderPage('Explorar'),
-                  _buildPlaceholderPage('Comunidade'),
-                  _buildPlaceholderPage('Notificações'),
-                  _buildPlaceholderPage('Configurações'),
-                ],
-              ),
+            child: Column(
+              children: [
+                // Top bar com busca e avatar
+                Container(
+                  height: 70,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      // Barra de busca
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Buscar criadores ou tópicos',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
+                            ),
+                            filled: true,
+                            fillColor: AppColors.inputFill,
+                            contentPadding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingLarge),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      // Avatar do usuário
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => ProfilePage()),
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 24,
+                          backgroundColor: AppColors.btnSecondary,
+                          backgroundImage: userState.avatarUrl != null
+                              ? NetworkImage(userState.avatarUrl!)
+                              : null,
+                          child: userState.avatarUrl == null
+                              ? Icon(Icons.person, color: Colors.white)
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Conteúdo das páginas
+                Expanded(
+                  child: Container(
+                    color: AppColors.background,
+                    child: IndexedStack(
+                      index: _currentPageIndex,
+                      children: [
+                        _buildHomePage(filterManager),
+                        _buildPlaceholderPage('Explorar'),
+                        _buildPlaceholderPage('Comunidade'),
+                        _buildPlaceholderPage('Notificações'),
+                        _buildPlaceholderPage('Configurações'),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -185,22 +212,6 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingExtraLarge, vertical: AppDimensions.spacingLarge),
       child: Column(
         children: [
-          // Barra de busca
-          Padding(
-            padding: EdgeInsets.only(bottom: AppDimensions.spacingLarge),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Buscar criadores ou tópicos',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
-                ),
-                filled: true,
-                fillColor: AppColors.inputFill,
-                contentPadding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingLarge),
-              ),
-            ),
-          ),
-
           // Tags de filtro
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,

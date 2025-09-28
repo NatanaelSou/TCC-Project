@@ -62,6 +62,8 @@ Ferramentas que equilibram alcance gratuito (para atrair mais público) e conte�
 
 Menos dependência de algoritmos externos e múltiplos aplicativos.
 
+Resumindo: Premiora seria como um híbrido entre Patreon, Discord, Twitch e Instagram, mas com o diferencial de unir conteúdo + comunidade + monetização flexível em uma única plataforma.
+
 ## MVP
 
 Objetivo do MVP
