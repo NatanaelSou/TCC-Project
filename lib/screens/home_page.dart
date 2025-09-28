@@ -11,8 +11,7 @@ import '../user_state.dart';
 import '../utils/filter_manager.dart';
 import '../constants.dart';
 
-// Telas
-import 'login_screen.dart';
+
 
 /// Tela principal da aplicação com navegação e filtros
 class HomePage extends StatefulWidget {
@@ -26,7 +25,6 @@ class _HomePageState extends State<HomePage> {
   // Estado da interface
   bool _sidebarExpanded = true;
   int _currentPageIndex = 0;
-  bool _showCreatorPrompt = true;
 
   // Lista de páginas disponíveis
   static const List<String> _pageTitles = [
@@ -42,29 +40,7 @@ class _HomePageState extends State<HomePage> {
     setState(() => _sidebarExpanded = !_sidebarExpanded);
   }
 
-  /// Mostra o modal de login/registro
-  void _showLoginModal() async {
-    await showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        insetPadding: EdgeInsets.all(AppDimensions.spacingLarge),
-        child: Padding(
-          padding: EdgeInsets.all(AppDimensions.spacingLarge),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              LoginScreen(
-                onLoginSuccess: () {
-                  setState(() {});
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+
 
   // Construção do Widget
   @override
@@ -100,18 +76,15 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: AppDimensions.spacingSmall),
                 // Avatar do usuário
-                GestureDetector(
-                  onTap: userState.isLoggedIn ? null : _showLoginModal,
-                  child: CircleAvatar(
-                    radius: 24,
-                    backgroundColor: AppColors.sidebarItemActive,
-                    backgroundImage: userState.avatarUrl != null
-                        ? NetworkImage(userState.avatarUrl!)
-                        : null,
-                    child: userState.avatarUrl == null
-                        ? Icon(Icons.person, color: Colors.white)
-                        : null,
-                  ),
+                CircleAvatar(
+                  radius: 24,
+                  backgroundColor: AppColors.sidebarItemActive,
+                  backgroundImage: userState.avatarUrl != null
+                      ? NetworkImage(userState.avatarUrl!)
+                      : null,
+                  child: userState.avatarUrl == null
+                      ? Icon(Icons.person, color: Colors.white)
+                      : null,
                 ),
 
                 // Nome do usuário
@@ -169,17 +142,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                // Prompt para se tornar criador ou botão de logout
-                if (!userState.isLoggedIn && _sidebarExpanded && _showCreatorPrompt)
-                  SidebarPrompt(
-                    onPressed: _showLoginModal,
-                    expanded: _sidebarExpanded,
-                    onClose: () {
-                      setState(() {
-                        _showCreatorPrompt = false;
-                      });
-                    },
-                  ),
+
                 if (userState.isLoggedIn)
                   TextButton(
                     onPressed: () {
