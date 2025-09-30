@@ -33,7 +33,7 @@ class FilterTag extends StatelessWidget {
         vertical: AppDimensions.spacingSmall,
       ),
       decoration: BoxDecoration(
-        color: active ? AppColors.sidebarItemActive : _inactiveColor,
+        color: active ? AppColors.primary : _inactiveColor,
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
         border: Border.all(
           color: active ? AppColors.primary : Colors.transparent,

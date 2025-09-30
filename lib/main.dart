@@ -10,6 +10,7 @@ import 'services/api_service.dart';
 import 'screens/landing_page.dart';
 import 'user_state.dart';
 import 'utils/filter_manager.dart';
+import 'providers/theme_provider.dart';
 
 /// Ponto de entrada da aplicação
 /// Inicializa o app com providers globais e configurações básicas
@@ -31,6 +32,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => UserState()),
         ChangeNotifierProvider(create: (_) => FilterManager()),
+        ChangeNotifierProvider(create: (_) => ThemeNotifier()),
       ],
       child: const MyApp(),
     ),
@@ -43,9 +45,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'App Flutter + Node.js + mySQL',
-      home: LandingPage(),
+    return Consumer<ThemeNotifier>(
+      builder: (context, theme, child) {
+        return MaterialApp(
+          title: 'App Flutter + Node.js + mySQL',
+          theme: theme.currentTheme,
+          home: LandingPage(),
+        );
+      },
     );
   }
 }

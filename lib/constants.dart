@@ -10,11 +10,11 @@ class AppColors {
   // Sidebar - Cores específicas da barra lateral
   static const Color sidebar = Colors.white;
   static const Color sidebarItemActive = Colors.black;
-  static const Color sidebarPromptBg = Color.fromARGB(185, 255, 207, 215);
+  static const Color sidebarPromptBg = Color.fromARGB(184, 255, 255, 255);
   static const Color sidebarPromptShadow = Color(0x30FF6F91);
 
   // Text - Cores para textos em diferentes contextos
-  static const Color textLight = Colors.white;
+  static const Color textLight = Color.fromARGB(255, 255, 255, 255);
   static const Color textDark = Colors.black;
   static const Color textGrey = Colors.grey;
 

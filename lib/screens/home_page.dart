@@ -10,10 +10,14 @@ import '../widgets/content_section.dart';
 // Serviços e Estado
 import '../user_state.dart';
 import '../utils/filter_manager.dart';
+import '../utils/content_utils.dart';
 import '../constants.dart';
 import '../mock_data.dart';
 import '../models/profile_models.dart';
 import 'profile_page.dart';
+import 'explore_page.dart';
+import 'notifications_page.dart';
+import 'settings_page.dart';
 
 
 
@@ -193,10 +197,10 @@ class _HomePageState extends State<HomePage> {
                       index: _currentPageIndex,
                       children: [
                         _buildHomePage(filterManager),
-                        _buildPlaceholderPage('Explorar'),
+                        ExplorePage(),
                         _buildPlaceholderPage('Comunidade'),
-                        _buildPlaceholderPage('Notificações'),
-                        _buildPlaceholderPage('Configurações'),
+                        NotificationsPage(),
+                        SettingsPage(),
                       ],
                     ),
                   ),
@@ -213,13 +217,16 @@ class _HomePageState extends State<HomePage> {
   Widget _buildHomePage(FilterManager filterManager) {
     // Função para filtrar conteúdos pela categoria selecionada
     List<ProfileContent> filterContents(List<ProfileContent> contents) {
-      if (filterManager.activeFilters.isEmpty || filterManager.isFilterActive(AppStrings.filterAll)) {
+      // Sempre mostrar tudo por padrão
+      if (filterManager.activeFilters.isEmpty || filterManager.isFilterActive('Todos')) {
         return contents;
       }
-      return contents.where((content) {
-        if (content.category == null) return false;
-        return filterManager.activeFilters.contains(content.category);
-      }).toList();
+      return ContentUtils.filterContents(contents, filterManager.activeFilters);
+    }
+
+    // Função para verificar se um filtro está ativo
+    bool isFilterActive(String filter) {
+      return filterManager.isFilterActive(filter);
     }
 
     return SingleChildScrollView(
@@ -230,53 +237,12 @@ class _HomePageState extends State<HomePage> {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: [
-                FilterTag(
-                  label: AppStrings.filterAll,
-                  active: filterManager.isFilterActive(AppStrings.filterAll),
-                  onTap: () => filterManager.toggleFilter(AppStrings.filterAll),
-                ),
-                FilterTag(
-                  label: 'Cultura pop',
-                  active: filterManager.isFilterActive('Cultura pop'),
-                  onTap: () => filterManager.toggleFilter('Cultura pop'),
-                ),
-                FilterTag(
-                  label: 'Comédia',
-                  active: filterManager.isFilterActive('Comédia'),
-                  onTap: () => filterManager.toggleFilter('Comédia'),
-                ),
-                FilterTag(
-                  label: 'Jogos de RPG',
-                  active: filterManager.isFilterActive('Jogos de RPG'),
-                  onTap: () => filterManager.toggleFilter('Jogos de RPG'),
-                ),
-                FilterTag(
-                  label: 'Crimes reais',
-                  active: filterManager.isFilterActive('Crimes reais'),
-                  onTap: () => filterManager.toggleFilter('Crimes reais'),
-                ),
-                FilterTag(
-                  label: 'Tutoriais de arte',
-                  active: filterManager.isFilterActive('Tutoriais de arte'),
-                  onTap: () => filterManager.toggleFilter('Tutoriais de arte'),
-                ),
-                FilterTag(
-                  label: 'Artesanato',
-                  active: filterManager.isFilterActive('Artesanato'),
-                  onTap: () => filterManager.toggleFilter('Artesanato'),
-                ),
-                FilterTag(
-                  label: 'Ilustração',
-                  active: filterManager.isFilterActive('Ilustração'),
-                  onTap: () => filterManager.toggleFilter('Ilustração'),
-                ),
-                FilterTag(
-                  label: 'Música',
-                  active: filterManager.isFilterActive('Música'),
-                  onTap: () => filterManager.toggleFilter('Música'),
-                ),
-              ],
+              children: FilterManager.availableFilters.map((filter) => FilterTag(
+                key: ValueKey(filter),
+                label: filter,
+                active: isFilterActive(filter),
+                onTap: () => filterManager.toggleFilter(filter),
+              )).toList(),
             ),
           ),
           SizedBox(height: AppDimensions.spacingExtraLarge),
