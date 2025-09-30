@@ -48,6 +48,7 @@ final List<ProfileContent> mockRecentPosts = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/FF6B6B/FFFFFF?text=Post+1',
     createdAt: DateTime(2024, 1, 10),
     views: 234,
+    category: 'Tutoriais de arte',
   ),
   ProfileContent(
     id: '2',
@@ -56,6 +57,7 @@ final List<ProfileContent> mockRecentPosts = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Post+2',
     createdAt: DateTime(2024, 1, 8),
     views: 567,
+    category: 'Jogos de RPG',
   ),
   ProfileContent(
     id: '3',
@@ -64,6 +66,7 @@ final List<ProfileContent> mockRecentPosts = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/45B7D1/FFFFFF?text=Post+3',
     createdAt: DateTime(2024, 1, 5),
     views: 123,
+    category: 'Crimes reais',
   ),
 ];
 
@@ -76,6 +79,7 @@ final List<ProfileContent> mockVideos = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/FF6B6B/FFFFFF?text=Video+1',
     createdAt: DateTime(2024, 1, 12),
     views: 1543,
+    category: 'Comédia',
   ),
   ProfileContent(
     id: 'v2',
@@ -84,6 +88,7 @@ final List<ProfileContent> mockVideos = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Video+2',
     createdAt: DateTime(2024, 1, 9),
     views: 892,
+    category: 'Cultura pop',
   ),
 ];
 
@@ -96,6 +101,7 @@ final List<ProfileContent> mockExclusiveContent = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/FFD93D/000000?text=Exclusive+1',
     createdAt: DateTime(2024, 1, 7),
     views: 45,
+    category: 'Ilustração',
   ),
   ProfileContent(
     id: 'e2',
@@ -104,6 +110,7 @@ final List<ProfileContent> mockExclusiveContent = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/6BCF7F/FFFFFF?text=Exclusive+2',
     createdAt: DateTime(2024, 1, 4),
     views: 23,
+    category: 'Música',
   ),
 ];
 

@@ -5,11 +5,14 @@ import 'package:provider/provider.dart';
 import '../widgets/sidebar_item.dart';
 import '../widgets/filter_tag.dart';
 import '../widgets/creator_section.dart';
+import '../widgets/content_section.dart';
 
 // Serviços e Estado
 import '../user_state.dart';
 import '../utils/filter_manager.dart';
 import '../constants.dart';
+import '../mock_data.dart';
+import '../models/profile_models.dart';
 import 'profile_page.dart';
 
 
@@ -208,6 +211,17 @@ class _HomePageState extends State<HomePage> {
 
   /// Constrói a página inicial com filtros e seções de criadores
   Widget _buildHomePage(FilterManager filterManager) {
+    // Função para filtrar conteúdos pela categoria selecionada
+    List<ProfileContent> filterContents(List<ProfileContent> contents) {
+      if (filterManager.activeFilters.isEmpty || filterManager.isFilterActive(AppStrings.filterAll)) {
+        return contents;
+      }
+      return contents.where((content) {
+        if (content.category == null) return false;
+        return filterManager.activeFilters.contains(content.category);
+      }).toList();
+    }
+
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingExtraLarge, vertical: AppDimensions.spacingLarge),
       child: Column(
@@ -276,6 +290,25 @@ class _HomePageState extends State<HomePage> {
             title: 'Em alta esta semana',
             activeFilters: filterManager.activeFilters,
           ),
+          SizedBox(height: AppDimensions.spacingExtraLarge),
+          // Seções de conteúdo filtradas
+          ContentSection(
+            title: 'Em alta',
+            contents: filterContents(mockRecentPosts),
+          ),
+          SizedBox(height: AppDimensions.spacingLarge),
+          ContentSection(
+            title: 'Vídeos',
+            contents: filterContents(mockVideos),
+          ),
+          SizedBox(height: AppDimensions.spacingLarge),
+          ContentSection(
+            title: 'Conteúdo Exclusivo',
+            contents: filterContents(mockExclusiveContent),
+          ),
+          SizedBox(height: AppDimensions.spacingLarge),
+          // Seção Ao vivo (placeholder)
+          _buildLiveSection(),
         ],
       ),
     );
@@ -292,6 +325,55 @@ class _HomePageState extends State<HomePage> {
           color: AppColors.textDark,
         ),
       ),
+    );
+  }
+
+  /// Constrói a seção Ao vivo (placeholder)
+  Widget _buildLiveSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'Ao vivo',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: AppColors.textDark,
+              ),
+            ),
+            Spacer(),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                'Ver tudo',
+                style: TextStyle(
+                  color: AppColors.btnSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: AppDimensions.spacingSmall),
+        Container(
+          height: 100,
+          decoration: BoxDecoration(
+            color: AppColors.cardBg,
+            borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+          ),
+          child: Center(
+            child: Text(
+              'Nenhuma transmissão ao vivo no momento',
+              style: TextStyle(
+                color: AppColors.textGrey,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

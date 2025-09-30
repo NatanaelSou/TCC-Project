@@ -37,6 +37,7 @@ class ProfileContent {
   final String thumbnailUrl;
   final DateTime createdAt;
   final int views;
+  final String? category; // Categoria opcional para filtros
 
   ProfileContent({
     required this.id,
@@ -45,6 +46,7 @@ class ProfileContent {
     required this.thumbnailUrl,
     required this.createdAt,
     required this.views,
+    this.category,
   });
 
   factory ProfileContent.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class ProfileContent {
       thumbnailUrl: json['thumbnail_url'] ?? '',
       createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
       views: json['views'] ?? 0,
+      category: json['category'],
     );
   }
 
@@ -65,6 +68,7 @@ class ProfileContent {
     'thumbnail_url': thumbnailUrl,
     'created_at': createdAt.toIso8601String(),
     'views': views,
+    'category': category,
   };
 }
 
