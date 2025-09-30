@@ -1,4 +1,5 @@
 import '../models/user.dart';
+import '../models/profile_models.dart';
 import '../mock_data.dart';
 
 /// Classe de serviço para API (versão mock)
@@ -43,5 +44,38 @@ class ApiService {
     // Simula delay de rede
     await Future.delayed(const Duration(milliseconds: 300));
     // Simula exclusão (não faz nada na prática)
+  }
+
+  /// Busca criadores mock por query
+  /// @param query String de busca
+  /// @returns Lista de criadores filtrados
+  Future<List<Map<String, dynamic>>> searchCreators(String query) async {
+    // Simula delay de rede
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (query.isEmpty) return [];
+
+    final lowerQuery = query.toLowerCase();
+    return mockCreators.where((creator) {
+      final name = creator['name'].toString().toLowerCase();
+      final category = creator['category'].toString().toLowerCase();
+      return name.contains(lowerQuery) || category.contains(lowerQuery);
+    }).toList();
+  }
+
+  /// Busca conteúdos mock por query
+  /// @param query String de busca
+  /// @returns Lista de conteúdos filtrados
+  Future<List<ProfileContent>> searchContents(String query) async {
+    // Simula delay de rede
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (query.isEmpty) return [];
+
+    final lowerQuery = query.toLowerCase();
+    final allContents = [...mockRecentPosts, ...mockVideos, ...mockExclusiveContent];
+    return allContents.where((content) {
+      final title = content.title.toLowerCase();
+      final category = content.category?.toLowerCase() ?? '';
+      return title.contains(lowerQuery) || category.contains(lowerQuery);
+    }).toList();
   }
 }

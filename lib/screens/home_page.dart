@@ -18,6 +18,7 @@ import 'profile_page.dart';
 import 'explore_page.dart';
 import 'notifications_page.dart';
 import 'settings_page.dart';
+import 'search_results_page.dart';
 
 
 
@@ -63,7 +64,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           // Sidebar
           AnimatedContainer(
-            duration: Duration(milliseconds: 300),
+            duration: Duration(milliseconds: 400),
+            curve: Curves.easeInOut,
             width: _sidebarExpanded ? 250 : 70,
             color: AppColors.sidebar,
             padding: EdgeInsets.all(AppDimensions.spacingLarge),
@@ -77,7 +79,7 @@ class _HomePageState extends State<HomePage> {
                       _sidebarExpanded
                           ? Icons.arrow_back_ios
                           : Icons.arrow_forward_ios,
-                      color: Colors.white,
+                      color: AppColors.iconDark,
                     ),
                     onPressed: _toggleSidebar,
                   ),
@@ -158,12 +160,22 @@ class _HomePageState extends State<HomePage> {
                           decoration: InputDecoration(
                             hintText: 'Buscar criadores ou tópicos',
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
+                      borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
                             ),
                             filled: true,
                             fillColor: AppColors.inputFill,
                             contentPadding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingLarge),
                           ),
+                          onSubmitted: (value) {
+                            if (value.trim().isNotEmpty) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SearchResultsPage(query: value.trim()),
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ),
                       SizedBox(width: 20),
