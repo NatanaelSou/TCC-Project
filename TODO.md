@@ -1,27 +1,9 @@
-# TODO: Remover Banco de Dados e APIs, Usar Dados Mock Estáticos
-
-## Etapas para Tornar o App Estático
-
-### 1. Criar Arquivo de Dados Mock
-- [x] Criar `lib/mock_data.dart` com dados estáticos para usuários, perfis, posts, vídeos, tiers de suporte, etc.
-
-### 2. Modificar Serviços
-- [x] Modificar `lib/services/api_service.dart` para retornar dados mock ao invés de fazer chamadas HTTP
-- [x] Modificar `lib/services/auth_service.dart` para simular login/registro com dados mock
-- [x] Modificar `lib/services/http_service.dart` para remover dependências HTTP ou criar versão mock
-- [x] Verificar e modificar `lib/services/profile_service.dart` se necessário
-
-### 3. Modificar Telas
-- [ ] Modificar `lib/screens/home_page.dart` para usar dados mock ao invés de estado dinâmico
-- [ ] Modificar `lib/screens/profile_page.dart` para carregar dados mock diretamente
-- [ ] Modificar `lib/screens/landing_page.dart` para funcionar sem APIs
-
-### 4. Modificar Ponto de Entrada
-- [ ] Modificar `lib/main.dart` para inicializar com dados mock e remover teste de conexão API
-
-### 5. Ajustar Estado do Usuário
-- [ ] Verificar e ajustar `lib/user_state.dart` para trabalhar com dados mock
-
-### 6. Testar Funcionalidade
-- [ ] Executar o app e verificar se funciona totalmente estático
-- [ ] Verificar navegação, filtros, perfil, etc.
+task_progress Items:
+- [x] Step 1: Update ProfileContent model in lib/models/profile_models.dart with new fields and serialization.
+- [x] Step 2: Create lib/services/content_service.dart with mock createContent function.
+- [x] Step 3: Create lib/widgets/content_type_bottom_sheet.dart and test bottom sheet navigation.
+- [x] Step 4: Create lib/screens/content_creation_page.dart with form fields, validation, and submission calling content_service.
+- [x] Step 5: Modify lib/mock_data.dart to support adding new content to lists.
+- [x] Step 6: Update lib/screens/home_page.dart: Resize search bar, add + button, integrate bottom sheet and refresh logic.
+- [x] Step 7: Add tests in test/ directory and run flutter test to verify.
+- [x] Step 8: If backend integration needed, add routes/controllers in backend/ for /api/content (POST), but keep MVP mock-based.

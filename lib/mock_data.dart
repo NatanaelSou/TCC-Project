@@ -173,3 +173,22 @@ final List<Map<String, dynamic>> mockCreators = [
     'isOnline': false,
   },
 ];
+
+/// Adiciona conteúdo recém-criado às listas mock apropriadas
+/// Baseado no tipo do conteúdo
+void addContentToMock(ProfileContent content) {
+  switch (content.type) {
+    case 'post':
+      mockRecentPosts.insert(0, content);
+      break;
+    case 'video':
+      mockVideos.insert(0, content);
+      break;
+    case 'exclusive':
+      mockExclusiveContent.insert(0, content);
+      break;
+    default:
+      mockRecentPosts.insert(0, content);
+      break;
+  }
+}

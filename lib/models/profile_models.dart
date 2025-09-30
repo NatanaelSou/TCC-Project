@@ -29,6 +29,16 @@ class ProfileStats {
   };
 }
 
+/// Enumeração para tipos de conteúdo suportados
+enum ContentType {
+  post,
+  video,
+  live,
+  podcast,
+  course,
+  other,
+}
+
 /// Modelo de dados para conteúdo do perfil
 class ProfileContent {
   final String id;
@@ -38,6 +48,14 @@ class ProfileContent {
   final DateTime createdAt;
   final int views;
   final String? category; // Categoria opcional para filtros
+  final String? description; // Descrição detalhada do conteúdo
+  final List<String>? keywords; // Palavras-chave para busca
+  final bool is18Plus; // Conteúdo para maiores de 18 anos
+  final bool isPrivate; // Conteúdo privado para assinantes
+  final String? quality; // Qualidade para vídeos ('low', 'medium', 'high')
+  final List<String>? images; // URLs de imagens para posts
+  final String? tierRequired; // ID do tier necessário para acesso exclusivo
+  final String? creatorId; // ID do criador do conteúdo
 
   ProfileContent({
     required this.id,
@@ -47,6 +65,14 @@ class ProfileContent {
     required this.createdAt,
     required this.views,
     this.category,
+    this.description,
+    this.keywords,
+    this.is18Plus = false,
+    this.isPrivate = false,
+    this.quality,
+    this.images,
+    this.tierRequired,
+    this.creatorId,
   });
 
   factory ProfileContent.fromJson(Map<String, dynamic> json) {
@@ -58,6 +84,14 @@ class ProfileContent {
       createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
       views: json['views'] ?? 0,
       category: json['category'],
+      description: json['description'],
+      keywords: json['keywords'] != null ? List<String>.from(json['keywords']) : null,
+      is18Plus: json['is_18_plus'] ?? false,
+      isPrivate: json['is_private'] ?? false,
+      quality: json['quality'],
+      images: json['images'] != null ? List<String>.from(json['images']) : null,
+      tierRequired: json['tier_required'],
+      creatorId: json['creator_id'],
     );
   }
 
@@ -69,6 +103,14 @@ class ProfileContent {
     'created_at': createdAt.toIso8601String(),
     'views': views,
     'category': category,
+    'description': description,
+    'keywords': keywords,
+    'is_18_plus': is18Plus,
+    'is_private': isPrivate,
+    'quality': quality,
+    'images': images,
+    'tier_required': tierRequired,
+    'creator_id': creatorId,
   };
 }
 

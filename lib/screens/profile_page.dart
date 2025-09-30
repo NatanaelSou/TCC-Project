@@ -109,6 +109,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.sidebar,
+        foregroundColor: AppColors.iconDark,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColors.iconDark),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text('Perfil'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -6,6 +6,7 @@ import '../widgets/sidebar_item.dart';
 import '../widgets/filter_tag.dart';
 import '../widgets/creator_section.dart';
 import '../widgets/content_section.dart';
+import '../widgets/content_type_bottom_sheet.dart';
 
 // Serviços e Estado
 import '../user_state.dart';
@@ -14,11 +15,13 @@ import '../utils/content_utils.dart';
 import '../constants.dart';
 import '../mock_data.dart';
 import '../models/profile_models.dart';
+import '../services/content_service.dart';
 import 'profile_page.dart';
 import 'explore_page.dart';
 import 'notifications_page.dart';
 import 'settings_page.dart';
 import 'search_results_page.dart';
+import 'content_creation_page.dart';
 
 
 
@@ -49,6 +52,38 @@ class _HomePageState extends State<HomePage> {
     setState(() => _sidebarExpanded = !_sidebarExpanded);
   }
 
+  /// Mostra o bottom sheet para seleção do tipo de conteúdo
+  void _showContentTypeBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => ContentTypeBottomSheet(
+        onTypeSelected: _onContentTypeSelected,
+      ),
+    );
+  }
+
+  /// Chamado quando um tipo de conteúdo é selecionado
+  void _onContentTypeSelected(ContentType type) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ContentCreationPage(contentType: type),
+      ),
+    ).then((result) {
+      if (result != null && result is ProfileContent) {
+        _onContentCreated(result);
+      }
+    });
+  }
+
+  /// Chamado quando um conteúdo é criado com sucesso
+  void _onContentCreated(ProfileContent content) {
+    // Adiciona o conteúdo aos dados mock
+    addContentToMock(content);
+    // Atualiza a interface
+    setState(() {});
+  }
+
 
 
   // Construção do Widget
@@ -64,8 +99,8 @@ class _HomePageState extends State<HomePage> {
         children: [
           // Sidebar
           AnimatedContainer(
-            duration: Duration(milliseconds: 400),
-            curve: Curves.easeInOut,
+            duration: Duration(milliseconds: 800),
+            curve: Curves.fastOutSlowIn,
             width: _sidebarExpanded ? 250 : 70,
             color: AppColors.sidebar,
             padding: EdgeInsets.all(AppDimensions.spacingLarge),
@@ -155,7 +190,8 @@ class _HomePageState extends State<HomePage> {
                   child: Row(
                     children: [
                       // Barra de busca
-                      Expanded(
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 400),
                         child: TextField(
                           decoration: InputDecoration(
                             hintText: 'Buscar criadores ou tópicos',
@@ -178,7 +214,14 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                       ),
-                      SizedBox(width: 20),
+                      Spacer(),
+                      // Botão de criar conteúdo
+                      IconButton(
+                        icon: Icon(Icons.add, color: AppColors.btnSecondary),
+                        onPressed: _showContentTypeBottomSheet,
+                        tooltip: 'Criar conteúdo',
+                      ),
+                      SizedBox(width: 10),
                       // Avatar do usuário
                       GestureDetector(
                         onTap: () {

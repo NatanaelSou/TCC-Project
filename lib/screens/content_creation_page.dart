@@ -1,0 +1,325 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/profile_models.dart';
+import '../services/content_service.dart';
+import '../constants.dart';
+import '../user_state.dart';
+import '../mock_data.dart';
+import '../utils/filter_manager.dart';
+
+/// Página para criação de novo conteúdo
+class ContentCreationPage extends StatefulWidget {
+  final ContentType contentType;
+
+  const ContentCreationPage({
+    super.key,
+    required this.contentType,
+  });
+
+  @override
+  State<ContentCreationPage> createState() => _ContentCreationPageState();
+}
+
+class _ContentCreationPageState extends State<ContentCreationPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _contentService = ContentService();
+
+  // Controladores dos campos
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _keywordsController = TextEditingController();
+  final _thumbnailController = TextEditingController();
+  final _imageController = TextEditingController();
+
+  // Estados dos switches e dropdowns
+  String? _selectedCategory;
+  bool _is18Plus = false;
+  bool _isPrivate = false;
+  String? _selectedQuality;
+  String? _selectedTier;
+
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    _keywordsController.dispose();
+    _thumbnailController.dispose();
+    _imageController.dispose();
+    super.dispose();
+  }
+
+  /// Submete o formulário para criar o conteúdo
+  Future<void> _submitForm() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    try {
+      // Coleta os dados do formulário
+      final data = {
+        'title': _titleController.text.trim(),
+        'description': _descriptionController.text.trim(),
+        'type': widget.contentType.name,
+        'thumbnailUrl': _thumbnailController.text.trim(),
+        'category': _selectedCategory,
+        'keywords': _keywordsController.text.isNotEmpty
+            ? _keywordsController.text.split(',').map((k) => k.trim()).toList()
+            : null,
+        'is18Plus': _is18Plus,
+        'isPrivate': _isPrivate,
+        'quality': _selectedQuality,
+        'images': _imageController.text.isNotEmpty ? [_imageController.text.trim()] : null,
+        'tierRequired': _selectedTier,
+        'creatorId': Provider.of<UserState>(context, listen: false).user?.id?.toString() ?? '1',
+      };
+
+      // Cria o conteúdo
+      final content = await _contentService.createContent(data);
+
+      if (content != null) {
+        // Retorna o conteúdo criado para a página anterior
+        Navigator.of(context).pop(content);
+      } else {
+        _showErrorSnackBar('Erro ao criar conteúdo. Tente novamente.');
+      }
+    } catch (e) {
+      _showErrorSnackBar('Erro inesperado: ${e.toString()}');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  /// Mostra snackbar de erro
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.sidebar,
+        foregroundColor: AppColors.iconDark,
+        title: Text('Criar ${widget.contentType.name}'),
+        actions: [
+          if (_isLoading)
+            Padding(
+              padding: EdgeInsets.all(AppDimensions.spacingSmall),
+              child: SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.iconDark),
+                ),
+              ),
+            )
+          else
+            TextButton(
+              onPressed: _submitForm,
+              child: Text(
+                'Publicar',
+                style: TextStyle(
+                  color: AppColors.btnSecondary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+        ],
+      ),
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(AppDimensions.spacingLarge),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Campo título
+              TextFormField(
+                controller: _titleController,
+                decoration: InputDecoration(
+                  labelText: 'Título *',
+                  hintText: 'Digite o título do conteúdo',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Título é obrigatório';
+                  }
+                  if (value.length > 200) {
+                    return 'Título deve ter no máximo 200 caracteres';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: AppDimensions.spacingLarge),
+
+              // Campo descrição
+              TextFormField(
+                controller: _descriptionController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: 'Descrição *',
+                  hintText: 'Descreva o conteúdo em detalhes',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Descrição é obrigatória';
+                  }
+                  if (value.length > 1000) {
+                    return 'Descrição deve ter no máximo 1000 caracteres';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: AppDimensions.spacingLarge),
+
+              // Campo palavras-chave
+              TextFormField(
+                controller: _keywordsController,
+                decoration: InputDecoration(
+                  labelText: 'Palavras-chave',
+                  hintText: 'Separe por vírgula (máx. 10)',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value != null && value.isNotEmpty) {
+                    final keywords = value.split(',').map((k) => k.trim()).where((k) => k.isNotEmpty).toList();
+                    if (keywords.length > 10) {
+                      return 'Máximo de 10 palavras-chave';
+                    }
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: AppDimensions.spacingLarge),
+
+              // Dropdown categoria
+              DropdownButtonFormField<String>(
+                value: _selectedCategory,
+                decoration: InputDecoration(
+                  labelText: 'Categoria',
+                  border: OutlineInputBorder(),
+                ),
+                items: FilterManager.availableFilters.map((filter) {
+                  return DropdownMenuItem(
+                    value: filter,
+                    child: Text(filter),
+                  );
+                }).toList(),
+                onChanged: (value) => setState(() => _selectedCategory = value),
+              ),
+              SizedBox(height: AppDimensions.spacingLarge),
+
+              // Switches para 18+ e privado
+              SwitchListTile(
+                title: Text('Conteúdo +18'),
+                subtitle: Text('Marcar se o conteúdo é para maiores de 18 anos'),
+                value: _is18Plus,
+                onChanged: (value) => setState(() => _is18Plus = value),
+              ),
+              SwitchListTile(
+                title: Text('Conteúdo privado'),
+                subtitle: Text('Apenas para assinantes'),
+                value: _isPrivate,
+                onChanged: (value) => setState(() => _isPrivate = value),
+              ),
+
+              // Campo thumbnail se for vídeo ou live
+              if (widget.contentType == ContentType.video || widget.contentType == ContentType.live)
+                Column(
+                  children: [
+                    SizedBox(height: AppDimensions.spacingLarge),
+                    TextFormField(
+                      controller: _thumbnailController,
+                      decoration: InputDecoration(
+                        labelText: 'URL da thumbnail',
+                        hintText: 'https://exemplo.com/imagem.jpg',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+
+              // Dropdown qualidade se for vídeo ou live
+              if (widget.contentType == ContentType.video || widget.contentType == ContentType.live)
+                Column(
+                  children: [
+                    SizedBox(height: AppDimensions.spacingLarge),
+                    DropdownButtonFormField<String>(
+                      value: _selectedQuality,
+                      decoration: InputDecoration(
+                        labelText: 'Qualidade',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: ['low', 'medium', 'high'].map((quality) {
+                        return DropdownMenuItem(
+                          value: quality,
+                          child: Text(quality == 'low' ? 'Baixa' : quality == 'medium' ? 'Média' : 'Alta'),
+                        );
+                      }).toList(),
+                      onChanged: (value) => setState(() => _selectedQuality = value),
+                    ),
+                  ],
+                ),
+
+              // Campo imagem se for post
+              if (widget.contentType == ContentType.post)
+                Column(
+                  children: [
+                    SizedBox(height: AppDimensions.spacingLarge),
+                    TextFormField(
+                      controller: _imageController,
+                      decoration: InputDecoration(
+                        labelText: 'URL da imagem',
+                        hintText: 'https://exemplo.com/imagem.jpg',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+
+              // Dropdown tier se for privado
+              if (_isPrivate)
+                Column(
+                  children: [
+                    SizedBox(height: AppDimensions.spacingLarge),
+                    DropdownButtonFormField<String>(
+                      value: _selectedTier,
+                      decoration: InputDecoration(
+                        labelText: 'Tier necessário *',
+                        border: OutlineInputBorder(),
+                      ),
+                      items: mockSupportTiers.map((tier) {
+                        return DropdownMenuItem(
+                          value: tier.id,
+                          child: Text('${tier.name} - R\$ ${tier.price.toStringAsFixed(0)}/mês'),
+                        );
+                      }).toList(),
+                      onChanged: (value) => setState(() => _selectedTier = value),
+                      validator: (value) {
+                        if (_isPrivate && (value == null || value.isEmpty)) {
+                          return 'Selecione um tier para conteúdo privado';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
+
+              SizedBox(height: AppDimensions.spacingExtraLarge),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
