@@ -74,7 +74,7 @@ class ApiService {
     final allContents = [...mockRecentPosts, ...mockVideos, ...mockExclusiveContent];
     return allContents.where((content) {
       final title = content.title.toLowerCase();
-      final category = content.category?.toLowerCase() ?? '';
+      final category = content.category?.join(' ').toLowerCase() ?? '';
       return title.contains(lowerQuery) || category.contains(lowerQuery);
     }).toList();
   }

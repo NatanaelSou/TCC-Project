@@ -203,7 +203,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         color: isRead ? Colors.white : AppColors.btnSecondary.withOpacity(0.05),
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
         border: Border.all(
-          color: isRead ? Colors.grey[200]! : AppColors.btnSecondary.withOpacity(0.2),
+          color: isRead ? Colors.grey.shade200 : AppColors.btnSecondary.withOpacity(0.2),
         ),
       ),
       child: ListTile(

@@ -11,7 +11,7 @@ import '../utils/filter_manager.dart';
 import '../utils/content_utils.dart';
 import '../constants.dart';
 import '../mock_data.dart';
-import '../models/profile_models.dart';
+
 
 /// Tela de exploração para descoberta de conteúdo por filtros
 class ExplorePage extends StatefulWidget {
@@ -22,16 +22,6 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-  /// Filtra conteúdos baseado nos filtros ativos
-  List<ProfileContent> _filterContents(List<ProfileContent> contents, List<String> activeFilters) {
-    if (activeFilters.isEmpty || activeFilters.contains('Todos')) {
-      return contents;
-    }
-    return contents.where((content) =>
-      content.category != null && activeFilters.contains(content.category!)
-    ).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     final filterManager = Provider.of<FilterManager>(context);

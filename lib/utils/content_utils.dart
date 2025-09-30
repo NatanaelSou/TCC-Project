@@ -11,7 +11,7 @@ class ContentUtils {
       return contents;
     }
     return contents.where((content) =>
-      content.category != null && activeFilters.contains(content.category!)
+      content.category != null && content.category!.any((cat) => activeFilters.contains(cat))
     ).toList();
   }
 }

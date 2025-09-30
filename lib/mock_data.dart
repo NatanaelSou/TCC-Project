@@ -1,5 +1,7 @@
 import 'models/user.dart';
 import 'models/profile_models.dart';
+import 'models/comment.dart';
+import 'models/recommendation.dart';
 
 /// Dados mock estáticos para o app funcionar sem APIs ou banco de dados
 
@@ -48,7 +50,7 @@ final List<ProfileContent> mockRecentPosts = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/FF6B6B/FFFFFF?text=Post+1',
     createdAt: DateTime(2024, 1, 10),
     views: 234,
-    category: 'Tutoriais de arte',
+    category: ['Tutoriais de arte'],
   ),
   ProfileContent(
     id: '2',
@@ -57,7 +59,7 @@ final List<ProfileContent> mockRecentPosts = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Post+2',
     createdAt: DateTime(2024, 1, 8),
     views: 567,
-    category: 'Jogos de RPG',
+    category: ['Jogos de RPG'],
   ),
   ProfileContent(
     id: '3',
@@ -66,7 +68,7 @@ final List<ProfileContent> mockRecentPosts = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/45B7D1/FFFFFF?text=Post+3',
     createdAt: DateTime(2024, 1, 5),
     views: 123,
-    category: 'Crimes reais',
+    category: ['Crimes reais'],
   ),
 ];
 
@@ -79,7 +81,10 @@ final List<ProfileContent> mockVideos = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/FF6B6B/FFFFFF?text=Video+1',
     createdAt: DateTime(2024, 1, 12),
     views: 1543,
-    category: 'Comédia',
+    category: ['Desenvolvimento'],
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+    tags: ['flutter', 'tutorial', 'mobile'],
+    duration: '10:30',
   ),
   ProfileContent(
     id: 'v2',
@@ -88,7 +93,10 @@ final List<ProfileContent> mockVideos = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/4ECDC4/FFFFFF?text=Video+2',
     createdAt: DateTime(2024, 1, 9),
     views: 892,
-    category: 'Cultura pop',
+    category: ['Desenvolvimento'],
+    videoUrl: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
+    tags: ['api', 'rest', 'integration'],
+    duration: '8:45',
   ),
 ];
 
@@ -101,7 +109,7 @@ final List<ProfileContent> mockExclusiveContent = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/FFD93D/000000?text=Exclusive+1',
     createdAt: DateTime(2024, 1, 7),
     views: 45,
-    category: 'Ilustração',
+    category: ['Ilustração'],
   ),
   ProfileContent(
     id: 'e2',
@@ -110,11 +118,10 @@ final List<ProfileContent> mockExclusiveContent = [
     thumbnailUrl: 'https://via.placeholder.com/300x200/6BCF7F/FFFFFF?text=Exclusive+2',
     createdAt: DateTime(2024, 1, 4),
     views: 23,
-    category: 'Música',
+    category: ['Música'],
   ),
 ];
 
-/// Níveis de suporte mock
 final List<SupportTier> mockSupportTiers = [
   SupportTier(
     id: 't1',
@@ -139,6 +146,56 @@ final List<SupportTier> mockSupportTiers = [
     description: 'Tudo do Prata + sessões Q&A mensais + merch digital',
     color: '#FFD700',
     subscriberCount: 12,
+  ),
+];
+
+/// Comentários mock
+final List<Comment> mockComments = [
+  Comment(
+    id: 'c1',
+    contentId: 'v1',
+    userId: '1',
+    text: 'Ótimo tutorial! Aprendi muito.',
+    createdAt: DateTime(2024, 1, 13),
+    likes: 5,
+  ),
+  Comment(
+    id: 'c2',
+    contentId: 'v1',
+    userId: '2',
+    text: 'Poderia explicar mais sobre state management?',
+    createdAt: DateTime(2024, 1, 12),
+    likes: 2,
+  ),
+  Comment(
+    id: 'c3',
+    contentId: 'v2',
+    userId: '3',
+    text: 'Exemplo prático ajudou bastante!',
+    createdAt: DateTime(2024, 1, 10),
+    likes: 3,
+  ),
+  Comment(
+    id: 'c4',
+    contentId: 'v2',
+    userId: '1',
+    text: 'Funcionou perfeitamente no meu projeto.',
+    createdAt: DateTime(2024, 1, 9),
+    likes: 1,
+  ),
+];
+
+/// Recomendações mock
+final List<Recommendation> mockRecommendations = [
+  Recommendation(
+    contentId: 'v1',
+    recommendedContentIds: ['v2'],
+    basedOn: 'category',
+  ),
+  Recommendation(
+    contentId: 'v2',
+    recommendedContentIds: ['v1'],
+    basedOn: 'views',
   ),
 ];
 
@@ -173,6 +230,20 @@ final List<Map<String, dynamic>> mockCreators = [
     'isOnline': false,
   },
 ];
+
+/// Obtém comentários para um conteúdo específico
+List<Comment> getCommentsForContent(String contentId) {
+  return mockComments.where((c) => c.contentId == contentId).toList();
+}
+
+/// Obtém vídeos similares baseado na categoria
+List<ProfileContent> getSimilarVideos(ProfileContent content) {
+  if (content.type != 'video') return [];
+  return mockVideos
+    .where((v) => v.id != content.id && 
+      (v.category?.any((cat) => content.category?.contains(cat) ?? false) ?? false))
+    .toList();
+}
 
 /// Adiciona conteúdo recém-criado às listas mock apropriadas
 /// Baseado no tipo do conteúdo

@@ -207,9 +207,16 @@ class _LandingPageState extends State<LandingPage> {
 
   // Seção Hero
   Widget _buildHeroSection() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1200;
+    final isTablet = screenWidth > 768;
+
+    final titleFontSize = isDesktop ? 48.0 : isTablet ? 36.0 : 28.0;
+    final descFontSize = isDesktop ? 18.0 : isTablet ? 16.0 : 14.0;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 60),
-      child: MediaQuery.of(context).size.width > 768
+      child: isTablet
           ? Row(
               children: [
                 // Conteúdo da esquerda
@@ -218,20 +225,20 @@ class _LandingPageState extends State<LandingPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Conteúdo Premium\npara Criadores e Fãs',
                         style: TextStyle(
-                          fontSize: 48,
+                          fontSize: titleFontSize,
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           height: 1.2,
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Text(
+                      Text(
                         'Descubra e apoie seus criadores favoritos com assinaturas exclusivas. Acesse conteúdo único, interaja na comunidade e seja parte de algo especial.',
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: descFontSize,
                           color: Colors.black87,
                           height: 1.6,
                         ),
@@ -291,10 +298,10 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 ),
                 // Conteúdo para mobile
-                const Text(
+                Text(
                   'Conteúdo Premium\npara Criadores e Fãs',
                   style: TextStyle(
-                    fontSize: 36,
+                    fontSize: titleFontSize,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                     height: 1.2,
@@ -302,10 +309,10 @@ class _LandingPageState extends State<LandingPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                const Text(
+                Text(
                   'Descubra e apoie seus criadores favoritos com assinaturas exclusivas. Acesse conteúdo único, interaja na comunidade e seja parte de algo especial.',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: descFontSize,
                     color: Colors.black87,
                     height: 1.6,
                   ),
@@ -349,6 +356,10 @@ class _LandingPageState extends State<LandingPage> {
       },
     ];
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1200;
+    final isTablet = screenWidth > 768;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
       color: Colors.grey[50],
@@ -364,17 +375,24 @@ class _LandingPageState extends State<LandingPage> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 60),
-          MediaQuery.of(context).size.width > 768
+          isDesktop
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: features.map((feature) => _buildFeatureCard(feature)).toList(),
                 )
-              : Column(
-                  children: features.map((feature) => Padding(
-                    padding: const EdgeInsets.only(bottom: 40),
-                    child: _buildFeatureCard(feature),
-                  )).toList(),
-                ),
+              : isTablet
+                  ? Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 20,
+                      runSpacing: 40,
+                      children: features.map((feature) => _buildFeatureCard(feature)).toList(),
+                    )
+                  : Column(
+                      children: features.map((feature) => Padding(
+                        padding: const EdgeInsets.only(bottom: 40),
+                        child: _buildFeatureCard(feature),
+                      )).toList(),
+                    ),
         ],
       ),
     );
@@ -382,8 +400,12 @@ class _LandingPageState extends State<LandingPage> {
 
   // Card de feature
   Widget _buildFeatureCard(Map<String, dynamic> feature) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1200;
+    final isTablet = screenWidth > 768;
+
     return Container(
-      width: MediaQuery.of(context).size.width > 768 ? 250 : double.infinity,
+      width: isDesktop ? 250 : isTablet ? 200 : double.infinity,
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -445,6 +467,10 @@ class _LandingPageState extends State<LandingPage> {
       },
     ];
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1200;
+    final isTablet = screenWidth > 768;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
       child: Column(
@@ -459,17 +485,24 @@ class _LandingPageState extends State<LandingPage> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 60),
-          MediaQuery.of(context).size.width > 768
+          isDesktop
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: testimonials.map((testimonial) => _buildTestimonialCard(testimonial)).toList(),
                 )
-              : Column(
-                  children: testimonials.map((testimonial) => Padding(
-                    padding: const EdgeInsets.only(bottom: 30),
-                    child: _buildTestimonialCard(testimonial),
-                  )).toList(),
-                ),
+              : isTablet
+                  ? Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 20,
+                      runSpacing: 40,
+                      children: testimonials.map((testimonial) => _buildTestimonialCard(testimonial)).toList(),
+                    )
+                  : Column(
+                      children: testimonials.map((testimonial) => Padding(
+                        padding: const EdgeInsets.only(bottom: 30),
+                        child: _buildTestimonialCard(testimonial),
+                      )).toList(),
+                    ),
         ],
       ),
     );
@@ -477,8 +510,12 @@ class _LandingPageState extends State<LandingPage> {
 
   // Card de depoimento
   Widget _buildTestimonialCard(Map<String, dynamic> testimonial) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isDesktop = screenWidth > 1200;
+    final isTablet = screenWidth > 768;
+
     return Container(
-      width: MediaQuery.of(context).size.width > 768 ? 300 : double.infinity,
+      width: isDesktop ? 300 : isTablet ? 250 : double.infinity,
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
         color: Colors.white,

@@ -1,5 +1,6 @@
 /// Serviço HTTP mock - não usado mais, mantido para compatibilidade
 /// Todas as operações HTTP foram substituídas por dados mock estáticos
+library;
 
 /// Exceção customizada para erros (mantida para compatibilidade)
 class HttpException implements Exception {

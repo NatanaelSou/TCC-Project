@@ -6,6 +6,7 @@ import '../constants.dart';
 import '../user_state.dart';
 import '../mock_data.dart';
 import '../utils/filter_manager.dart';
+import '../widgets/file_picker_widget.dart';
 
 /// Página para criação de novo conteúdo
 class ContentCreationPage extends StatefulWidget {
@@ -28,11 +29,14 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _keywordsController = TextEditingController();
-  final _thumbnailController = TextEditingController();
-  final _imageController = TextEditingController();
+
+  // Estados dos arquivos selecionados
+  String? _selectedThumbnailPath;
+  String? _selectedImagePath;
+  String? _selectedVideoPath;
 
   // Estados dos switches e dropdowns
-  String? _selectedCategory;
+  final List<String> _selectedCategories = [];
   bool _is18Plus = false;
   bool _isPrivate = false;
   String? _selectedQuality;
@@ -45,14 +49,23 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
     _titleController.dispose();
     _descriptionController.dispose();
     _keywordsController.dispose();
-    _thumbnailController.dispose();
-    _imageController.dispose();
     super.dispose();
   }
 
   /// Submete o formulário para criar o conteúdo
   Future<void> _submitForm() async {
     if (!_formKey.currentState!.validate()) return;
+
+    // Validação adicional para campos obrigatórios de arquivo
+    if (widget.contentType == ContentType.video && _selectedVideoPath == null) {
+      _showErrorSnackBar('Vídeo é obrigatório para conteúdo de vídeo');
+      return;
+    }
+
+    // Obtém o creatorId e navigator antes de qualquer operação assíncrona
+    final userState = Provider.of<UserState>(context, listen: false);
+    final creatorId = userState.user?.id?.toString() ?? '1';
+    final navigator = Navigator.of(context);
 
     setState(() => _isLoading = true);
 
@@ -62,32 +75,38 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
         'title': _titleController.text.trim(),
         'description': _descriptionController.text.trim(),
         'type': widget.contentType.name,
-        'thumbnailUrl': _thumbnailController.text.trim(),
-        'category': _selectedCategory,
+        'thumbnailUrl': _selectedThumbnailPath ?? '',
+        'videoUrl': _selectedVideoPath ?? '',
+        'category': _selectedCategories.isEmpty ? null : _selectedCategories,
         'keywords': _keywordsController.text.isNotEmpty
             ? _keywordsController.text.split(',').map((k) => k.trim()).toList()
             : null,
         'is18Plus': _is18Plus,
         'isPrivate': _isPrivate,
         'quality': _selectedQuality,
-        'images': _imageController.text.isNotEmpty ? [_imageController.text.trim()] : null,
+        'images': _selectedImagePath != null ? [_selectedImagePath] : null,
         'tierRequired': _selectedTier,
-        'creatorId': Provider.of<UserState>(context, listen: false).user?.id?.toString() ?? '1',
+        'creatorId': creatorId,
       };
 
       // Cria o conteúdo
       final content = await _contentService.createContent(data);
 
+      if (!mounted) return;
+
       if (content != null) {
-        // Retorna o conteúdo criado para a página anterior
-        Navigator.of(context).pop(content);
+        // Retorna o conteúdo criado para a página anterior usando o navigator capturado
+        navigator.pop(content);
       } else {
         _showErrorSnackBar('Erro ao criar conteúdo. Tente novamente.');
       }
     } catch (e) {
+      if (!mounted) return;
       _showErrorSnackBar('Erro inesperado: ${e.toString()}');
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -202,20 +221,34 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
               ),
               SizedBox(height: AppDimensions.spacingLarge),
 
-              // Dropdown categoria
-              DropdownButtonFormField<String>(
-                value: _selectedCategory,
-                decoration: InputDecoration(
-                  labelText: 'Categoria',
-                  border: OutlineInputBorder(),
+              // Seleção de categorias
+              Text(
+                'Categorias',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
-                items: FilterManager.availableFilters.map((filter) {
-                  return DropdownMenuItem(
-                    value: filter,
-                    child: Text(filter),
+              ),
+              SizedBox(height: AppDimensions.spacingSmall),
+              Wrap(
+                spacing: 8.0,
+                runSpacing: 4.0,
+                children: FilterManager.availableFilters.map((filter) {
+                  return ChoiceChip(
+                    label: Text(filter),
+                    selected: _selectedCategories.contains(filter),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedCategories.add(filter);
+                        } else {
+                          _selectedCategories.remove(filter);
+                        }
+                      });
+                    },
                   );
                 }).toList(),
-                onChanged: (value) => setState(() => _selectedCategory = value),
               ),
               SizedBox(height: AppDimensions.spacingLarge),
 
@@ -238,13 +271,29 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
                 Column(
                   children: [
                     SizedBox(height: AppDimensions.spacingLarge),
-                    TextFormField(
-                      controller: _thumbnailController,
-                      decoration: InputDecoration(
-                        labelText: 'URL da thumbnail',
-                        hintText: 'https://exemplo.com/imagem.jpg',
-                        border: OutlineInputBorder(),
-                      ),
+                    FilePickerWidget(
+                      label: 'Thumbnail',
+                      hint: 'Selecione uma imagem para thumbnail',
+                      selectedFilePath: _selectedThumbnailPath,
+                      onFileSelected: (path) => setState(() => _selectedThumbnailPath = path),
+                      isVideo: false,
+                      isRequired: false,
+                    ),
+                  ],
+                ),
+
+              // Campo vídeo se for vídeo
+              if (widget.contentType == ContentType.video)
+                Column(
+                  children: [
+                    SizedBox(height: AppDimensions.spacingLarge),
+                    FilePickerWidget(
+                      label: 'Vídeo',
+                      hint: 'Selecione um arquivo de vídeo',
+                      selectedFilePath: _selectedVideoPath,
+                      onFileSelected: (path) => setState(() => _selectedVideoPath = path),
+                      isVideo: true,
+                      isRequired: true,
                     ),
                   ],
                 ),
@@ -255,7 +304,7 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
                   children: [
                     SizedBox(height: AppDimensions.spacingLarge),
                     DropdownButtonFormField<String>(
-                      value: _selectedQuality,
+                      initialValue: _selectedQuality,
                       decoration: InputDecoration(
                         labelText: 'Qualidade',
                         border: OutlineInputBorder(),
@@ -276,13 +325,13 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
                 Column(
                   children: [
                     SizedBox(height: AppDimensions.spacingLarge),
-                    TextFormField(
-                      controller: _imageController,
-                      decoration: InputDecoration(
-                        labelText: 'URL da imagem',
-                        hintText: 'https://exemplo.com/imagem.jpg',
-                        border: OutlineInputBorder(),
-                      ),
+                    FilePickerWidget(
+                      label: 'Imagem',
+                      hint: 'Selecione uma imagem',
+                      selectedFilePath: _selectedImagePath,
+                      onFileSelected: (path) => setState(() => _selectedImagePath = path),
+                      isVideo: false,
+                      isRequired: false,
                     ),
                   ],
                 ),
@@ -293,7 +342,7 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
                   children: [
                     SizedBox(height: AppDimensions.spacingLarge),
                     DropdownButtonFormField<String>(
-                      value: _selectedTier,
+                      initialValue: _selectedTier,
                       decoration: InputDecoration(
                         labelText: 'Tier necessário *',
                         border: OutlineInputBorder(),

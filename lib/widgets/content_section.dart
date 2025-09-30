@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../models/profile_models.dart';
+import '../screens/video_player_screen.dart';
 
 /// Seção de conteúdo com layout de grid
 /// Exibe cards de conteúdo como posts, vídeos, etc.
@@ -50,27 +51,32 @@ class ContentSection extends StatelessWidget {
   }
 
   /// Constrói um card de conteúdo
-  Widget _buildContentCard(ProfileContent content) {
-    return Container(
-      width: 280,
-      margin: EdgeInsets.only(right: AppDimensions.spacingLarge, bottom: AppDimensions.spacingMedium),
-      decoration: BoxDecoration(
-        color: AppColors.cardBg,
-        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildContentThumbnail(content),
-          _buildContentInfo(content),
-        ],
+  Widget _buildContentCard(BuildContext context, ProfileContent content) {
+    return GestureDetector(
+      onTap: content.type == 'video' && content.videoUrl != null
+          ? () => _navigateToVideoPlayer(context, content)
+          : null,
+      child: Container(
+        width: 280,
+        margin: EdgeInsets.only(right: AppDimensions.spacingLarge, bottom: AppDimensions.spacingMedium),
+        decoration: BoxDecoration(
+          color: AppColors.cardBg,
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildContentThumbnail(content),
+            _buildContentInfo(content),
+          ],
+        ),
       ),
     );
   }
@@ -148,11 +154,13 @@ class ContentSection extends StatelessWidget {
                 color: AppColors.textGrey,
               ),
               SizedBox(width: 4),
-              Text(
-                '${content.views} visualizações',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: AppColors.textGrey,
+              Flexible(
+                child: Text(
+                  '${content.views} visualizações',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textGrey,
+                  ),
                 ),
               ),
               Spacer(),
@@ -186,6 +194,15 @@ class ContentSection extends StatelessWidget {
     }
   }
 
+  /// Navega para o player de vídeo
+  void _navigateToVideoPlayer(BuildContext context, ProfileContent content) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => VideoPlayerScreen(video: content),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -214,7 +231,7 @@ class ContentSection extends StatelessWidget {
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: contents.map((content) => _buildContentCard(content)).toList(),
+              children: contents.map((content) => _buildContentCard(context, content)).toList(),
             ),
           ),
       ],

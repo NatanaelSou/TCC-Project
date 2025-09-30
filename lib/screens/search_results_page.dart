@@ -91,7 +91,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
 
                   // Mensagem quando não há resultados
                   if (_creators.isEmpty && _contents.isEmpty)
-                    Container(
+                    SizedBox(
                       height: 200,
                       child: Center(
                         child: Text(

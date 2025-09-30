@@ -47,7 +47,7 @@ class ProfileContent {
   final String thumbnailUrl;
   final DateTime createdAt;
   final int views;
-  final String? category; // Categoria opcional para filtros
+  final List<String>? category; // Categorias opcionais para filtros
   final String? description; // Descrição detalhada do conteúdo
   final List<String>? keywords; // Palavras-chave para busca
   final bool is18Plus; // Conteúdo para maiores de 18 anos
@@ -56,6 +56,9 @@ class ProfileContent {
   final List<String>? images; // URLs de imagens para posts
   final String? tierRequired; // ID do tier necessário para acesso exclusivo
   final String? creatorId; // ID do criador do conteúdo
+  final String? videoUrl; // URL do vídeo para conteúdo de vídeo
+  final List<String>? tags; // Tags para recomendações
+  final String? duration; // Duração do vídeo, e.g., "10:30"
 
   ProfileContent({
     required this.id,
@@ -73,9 +76,19 @@ class ProfileContent {
     this.images,
     this.tierRequired,
     this.creatorId,
+    this.videoUrl,
+    this.tags,
+    this.duration,
   });
 
   factory ProfileContent.fromJson(Map<String, dynamic> json) {
+    dynamic cat = json['category'];
+    List<String>? categories;
+    if (cat is String) {
+      categories = [cat];
+    } else if (cat is List) {
+      categories = List<String>.from(cat);
+    }
     return ProfileContent(
       id: json['id'] ?? '',
       title: json['title'] ?? '',
@@ -83,7 +96,7 @@ class ProfileContent {
       thumbnailUrl: json['thumbnail_url'] ?? '',
       createdAt: DateTime.parse(json['created_at'] ?? DateTime.now().toIso8601String()),
       views: json['views'] ?? 0,
-      category: json['category'],
+      category: categories,
       description: json['description'],
       keywords: json['keywords'] != null ? List<String>.from(json['keywords']) : null,
       is18Plus: json['is_18_plus'] ?? false,
@@ -92,6 +105,9 @@ class ProfileContent {
       images: json['images'] != null ? List<String>.from(json['images']) : null,
       tierRequired: json['tier_required'],
       creatorId: json['creator_id'],
+      videoUrl: json['video_url'],
+      tags: json['tags'] != null ? List<String>.from(json['tags']) : null,
+      duration: json['duration'],
     );
   }
 
@@ -111,6 +127,9 @@ class ProfileContent {
     'images': images,
     'tier_required': tierRequired,
     'creator_id': creatorId,
+    'video_url': videoUrl,
+    'tags': tags,
+    'duration': duration,
   };
 }
 

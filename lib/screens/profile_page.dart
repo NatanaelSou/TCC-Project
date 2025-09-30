@@ -4,6 +4,7 @@ import '../user_state.dart';
 import '../constants.dart';
 import '../services/profile_service.dart';
 import '../models/profile_models.dart';
+import '../screens/video_player_screen.dart';
 
 /// Página de perfil do usuário baseada em mistura de YouTube e Patreon
 /// Exibe informações do perfil, estatísticas e conteúdo dinâmicos
@@ -246,8 +247,10 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: EdgeInsets.all(20),
       color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Wrap(
+        spacing: 20,
+        runSpacing: 10,
+        alignment: WrapAlignment.spaceEvenly,
         children: [
           _buildStatItem('Seguidores', _formatNumber(_stats!.followers)),
           _buildStatItem('Posts', _formatNumber(_stats!.posts)),
@@ -267,6 +270,15 @@ class _ProfilePageState extends State<ProfilePage> {
     } else {
       return number.toString();
     }
+  }
+
+  /// Navega para o player de vídeo
+  void _navigateToVideoPlayer(BuildContext context, ProfileContent content) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => VideoPlayerScreen(video: content),
+      ),
+    );
   }
 
   /// Item de estatística
@@ -332,68 +344,73 @@ class _ProfilePageState extends State<ProfilePage> {
                 itemCount: contentList.length,
                 itemBuilder: (context, index) {
                   final content = contentList[index];
-                  return Container(
-                    width: 200,
-                    margin: EdgeInsets.only(right: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(10),
-                      image: content.thumbnailUrl.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(content.thumbnailUrl),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                    child: Stack(
-                      children: [
-                        if (content.thumbnailUrl.isEmpty)
-                          Center(
-                            child: Icon(
-                              content.type == 'video' ? Icons.play_circle_fill : Icons.article,
-                              size: 48,
-                              color: Colors.grey[400],
+                  return GestureDetector(
+                    onTap: content.type == 'video' && content.videoUrl != null
+                        ? () => _navigateToVideoPlayer(context, content)
+                        : null,
+                    child: Container(
+                      width: 200,
+                      margin: EdgeInsets.only(right: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(10),
+                        image: content.thumbnailUrl.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(content.thumbnailUrl),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: Stack(
+                        children: [
+                          if (content.thumbnailUrl.isEmpty)
+                            Center(
+                              child: Icon(
+                                content.type == 'video' ? Icons.play_circle_fill : Icons.article,
+                                size: 48,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          Positioned(
+                            bottom: 10,
+                            left: 10,
+                            right: 10,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  content.title,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.visibility,
+                                      size: 14,
+                                      color: Colors.white.withValues(alpha: 0.8),
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      _formatNumber(content.views),
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(alpha: 0.8),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        Positioned(
-                          bottom: 10,
-                          left: 10,
-                          right: 10,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                content.title,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.visibility,
-                                    size: 14,
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    _formatNumber(content.views),
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.8),
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },

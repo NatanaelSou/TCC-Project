@@ -21,16 +21,26 @@ class _SettingsPageState extends State<SettingsPage> {
 
   bool _notificationsEnabled = true;
   bool _emailUpdates = true;
-  bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
 
   @override
   void initState() {
     super.initState();
+    // Move this to didChangeDependencies
+    _loadUserData();
+  }
+
+  void _loadUserData() {
     final userState = Provider.of<UserState>(context, listen: false);
     _nameController.text = userState.name ?? '';
     _emailController.text = userState.email ?? '';
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadUserData();
   }
 
   @override
@@ -43,54 +53,18 @@ class _SettingsPageState extends State<SettingsPage> {
     super.dispose();
   }
 
-  /// Altera senha
-  Future<void> _changePassword() async {
-    if (_newPasswordController.text != _confirmPasswordController.text) {
-      setState(() {
-        _errorMessage = 'As senhas não coincidem';
-      });
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-      _successMessage = null;
-    });
-
-    try {
-      // Simulação de mudança de senha
-      await Future.delayed(Duration(seconds: 1));
-
-      setState(() {
-        _successMessage = 'Senha alterada com sucesso!';
-        _currentPasswordController.clear();
-        _newPasswordController.clear();
-        _confirmPasswordController.clear();
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Erro ao alterar senha: ${e.toString()}';
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    bool _cacheCleared = false;
+    bool cacheCleared = false;
 
-    void _clearCache() {
+    void clearCache() {
       setState(() {
-        _cacheCleared = true;
+        cacheCleared = true;
       });
       // Aqui você pode adicionar a lógica para limpar o cache real
       Future.delayed(Duration(seconds: 2), () {
         setState(() {
-          _cacheCleared = false;
+          cacheCleared = false;
         });
       });
     }
@@ -285,13 +259,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           Navigator.of(context).pop();
                           return;
                         }
-                        setState(() {
-                          _isLoading = true;
-                        });
                         // Simulação de mudança de senha
                         await Future.delayed(Duration(seconds: 1));
                         setState(() {
-                          _isLoading = false;
                           _successMessage = 'Senha alterada com sucesso!';
                           _currentPasswordController.clear();
                           _newPasswordController.clear();
@@ -319,12 +289,12 @@ class _SettingsPageState extends State<SettingsPage> {
           SizedBox(height: AppDimensions.spacingMedium),
           _buildActionTile(
             'Limpar Cache',
-            _cacheCleared ? 'Cache limpo com sucesso' : 'Remover arquivos temporários',
+            cacheCleared ? 'Cache limpo com sucesso' : 'Remover arquivos temporários',
             Icons.delete_sweep,
-            _cacheCleared ? Colors.green : AppColors.textDark,
+            cacheCleared ? Colors.green : AppColors.textDark,
             () {
-              if (!_cacheCleared) {
-                _clearCache();
+              if (!cacheCleared) {
+                clearCache();
               }
             },
           ),
@@ -365,23 +335,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  /// Constrói campo de texto
-  Widget _buildTextField(String label, TextEditingController controller, IconData icon, {bool obscureText = false}) {
-    return TextField(
-      controller: controller,
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon, color: AppColors.iconDark),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
-        ),
-        filled: true,
-        fillColor: AppColors.inputFill,
-      ),
-    );
-  }
-
   /// Constrói tile com switch
   Widget _buildSwitchTile(String title, String subtitle, bool value, ValueChanged<bool> onChanged) {
     return Container(
@@ -397,7 +350,7 @@ class _SettingsPageState extends State<SettingsPage> {
         trailing: Switch(
           value: value,
           onChanged: onChanged,
-          activeColor: AppColors.btnSecondary,
+          activeThumbColor: AppColors.btnSecondary,
         ),
       ),
     );
