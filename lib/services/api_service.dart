@@ -1,76 +1,47 @@
 import '../models/user.dart';
-import 'http_service.dart';
+import '../mock_data.dart';
 
-/// Classe de serviço para API
-/// Gerencia todas as chamadas para a API backend com tratamento de erro robusto
-class ApiService extends HttpService {
-  /// Obtém lista de usuários
+/// Classe de serviço para API (versão mock)
+/// Retorna dados estáticos ao invés de fazer chamadas HTTP
+class ApiService {
+  /// Obtém lista de usuários mock
   /// @returns Lista de usuários
-  /// @throws HttpException em caso de erro
   Future<List<User>> getUsers() async {
-    try {
-      final response = await get('/users');
-
-      final data = handleResponse(response, 'carregar usuários') as List<dynamic>;
-      return data.map((json) => User.fromJson(json as Map<String, dynamic>)).toList();
-    } catch (e) {
-      if (e is HttpException) {
-        rethrow;
-      }
-      throw HttpException('Erro inesperado: ${e.toString()}');
-    }
+    // Simula delay de rede
+    await Future.delayed(const Duration(milliseconds: 500));
+    return mockUsers;
   }
 
-  /// Obtém dados de um usuário específico
+  /// Obtém dados de um usuário específico mock
   /// @param userId ID do usuário
   /// @returns Dados do usuário
-  /// @throws HttpException em caso de erro
   Future<User> getUserById(String userId) async {
-    try {
-      final response = await get('/users/$userId');
-
-      final data = handleResponse(response, 'carregar usuário $userId') as Map<String, dynamic>;
-      return User.fromJson(data);
-    } catch (e) {
-      if (e is HttpException) {
-        rethrow;
-      }
-      throw HttpException('Erro inesperado: ${e.toString()}');
-    }
+    // Simula delay de rede
+    await Future.delayed(const Duration(milliseconds: 300));
+    final user = mockUsers.firstWhere(
+      (u) => u.id.toString() == userId,
+      orElse: () => throw Exception('Usuário não encontrado'),
+    );
+    return user;
   }
 
-  /// Atualiza dados de um usuário
+  /// Atualiza dados de um usuário mock
   /// @param userId ID do usuário
   /// @param userData Dados a serem atualizados
   /// @returns Dados atualizados do usuário
-  /// @throws HttpException em caso de erro
   Future<User> updateUser(String userId, Map<String, dynamic> userData) async {
-    try {
-      final response = await put('/users/$userId', userData);
-
-      final data = handleResponse(response, 'atualizar usuário $userId') as Map<String, dynamic>;
-      return User.fromJson(data);
-    } catch (e) {
-      if (e is HttpException) {
-        rethrow;
-      }
-      throw HttpException('Erro inesperado: ${e.toString()}');
-    }
+    // Simula delay de rede
+    await Future.delayed(const Duration(milliseconds: 400));
+    final user = await getUserById(userId);
+    // Simula atualização (na prática, apenas retorna o usuário existente)
+    return user;
   }
 
-  /// Deleta um usuário
+  /// Deleta um usuário mock
   /// @param userId ID do usuário
-  /// @throws HttpException em caso de erro
   Future<void> deleteUser(String userId) async {
-    try {
-      final response = await delete('/users/$userId');
-
-      handleResponse(response, 'deletar usuário $userId');
-    } catch (e) {
-      if (e is HttpException) {
-        rethrow;
-      }
-      throw HttpException('Erro inesperado: ${e.toString()}');
-    }
+    // Simula delay de rede
+    await Future.delayed(const Duration(milliseconds: 300));
+    // Simula exclusão (não faz nada na prática)
   }
 }

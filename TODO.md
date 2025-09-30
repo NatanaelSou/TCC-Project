@@ -1,30 +1,27 @@
-# TODO List - TCC Project Refactoring
+# TODO: Remover Banco de Dados e APIs, Usar Dados Mock Estáticos
 
-## Completed Tasks
+## Etapas para Tornar o App Estático
 
-- [x] Create User model with fromJson, toJson, copyWith, and equality
-- [x] Create Validators utility with email and password validation
-- [x] Create HttpService base class for HTTP operations
-- [x] Update AuthService to extend HttpService and return User objects
-- [x] Update ApiService to extend HttpService and return User objects
-- [x] Update UserState to use User model instead of separate properties
-- [x] Update LoginScreen to use Validators and UserState.loginWithUser
-- [x] Create FilterManager for managing filter state
-- [x] Test the app by running flutter run
+### 1. Criar Arquivo de Dados Mock
+- [x] Criar `lib/mock_data.dart` com dados estáticos para usuários, perfis, posts, vídeos, tiers de suporte, etc.
 
-## Notes
+### 2. Modificar Serviços
+- [x] Modificar `lib/services/api_service.dart` para retornar dados mock ao invés de fazer chamadas HTTP
+- [x] Modificar `lib/services/auth_service.dart` para simular login/registro com dados mock
+- [x] Modificar `lib/services/http_service.dart` para remover dependências HTTP ou criar versão mock
+- [x] Verificar e modificar `lib/services/profile_service.dart` se necessário
 
-- AuthService now uses /worker-login endpoint as per backend API
-- All services now return User objects instead of Map<String, dynamic>
-- Validation logic moved to Validators utility
-- Filter logic extracted to FilterManager with ChangeNotifier
-- UserState now holds a User? object instead of separate fields
-- HttpService provides common HTTP methods for subclasses
-- Tests created for User model (though import path may need adjustment)
+### 3. Modificar Telas
+- [ ] Modificar `lib/screens/home_page.dart` para usar dados mock ao invés de estado dinâmico
+- [ ] Modificar `lib/screens/profile_page.dart` para carregar dados mock diretamente
+- [ ] Modificar `lib/screens/landing_page.dart` para funcionar sem APIs
 
-## Next Steps (if needed)
+### 4. Modificar Ponto de Entrada
+- [ ] Modificar `lib/main.dart` para inicializar com dados mock e remover teste de conexão API
 
-- Add FilterManager to main.dart providers
-- Update home_page.dart to use FilterManager instead of local state
-- Run tests with flutter test
-- Fix any compilation errors
+### 5. Ajustar Estado do Usuário
+- [ ] Verificar e ajustar `lib/user_state.dart` para trabalhar com dados mock
+
+### 6. Testar Funcionalidade
+- [ ] Executar o app e verificar se funciona totalmente estático
+- [ ] Verificar navegação, filtros, perfil, etc.

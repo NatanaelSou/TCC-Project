@@ -2,7 +2,6 @@
 //
 // Landing page principal da plataforma Premiora
 // Página inicial com design responsivo para mobile e desktop
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
@@ -574,16 +573,10 @@ class _LandingPageState extends State<LandingPage> {
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
-    } on HttpException catch (e) {
-      if (mounted) {
-        setState(() {
-          _registerError = e.message;
-        });
-      }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _registerError = 'Erro inesperado';
+          _registerError = e.toString();
         });
       }
     } finally {
@@ -613,16 +606,10 @@ class _LandingPageState extends State<LandingPage> {
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
-    } on HttpException catch (e) {
-      if (mounted) {
-        setState(() {
-          _loginError = e.message;
-        });
-      }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _loginError = 'Erro inesperado';
+          _loginError = e.toString();
         });
       }
     } finally {

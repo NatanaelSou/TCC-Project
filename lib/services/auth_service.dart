@@ -1,64 +1,41 @@
 import '../models/user.dart';
-import 'http_service.dart';
+import '../mock_data.dart';
 
-/// Classe de serviço para autenticação
-/// Gerencia login e registro de usuários com tratamento robusto de erros
-class AuthService extends HttpService {
-  /// Realiza login do usuário
-  /// @param userNameOrEmail Nome de usuário ou email
-  /// @param password Senha do usuário
+/// Classe de serviço para autenticação (versão mock)
+/// Simula login e registro com dados estáticos
+class AuthService {
+  /// Realiza login do usuário mock
+  /// Permite login sem credenciais, retornando usuário padrão se campos vazios
+  /// @param userNameOrEmail Nome de usuário ou email (opcional)
+  /// @param password Senha do usuário (opcional)
   /// @returns Instância de User
-  /// @throws HttpException em caso de erro
   Future<User> login(String userNameOrEmail, String password) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    // Se nenhum nome/email fornecido, retorna usuário padrão para login sem credenciais
+    if (userNameOrEmail.trim().isEmpty) {
+      return mockUsers[0];
+    }
     try {
-      final response = await post('/login', {
-        'email': userNameOrEmail.trim(),
-        'password': password.trim(),
-      });
-
-      final data = handleResponse(response, 'login') as Map<String, dynamic>;
-      if (data['user'] != null) {
-        return User.fromJson(data['user'] as Map<String, dynamic>);
-      } else {
-        throw HttpException('Dados do usuário não encontrados na resposta');
-      }
+      final user = mockUsers.firstWhere(
+        (u) =>
+            (u.email == userNameOrEmail.trim() ||
+                u.name.toLowerCase() == userNameOrEmail.trim().toLowerCase()) &&
+            password.isNotEmpty, // Simula validação simples
+      );
+      return user;
     } catch (e) {
-      if (e is HttpException) {
-        rethrow;
-      }
-      throw HttpException('Erro inesperado: ${e.toString()}');
+      throw Exception('Usuário ou senha inválidos');
     }
   }
 
-  /// Registra um novo usuário
+  /// Registra um novo usuário mock
   /// @param email Email do usuário
   /// @param password Senha do usuário
   /// @param name Nome opcional do usuário
   /// @returns Instância de User criado
-  /// @throws HttpException em caso de erro
   Future<User> register(String email, String password, {String? name}) async {
-    try {
-      final body = {
-        'email': email.trim(),
-        'password': password.trim(),
-        if (name != null && name.isNotEmpty) 'name': name.trim(),
-      };
-
-      final response = await post('/users/register', body);
-
-      final data = handleResponse(response, 'registro') as Map<String, dynamic>;
-      if (data['user'] != null) {
-        return User.fromJson(data['user'] as Map<String, dynamic>);
-      } else {
-        throw HttpException('Dados do usuário não encontrados na resposta');
-      }
-    } catch (e) {
-      if (e is HttpException) {
-        rethrow;
-      }
-      throw HttpException('Erro inesperado: ${e.toString()}');
-    }
+    await Future.delayed(const Duration(milliseconds: 500));
+    // Simula criação de usuário (retorna o primeiro mock para simplicidade)
+    return mockUsers[0];
   }
-
-
 }
