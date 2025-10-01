@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../models/profile_models.dart';
+import '../screens/video_player_screen.dart';
 
 /// Seção de conteúdo com layout de grid
 /// Exibe cards de conteúdo como posts, vídeos, etc.
@@ -20,6 +21,15 @@ class ContentSection extends StatelessWidget {
     this.showViewAll = true,
     super.key,
   });
+
+  /// Navega para o player de vídeo
+  void _navigateToVideoPlayer(BuildContext context, ProfileContent content) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => VideoPlayerScreen(video: content),
+      ),
+    );
+  }
 
   /// Constrói o cabeçalho da seção
   Widget _buildHeader() {
@@ -51,26 +61,31 @@ class ContentSection extends StatelessWidget {
 
   /// Constrói um card de conteúdo
   Widget _buildContentCard(BuildContext context, ProfileContent content) {
-    return Container(
-      width: 280,
-      margin: EdgeInsets.only(right: AppDimensions.spacingLarge, bottom: AppDimensions.spacingMedium),
-      decoration: BoxDecoration(
-        color: AppColors.cardBg,
-        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 6,
-            offset: Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildContentThumbnail(content),
-          _buildContentInfo(content),
-        ],
+    return GestureDetector(
+      onTap: content.type == 'video' && content.videoUrl != null
+          ? () => _navigateToVideoPlayer(context, content)
+          : null,
+      child: Container(
+        width: 280,
+        margin: EdgeInsets.only(right: AppDimensions.spacingLarge, bottom: AppDimensions.spacingMedium),
+        decoration: BoxDecoration(
+          color: AppColors.cardBg,
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 6,
+              offset: Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildContentThumbnail(content),
+            _buildContentInfo(content),
+          ],
+        ),
       ),
     );
   }
