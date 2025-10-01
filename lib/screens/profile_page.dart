@@ -4,7 +4,6 @@ import '../user_state.dart';
 import '../constants.dart';
 import '../services/profile_service.dart';
 import '../models/profile_models.dart';
-import '../screens/video_player_screen.dart';
 
 /// Página de perfil do usuário baseada em mistura de YouTube e Patreon
 /// Exibe informações do perfil, estatísticas e conteúdo dinâmicos
@@ -20,7 +19,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   ProfileStats? _stats;
   List<ProfileContent> _recentPosts = [];
-  List<ProfileContent> _videos = [];
   List<ProfileContent> _exclusiveContent = [];
   List<SupportTier> _supportTiers = [];
   bool _isLoading = true;
@@ -47,7 +45,6 @@ class _ProfilePageState extends State<ProfilePage> {
       final results = await Future.wait([
         _profileService.getProfileStats(userId),
         _profileService.getProfileContent(userId, 'posts', limit: 5),
-        _profileService.getProfileContent(userId, 'videos', limit: 5),
         _profileService.getProfileContent(userId, 'exclusive', limit: 5),
         _profileService.getSupportTiers(userId),
       ]);
@@ -55,9 +52,8 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         _stats = results[0] as ProfileStats;
         _recentPosts = results[1] as List<ProfileContent>;
-        _videos = results[2] as List<ProfileContent>;
-        _exclusiveContent = results[3] as List<ProfileContent>;
-        _supportTiers = results[4] as List<SupportTier>;
+        _exclusiveContent = results[2] as List<ProfileContent>;
+        _supportTiers = results[3] as List<SupportTier>;
         _isLoading = false;
       });
     } catch (e) {
@@ -129,7 +125,6 @@ class _ProfilePageState extends State<ProfilePage> {
             _buildStatsSection(),
             // Seções de conteúdo
             _buildContentSection('Posts Recentes', _recentPosts),
-            _buildContentSection('Vídeos', _videos),
             _buildContentSection('Conteúdo Exclusivo', _exclusiveContent),
             // Níveis de suporte (estilo Patreon)
             _buildSupportTiers(),
@@ -272,14 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  /// Navega para o player de vídeo
-  void _navigateToVideoPlayer(BuildContext context, ProfileContent content) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => VideoPlayerScreen(video: content),
-      ),
-    );
-  }
+
 
   /// Item de estatística
   Widget _buildStatItem(String label, String value) {
@@ -345,9 +333,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 itemBuilder: (context, index) {
                   final content = contentList[index];
                   return GestureDetector(
-                    onTap: content.type == 'video' && content.videoUrl != null
-                        ? () => _navigateToVideoPlayer(context, content)
-                        : null,
+                    onTap: null,
                     child: Container(
                       width: 200,
                       margin: EdgeInsets.only(right: 15),

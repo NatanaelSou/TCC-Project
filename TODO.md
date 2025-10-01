@@ -1,4 +1,9 @@
-- [ ] Remove vertical drawer for mobile: Remove drawer property from Scaffold and leading IconButton from appBar in mobile layout.
-- [ ] Add sliding bottom navigation for wide screens: Replace the sidebar Row layout with a Stack layout including the content Column and AnimatedPositioned bottom nav, add GestureDetector for swipe gestures.
-- [ ] Ensure bottom nav is consistent: Use the same bottom nav code for both layouts, with icons for navigation.
-- [ ] Test the changes: Run the app to verify swipe up shows bottom nav, swipe down hides it, and navigation works.
+- [x] Remove video_player dependency from pubspec.yaml
+- [x] Delete lib/screens/video_player_screen.dart
+- [x] Remove video-related code from lib/widgets/content_section.dart
+- [ ] Remove video-related code from lib/screens/profile_page.dart
+- [ ] Remove videoUrl from lib/models/profile_models.dart
+- [ ] Remove video data from lib/mock_data.dart
+- [ ] Remove video-related code from lib/services/content_service.dart
+- [ ] Remove video-related code from lib/screens/content_creation_page.dart
+- [ ] Test the app to ensure no video references remain

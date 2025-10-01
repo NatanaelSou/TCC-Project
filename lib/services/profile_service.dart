@@ -14,7 +14,7 @@ class ProfileService {
 
   /// Busca conteúdo do perfil por tipo mock
   /// @param userId ID do usuário
-  /// @param type Tipo de conteúdo ('posts', 'videos', 'exclusive')
+  /// @param type Tipo de conteúdo ('posts', 'exclusive')
   /// @param limit Limite de itens (padrão: 10)
   /// @returns Lista de conteúdos
   Future<List<ProfileContent>> getProfileContent(String userId, String type, {int limit = 10}) async {
@@ -23,8 +23,6 @@ class ProfileService {
     switch (type) {
       case 'posts':
         return mockRecentPosts.take(limit).toList();
-      case 'videos':
-        return mockVideos.take(limit).toList();
       case 'exclusive':
         return mockExclusiveContent.take(limit).toList();
       default:
