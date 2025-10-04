@@ -90,7 +90,7 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
       };
 
       // Cria o conteúdo
-      final content = await _contentService.createContent(data);
+      final content = await _contentService.createContent(creatorId, data);
 
       if (!mounted) return;
 

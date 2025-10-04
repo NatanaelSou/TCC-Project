@@ -1,116 +1,74 @@
 # Implementation Plan
 
-Create a comprehensive YouTube-like video player screen with likes/dislikes, follow functionality, description, comments section, recommended videos, and similar videos. This screen will replace the previous malfunctioning video player and integrate seamlessly with the existing content navigation system.
+[Overview]  
+The goal is to upgrade and modify the existing Flutter + Node.js + MySQL project to create a minimum viable product (MVP) that supports user registration, login, basic content publication, monthly subscriptions with tiers, and an initial community chat/mural, while keeping the frontend using mock data services for API interactions.
 
-The implementation will enhance the video viewing experience by providing interactive features similar to popular video platforms, while maintaining the app's existing architecture and design patterns. It will include proper state management for user interactions, video playback controls, and responsive layout for different screen sizes.
+This implementation is needed to provide a functional baseline platform called Premiora, which unifies content creation, community interaction, and monetization in a single environment. The approach is to leverage the existing backend API for user management and authentication, while the frontend will continue using mock data for content and community features initially. This allows incremental development and testing of core features before full backend integration.
 
-[Types]
-Add new data structures to support video player interactions and state management.
+[Types]  
+No major type system changes are required at this stage since the frontend uses Dart models for User and ProfileContent, and the backend uses JavaScript objects with MySQL schemas. The existing User model in Dart and the users table in MySQL are sufficient for MVP.
 
-- VideoInteractionState: A class to track user interactions with videos including like/dislike status, follow status, and notification preferences. Fields: videoId (String), isLiked (bool), isDisliked (bool), isFollowing (bool), isNotified (bool), likeCount (int), dislikeCount (int).
+[Files]  
+- New files:  
+  - None required for MVP; focus is on modifying existing files.
 
-- VideoRecommendation: Extend existing Recommendation model to include similarity scores and recommendation types. Add fields: similarityScore (double), recommendationType ('similar', 'recommended', 'trending').
+- Existing files to be modified:  
+  - Backend:  
+    - `backend/controllers/userController.js` - Ensure user registration and listing endpoints are robust.  
+    - `backend/controllers/loginController.js` - Handle user login.  
+    - `backend/routes/userRoutes.js` and `backend/routes/loginRoutes.js` - Route setup for user and login APIs.  
+    - `backend/services/userService.js` and `backend/services/loginService.js` - Business logic for user registration and login.  
+  - Frontend:  
+    - `lib/services/api_service.dart` - Currently mock, keep as is for MVP.  
+    - `lib/services/auth_service.dart` - Mock authentication service, keep as is.  
+    - `lib/screens/landing_page.dart` - UI for login and registration modals.  
+    - `lib/screens/home_page.dart` - Main app page with navigation and content sections.  
+    - `lib/screens/video_player_screen.dart` - Video player UI with YouTube/Patreon style layout.  
+    - `lib/user_state.dart` - Global user state management.  
+    - `lib/models/user.dart` - User data model.  
+    - `lib/constants.dart` - UI constants for colors, dimensions, and strings.
 
-- CommentReply: New model for nested comment replies. Fields: id (String), parentCommentId (String), userId (String), text (String), createdAt (DateTime), likes (int).
+- Files to be deleted or moved:  
+  - None.
 
-[Files]
-Create new video player screen and modify existing files to support video functionality.
+- Configuration file updates:  
+  - None required for MVP.
 
-- New file: lib/screens/video_player_screen.dart - Main video player screen with YouTube-like layout including video player, controls, description, comments, and recommendations.
+[Functions]  
+- New functions:  
+  - None for MVP; focus on existing functions.
 
-- New file: lib/widgets/video_player_controls.dart - Custom video player controls widget with play/pause, progress bar, volume, and fullscreen toggle.
+- Modified functions:  
+  - Backend user registration and login functions to ensure proper validation and error handling.  
+  - Frontend login and registration handlers in `landing_page.dart` to interact with mock services and update user state.
 
-- New file: lib/widgets/comment_section.dart - Comments display and input widget with replies support.
+- Removed functions:  
+  - None.
 
-- New file: lib/widgets/video_recommendations.dart - Recommended and similar videos sidebar widget.
+[Classes]  
+- New classes:  
+  - None.
 
-- New file: lib/widgets/like_dislike_buttons.dart - Like/dislike and follow buttons with state management.
+- Modified classes:  
+  - Frontend `AuthService` and `ApiService` remain mock but may be extended later.  
+  - UI classes in `landing_page.dart`, `home_page.dart`, and `video_player_screen.dart` to support MVP features.
 
-- Modify: lib/widgets/content_section.dart - Re-enable video navigation by adding back the GestureDetector for video content and play icon overlay.
+- Removed classes:  
+  - None.
 
-- Modify: lib/services/profile_service.dart - Add back video content fetching and add new methods for video interactions (like, dislike, follow, get recommendations).
+[Dependencies]  
+- No new dependencies are required for MVP.  
+- Backend uses express, mysql2, cors, dotenv.  
+- Frontend uses flutter, provider, http, video_player, file_picker, image_picker.
 
-- Modify: lib/mock_data.dart - Add mock data for video interactions and ensure video URLs are valid for testing.
+[Testing]  
+- Manual testing of user registration, login, navigation, and video player UI.  
+- No automated tests currently; consider adding tests in future iterations.
 
-- Modify: pubspec.yaml - Add video_player dependency (^2.8.1) for video playback functionality.
-
-[Functions]
-Implement new functions for video interactions and data fetching.
-
-- New function: VideoPlayerScreen._toggleLike() - Handle like button press, update state and send to backend.
-
-- New function: VideoPlayerScreen._toggleDislike() - Handle dislike button press, update state and send to backend.
-
-- New function: VideoPlayerScreen._toggleFollow() - Handle follow/unfollow creator, update state and send to backend.
-
-- New function: VideoPlayerScreen._loadVideoData() - Load video metadata, comments, and recommendations on screen initialization.
-
-- New function: VideoPlayerScreen._submitComment() - Submit new comment and refresh comments list.
-
-- New function: ContentService.likeVideo(String videoId) - API call to like a video.
-
-- New function: ContentService.dislikeVideo(String videoId) - API call to dislike a video.
-
-- New function: ContentService.followCreator(String creatorId) - API call to follow/unfollow a creator.
-
-- New function: ContentService.getVideoRecommendations(String videoId) - Fetch recommended videos for a given video.
-
-- New function: ContentService.getVideoComments(String videoId) - Fetch comments for a video.
-
-- Modify function: ContentSection._navigateToVideoPlayer() - Restore video navigation functionality.
-
-[Classes]
-Extend existing classes and create new ones for video player functionality.
-
-- New class: VideoPlayerControls - Stateful widget for video playback controls with custom UI.
-
-- New class: CommentSection - Stateful widget for displaying and managing comments with replies.
-
-- New class: VideoRecommendations - Stateless widget for displaying recommended and similar videos.
-
-- New class: LikeDislikeButtons - Stateful widget for like/dislike/follow buttons with state management.
-
-- Modify class: VideoPlayerScreen - Complete rewrite with YouTube-like layout, state management for interactions, and integration with new widgets.
-
-- Modify class: ContentService - Add methods for video interactions and data fetching.
-
-[Dependencies]
-Add video_player package for video playback functionality.
-
-- Add dependency: video_player: ^2.8.1 - Official Flutter package for video playback with network and asset support.
-
-[Testing]
-Test video player functionality across different scenarios.
-
-- Unit tests: Test video interaction state management and API calls in ContentService.
-
-- Widget tests: Test VideoPlayerScreen, VideoPlayerControls, CommentSection, and VideoRecommendations widgets.
-
-- Integration tests: Test full video viewing flow from content section to video player, including navigation, playback, and interactions.
-
-- Manual testing: Verify video playback on different devices, test like/dislike/follow functionality, comment submission, and recommendation loading.
-
-[Implementation Order]
-Implement in logical sequence to ensure dependencies are met.
-
-1. Add video_player dependency to pubspec.yaml and run flutter pub get.
-
-2. Create VideoInteractionState and CommentReply models in appropriate files.
-
-3. Implement ContentService methods for video interactions and data fetching.
-
-4. Create VideoPlayerControls widget.
-
-5. Create LikeDislikeButtons widget.
-
-6. Create CommentSection widget.
-
-7. Create VideoRecommendations widget.
-
-8. Implement VideoPlayerScreen with YouTube-like layout.
-
-9. Modify ContentSection to re-enable video navigation.
-
-10. Update mock data to support video interactions.
-
-11. Test video player functionality and fix any issues.
+[Implementation Order]  
+1. Verify backend user registration and login endpoints are functional and robust.  
+2. Ensure frontend login and registration modals in `landing_page.dart` correctly use mock `AuthService` and update `UserState`.  
+3. Confirm main app navigation and content display in `home_page.dart` using mock data.  
+4. Validate video player screen layout and controls in `video_player_screen.dart`.  
+5. Perform manual testing of user flows: registration, login, navigation, video playback.  
+6. Document any issues or enhancements for future backend integration and feature expansion.

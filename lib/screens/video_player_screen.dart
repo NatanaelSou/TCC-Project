@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:provider/provider.dart';
 import '../models/profile_models.dart';
 import '../models/comment.dart';
 import '../constants.dart';
 import '../mock_data.dart';
-import '../user_state.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
   final ProfileContent video;

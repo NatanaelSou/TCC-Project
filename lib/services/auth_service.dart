@@ -1,41 +1,49 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../models/user.dart';
-import '../mock_data.dart';
 
-/// Classe de serviço para autenticação (versão mock)
-/// Simula login e registro com dados estáticos
+/// Classe de serviço para autenticação usando API backend
 class AuthService {
-  /// Realiza login do usuário mock
-  /// Permite login sem credenciais, retornando usuário padrão se campos vazios
-  /// @param userNameOrEmail Nome de usuário ou email (opcional)
-  /// @param password Senha do usuário (opcional)
+  static const String baseUrl = 'http://localhost:3000/api';
+
+  /// Realiza login do usuário via API
+  /// @param email Email do usuário
+  /// @param password Senha do usuário
   /// @returns Instância de User
-  Future<User> login(String userNameOrEmail, String password) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Se nenhum nome/email fornecido, retorna usuário padrão para login sem credenciais
-    if (userNameOrEmail.trim().isEmpty) {
-      return mockUsers[0];
-    }
-    try {
-      final user = mockUsers.firstWhere(
-        (u) =>
-            (u.email == userNameOrEmail.trim() ||
-                u.name.toLowerCase() == userNameOrEmail.trim().toLowerCase()) &&
-            password.isNotEmpty, // Simula validação simples
-      );
-      return user;
-    } catch (e) {
-      throw Exception('Usuário ou senha inválidos');
+  Future<User> login(String email, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return User.fromJson(data['user']);
+    } else {
+      final data = jsonDecode(response.body);
+      throw Exception(data['message'] ?? 'Erro no login');
     }
   }
 
-  /// Registra um novo usuário mock
+  /// Registra um novo usuário via API
   /// @param email Email do usuário
   /// @param password Senha do usuário
   /// @param name Nome opcional do usuário
   /// @returns Instância de User criado
   Future<User> register(String email, String password, {String? name}) async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Simula criação de usuário (retorna o primeiro mock para simplicidade)
-    return mockUsers[0];
+    final response = await http.post(
+      Uri.parse('$baseUrl/users/register'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password, 'name': name}),
+    );
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return User.fromJson(data['user']);
+    } else {
+      final data = jsonDecode(response.body);
+      throw Exception(data['message'] ?? 'Erro no registro');
+    }
   }
 }

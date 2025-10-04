@@ -61,7 +61,6 @@ Criar uma versão mínima funcional com:
 - **Publicação de conteúdo básico** (posts de texto/imagem).
 - **Assinaturas mensais** com tiers simulados.
 - **Comunidade inicial** (chat/mural).
-- **Conteúdo gratuito mínimo** para todos os usuários.
 
 ## Estrutura do projeto
 

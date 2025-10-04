@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   ProfileStats? _stats;
   List<ProfileContent> _recentPosts = [];
-  List<ProfileContent> _videos = [];
+  final List<ProfileContent> _videos = [];
   List<ProfileContent> _exclusiveContent = [];
   List<SupportTier> _supportTiers = [];
   bool _isLoading = true;

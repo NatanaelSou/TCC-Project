@@ -1,94 +1,108 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../models/comment.dart';
 import '../models/profile_models.dart';
 
-/// Serviço para criação e gerenciamento de conteúdo
+/// Serviço para gerenciar conteúdo e interações via API
 class ContentService {
-  /// Faz upload de um arquivo e retorna a URL mock
-  /// @param filePath Caminho do arquivo local
-  /// @returns URL do arquivo após upload
-  Future<String?> uploadFile(String filePath) async {
-    try {
-      // Simulação de delay de upload
-      await Future.delayed(Duration(seconds: 2));
+  static const String baseUrl = 'http://localhost:3000/api';
 
-      // Simula upload bem-sucedido retornando uma URL mock
-      // Em um app real, isso seria uma URL do servidor de arquivos
-      final fileName = filePath.split('/').last;
-      return 'https://mock-cdn.example.com/uploads/$fileName';
-    } catch (e) {
-      // Em caso de erro, retorna null
-      return null;
+  /// Busca comentários para um conteúdo específico
+  /// @param contentId ID do conteúdo
+  /// @returns Lista de comentários
+  Future<List<Comment>> getCommentsForContent(String contentId) async {
+    final response = await http.get(Uri.parse('$baseUrl/content/$contentId/comments'));
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data.map((item) => Comment.fromJson(item)).toList();
+    } else {
+      throw Exception('Erro ao buscar comentários');
     }
   }
 
-  /// Cria um novo conteúdo baseado nos dados fornecidos
-  /// Retorna o conteúdo criado ou null em caso de erro
-  Future<ProfileContent?> createContent(Map<String, dynamic> data) async {
-    try {
-      // Simulação de delay de rede
-      await Future.delayed(Duration(seconds: 1));
+  /// Adiciona um comentário a um conteúdo
+  /// @param contentId ID do conteúdo
+  /// @param userId ID do usuário
+  /// @param text Texto do comentário
+  /// @returns Comentário criado
+  Future<Comment> addComment(String contentId, String userId, String text) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/content/$contentId/comments'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'userId': userId,
+        'text': text,
+      }),
+    );
 
-      // Faz upload dos arquivos se fornecidos
-      String? uploadedThumbnailUrl;
-      String? uploadedVideoUrl;
-      List<String>? uploadedImageUrls;
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return Comment.fromJson(data);
+    } else {
+      throw Exception('Erro ao adicionar comentário');
+    }
+  }
 
-      // Upload do thumbnail se fornecido
-      if (data['thumbnailUrl'] != null && data['thumbnailUrl'].isNotEmpty) {
-        uploadedThumbnailUrl = await uploadFile(data['thumbnailUrl']);
-        if (uploadedThumbnailUrl == null) {
-          throw Exception('Falha no upload do thumbnail');
-        }
-      }
+  /// Busca vídeos similares baseado em categorias
+  /// @param contentId ID do conteúdo atual
+  /// @param categories Lista de categorias
+  /// @returns Lista de vídeos similares
+  Future<List<ProfileContent>> getSimilarVideos(String contentId, List<String> categories) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/content/$contentId/similar'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'categories': categories}),
+    );
 
-      // Upload do vídeo se fornecido
-      if (data['videoUrl'] != null && data['videoUrl'].isNotEmpty) {
-        uploadedVideoUrl = await uploadFile(data['videoUrl']);
-        if (uploadedVideoUrl == null) {
-          throw Exception('Falha no upload do vídeo');
-        }
-      }
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data.map((item) => ProfileContent.fromJson(item)).toList();
+    } else {
+      throw Exception('Erro ao buscar vídeos similares');
+    }
+  }
 
-      // Upload das imagens se fornecidas
-      if (data['images'] != null && data['images'].isNotEmpty) {
-        uploadedImageUrls = [];
-        for (String imagePath in data['images']) {
-          final uploadedUrl = await uploadFile(imagePath);
-          if (uploadedUrl == null) {
-            throw Exception('Falha no upload de uma imagem');
-          }
-          uploadedImageUrls.add(uploadedUrl);
-        }
-      }
+  /// Busca recomendações para um conteúdo
+  /// @param contentId ID do conteúdo
+  /// @returns Lista de conteúdos recomendados
+  Future<List<ProfileContent>> getRecommendations(String contentId) async {
+    final response = await http.get(Uri.parse('$baseUrl/content/$contentId/recommendations'));
 
-      // Gera ID único para o conteúdo
-      final id = DateTime.now().millisecondsSinceEpoch.toString();
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data.map((item) => ProfileContent.fromJson(item)).toList();
+    } else {
+      throw Exception('Erro ao buscar recomendações');
+    }
+  }
 
-      // Cria o conteúdo com os dados fornecidos e URLs dos arquivos enviados
-      final content = ProfileContent(
-        id: id,
-        title: data['title'] ?? '',
-        type: data['type'] ?? 'post',
-        thumbnailUrl: uploadedThumbnailUrl ?? '',
-        videoUrl: uploadedVideoUrl ?? '',
-        createdAt: DateTime.now(),
-        views: 0,
-        category: data['category'],
-        description: data['description'],
-        keywords: data['keywords'] != null ? List<String>.from(data['keywords']) : null,
-        is18Plus: data['is18Plus'] ?? false,
-        isPrivate: data['isPrivate'] ?? false,
-        quality: data['quality'],
-        images: uploadedImageUrls,
-        tierRequired: data['tierRequired'],
-        creatorId: data['creatorId'] ?? '1', // Mock creator ID
-      );
+  /// Incrementa visualizações de um conteúdo
+  /// @param contentId ID do conteúdo
+  Future<void> incrementViews(String contentId) async {
+    final response = await http.post(Uri.parse('$baseUrl/content/$contentId/views'));
 
-      // Aqui seria feita a chamada para o backend
-      // Por enquanto, apenas retorna o conteúdo criado
-      return content;
-    } catch (e) {
-      // Em caso de erro, retorna null
-      return null;
+    if (response.statusCode != 200) {
+      throw Exception('Erro ao incrementar visualizações');
+    }
+  }
+
+  /// Cria novo conteúdo
+  /// @param userId ID do usuário criador
+  /// @param contentData Dados do conteúdo
+  /// @returns Conteúdo criado
+  Future<ProfileContent> createContent(String userId, Map<String, dynamic> contentData) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/content/$userId'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(contentData),
+    );
+
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      return ProfileContent.fromJson(data);
+    } else {
+      throw Exception('Erro ao criar conteúdo');
     }
   }
 }
