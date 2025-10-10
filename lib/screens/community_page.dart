@@ -4,8 +4,6 @@ import '../user_state.dart';
 import '../constants.dart';
 import '../services/community_service.dart';
 import '../models/community_models.dart';
-import 'community_chat_screen.dart';
-import 'community_mural_screen.dart';
 
 /// Página principal da comunidade
 /// Lista canais disponíveis e permite navegação para chat ou mural
@@ -17,7 +15,7 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  final CommunityService _communityService = CommunityService();
+  final CommunityService _communityService = CommunityService(baseUrl: 'http://localhost:3000/api');
   List<Channel> _channels = [];
   bool _isLoading = true;
   String? _errorMessage;

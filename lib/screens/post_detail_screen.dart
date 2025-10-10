@@ -23,7 +23,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
   int _downvotes = 0;
   List<Comment> _comments = [];
   final TextEditingController _commentController = TextEditingController();
-  final ContentService _contentService = ContentService();
+  final ContentService _contentService = ContentService(baseUrl: 'http://localhost:3000/api');
 
   @override
   void initState() {

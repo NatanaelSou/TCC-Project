@@ -58,6 +58,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   }
 
   Future<void> _initializeVideo() async {
+    if (widget.video.videoUrl == null) {
+      throw Exception('O vídeo não possui uma URL válida.');
+    }
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl!));
     await _controller.initialize();
 

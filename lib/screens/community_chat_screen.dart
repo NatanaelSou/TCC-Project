@@ -17,7 +17,7 @@ class CommunityChatScreen extends StatefulWidget {
 }
 
 class _CommunityChatScreenState extends State<CommunityChatScreen> {
-  final CommunityService _communityService = CommunityService();
+  final CommunityService _communityService = CommunityService(baseUrl: 'http://localhost:3000/api');
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 

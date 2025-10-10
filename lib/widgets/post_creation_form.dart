@@ -292,21 +292,21 @@ class _PostCreationFormState extends State<PostCreationForm> {
                       filled: true,
                       fillColor: AppColors.background,
                     ),
-                    items: mockSupportTiers.map((tier) {
+                    items: mockSupportTiers.map((tierOption) {
                       return DropdownMenuItem(
-                        value: tier.id,
+                        value: tierOption.id,
                         child: Row(
                           children: [
                             Container(
                               width: 12,
                               height: 12,
                               decoration: BoxDecoration(
-                                color: Color(int.parse('0xFF${tier.color.substring(1)}')),
+                                color: Color(int.parse('0xFF${tierOption.color.substring(1)}')),
                                 shape: BoxShape.circle,
                               ),
                             ),
                             const SizedBox(width: 8),
-                            Text('${tier.name} - R\$ ${tier.price.toStringAsFixed(0)}/mês'),
+                            Text('${tierOption.name} - R\$ ${tierOption.price.toStringAsFixed(0)}/mês'),
                           ],
                         ),
                       );

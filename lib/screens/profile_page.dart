@@ -5,8 +5,6 @@ import '../constants.dart';
 import '../services/profile_service.dart';
 import '../models/profile_models.dart';
 import '../models/community_models.dart';
-import 'community_chat_screen.dart';
-import 'community_mural_screen.dart';
 
 /// Página de perfil do usuário baseada em mistura de YouTube e Patreon
 /// Exibe informações do perfil, estatísticas e conteúdo dinâmicos
@@ -18,11 +16,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final ProfileService _profileService = ProfileService();
+  final ProfileService _profileService = ProfileService(baseUrl: 'http://localhost:3000/api');
 
   ProfileStats? _stats;
   List<ProfileContent> _recentPosts = [];
-  final List<ProfileContent> _videos = [];
   List<ProfileContent> _exclusiveContent = [];
   List<SupportTier> _supportTiers = [];
   List<Channel> _channels = [];

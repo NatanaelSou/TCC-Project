@@ -5,7 +5,9 @@ import '../models/profile_models.dart';
 
 /// Serviço para gerenciar conteúdo e interações via API
 class ContentService {
-  static const String baseUrl = 'http://localhost:3000/api';
+  final String baseUrl;
+
+  ContentService({required this.baseUrl});
 
   /// Busca comentários para um conteúdo específico
   /// @param contentId ID do conteúdo

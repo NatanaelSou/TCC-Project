@@ -17,8 +17,8 @@ import 'package:app/providers/theme_provider.dart';
 void main() {
   testWidgets('App builds without crashing', (WidgetTester tester) async {
     // Set a larger screen size to avoid overflow issues
-    tester.binding.window.physicalSizeTestValue = const Size(1200, 800);
-    tester.binding.window.devicePixelRatioTestValue = 1.0;
+    tester.view.physicalSize = const Size(1200, 800);
+    tester.view.devicePixelRatio = 1.0;
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(
@@ -39,6 +39,6 @@ void main() {
     expect(find.byType(MaterialApp), findsOneWidget);
 
     // Reset screen size
-    tester.binding.window.clearPhysicalSizeTestValue();
+    tester.view.resetPhysicalSize();
   });
 }

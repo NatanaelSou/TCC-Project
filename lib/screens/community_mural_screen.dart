@@ -17,7 +17,7 @@ class CommunityMuralScreen extends StatefulWidget {
 }
 
 class _CommunityMuralScreenState extends State<CommunityMuralScreen> {
-  final CommunityService _communityService = CommunityService();
+  final CommunityService _communityService = CommunityService(baseUrl: 'http://localhost:3000/api');
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
 

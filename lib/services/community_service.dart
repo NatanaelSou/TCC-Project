@@ -5,7 +5,9 @@ import '../mock_data.dart';
 
 /// Serviço para gerenciar funcionalidades de comunidade via API
 class CommunityService {
-  static const String baseUrl = 'http://localhost:3000/api';
+  final String baseUrl;
+
+  CommunityService({required this.baseUrl});
 
   /// Cria um novo canal
   /// @param creatorId ID do criador

@@ -235,7 +235,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 // Sidebar
                 AnimatedContainer(
-                  duration: Duration(milliseconds: 800),
+                  duration: Duration(milliseconds: 300),
                   curve: Curves.fastOutSlowIn,
                   width: _sidebarExpanded ? 250 : 70,
                   color: AppColors.sidebar,

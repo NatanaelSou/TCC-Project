@@ -32,29 +32,26 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
   final ImagePicker _imagePicker = ImagePicker();
 
   /// Seleciona arquivo do dispositivo
-  Future<void> _pickFile() async {
+  /// Seleciona vídeo do dispositivo
+  Future<void> _pickVideoFile() async {
     try {
-      FilePickerResult? result;
-
-      if (widget.isVideo) {
-        // Para vídeos, usar file picker com filtro de vídeo
-        result = await FilePicker.platform.pickFiles(
-          type: FileType.video,
-          allowMultiple: false,
-        );
-      } else {
-        // Para imagens, mostrar opções
-        await _showImageSourceDialog();
-        return;
-      }
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.video,
+        allowMultiple: false,
+      );
 
       if (result != null && result.files.isNotEmpty) {
         final filePath = result.files.first.path;
         widget.onFileSelected(filePath);
       }
     } catch (e) {
-      _showErrorSnackBar('Erro ao selecionar arquivo: ${e.toString()}');
+      _showErrorSnackBar('Erro ao selecionar vídeo: ${e.toString()}');
     }
+  }
+
+  /// Seleciona imagem do dispositivo
+  Future<void> _pickImage() async {
+    await _showImageSourceDialog();
   }
 
   /// Mostra diálogo para escolher fonte da imagem
@@ -163,7 +160,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
             children: [
               // Área de seleção
               InkWell(
-                onTap: _pickFile,
+                onTap: widget.isVideo ? _pickVideoFile : _pickImage,
                 child: Container(
                   padding: EdgeInsets.all(AppDimensions.spacingMedium),
                   child: Row(

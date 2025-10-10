@@ -4,7 +4,9 @@ import '../models/user.dart';
 
 /// Classe de serviço para autenticação usando API backend
 class AuthService {
-  static const String baseUrl = 'http://localhost:3000/api';
+  final String baseUrl;
+
+  AuthService({required this.baseUrl});
 
   /// Realiza login do usuário via API
   /// @param email Email do usuário

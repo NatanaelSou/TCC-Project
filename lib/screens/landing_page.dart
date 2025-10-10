@@ -25,7 +25,7 @@ class _LandingPageState extends State<LandingPage> {
   final TextEditingController _loginPasswordController = TextEditingController();
 
   // Serviço de autenticação
-  final AuthService _authService = AuthService();
+  final AuthService _authService = AuthService(baseUrl: 'http://localhost:3000/api');
 
   // Estados dos modais
   bool _showLoginModal = false;
@@ -610,10 +610,16 @@ class _LandingPageState extends State<LandingPage> {
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
+    } on Exception catch (e) {
+      if (mounted) {
+        setState(() {
+          _registerError = 'Erro de conexão: ${e.toString()}';
+        });
+      }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _registerError = e.toString();
+          _registerError = 'Ocorreu um erro inesperado. Tente novamente.';
         });
       }
     } finally {
@@ -643,10 +649,16 @@ class _LandingPageState extends State<LandingPage> {
           MaterialPageRoute(builder: (context) => HomePage()),
         );
       }
+    } on Exception catch (e) {
+      if (mounted) {
+        setState(() {
+          _loginError = 'Erro de conexão: ${e.toString()}';
+        });
+      }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _loginError = e.toString();
+          _loginError = 'Ocorreu um erro inesperado. Tente novamente.';
         });
       }
     } finally {

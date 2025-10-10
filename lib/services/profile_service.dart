@@ -2,17 +2,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/profile_models.dart';
 import '../models/community_models.dart';
-import '../mock_data.dart';
 
 /// Serviço para gerenciar dados do perfil do usuário via API
 class ProfileService {
-  static const String baseUrl = 'http://localhost:3000/api';
+  final String baseUrl;
+
+  ProfileService({required this.baseUrl});
 
   /// Busca estatísticas do perfil do usuário via API
   /// @param userId ID do usuário
   /// @returns Estatísticas do perfil
   Future<ProfileStats> getProfileStats(String userId) async {
-    final response = await http.get(Uri.parse('$baseUrl/profiles/$userId/stats'));
+    final response = await http.get(Uri.parse('$this.baseUrl/profiles/$userId/stats'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -34,7 +35,7 @@ class ProfileService {
   /// @returns Lista de conteúdos
   Future<List<ProfileContent>> getProfileContent(String userId, String type, {int limit = 10}) async {
     final response = await http.get(
-      Uri.parse('$baseUrl/content/$userId?type=$type&limit=$limit'),
+      Uri.parse('$this.baseUrl/content/$userId?type=$type&limit=$limit'),
     );
 
     if (response.statusCode == 200) {
@@ -49,7 +50,7 @@ class ProfileService {
   /// @param userId ID do usuário
   /// @returns Lista de tiers de suporte
   Future<List<SupportTier>> getSupportTiers(String userId) async {
-    final response = await http.get(Uri.parse('$baseUrl/profiles/$userId/tiers'));
+    final response = await http.get(Uri.parse('$this.baseUrl/profiles/$userId/tiers'));
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);
@@ -65,7 +66,7 @@ class ProfileService {
   /// @returns Status da operação
   Future<bool> toggleFollow(String followerId, String followedId) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/profiles/follow'),
+      Uri.parse('$this.baseUrl/profiles/follow'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'followerId': followerId,
@@ -87,7 +88,7 @@ class ProfileService {
   /// @returns Status da operação
   Future<bool> supportTier(String userId, String tierId) async {
     final response = await http.post(
-      Uri.parse('$baseUrl/profiles/$userId/support'),
+      Uri.parse('$this.baseUrl/profiles/$userId/support'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'tierId': tierId}),
     );
@@ -103,7 +104,7 @@ class ProfileService {
   /// @param userId ID do usuário
   /// @returns Lista de canais
   Future<List<Channel>> getChannels(String userId) async {
-    final response = await http.get(Uri.parse('$baseUrl/profiles/$userId/channels'));
+    final response = await http.get(Uri.parse('$this.baseUrl/profiles/$userId/channels'));
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);

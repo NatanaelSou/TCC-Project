@@ -1,6 +1,4 @@
-import 'dart:convert';
-
-/// Modelo para mensagens de chat
+//// Modelo para mensagens de chat
 class Message {
   final String id;
   final String senderId;

@@ -20,7 +20,7 @@ class ContentCreationPage extends StatefulWidget {
 }
 
 class _ContentCreationPageState extends State<ContentCreationPage> {
-  final _contentService = ContentService();
+  final _contentService = ContentService(baseUrl: 'http://localhost:3000/api');
   bool _isLoading = false;
 
   @override

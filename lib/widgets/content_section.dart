@@ -38,7 +38,7 @@ class ContentSection extends StatelessWidget {
   void _navigateToPostDetail(BuildContext context, ProfileContent content) async {
     // Incrementa visualizações
     try {
-      await ContentService().incrementViews(content.id);
+      await ContentService(baseUrl: 'http://localhost:3000/api').incrementViews(content.id);
     } catch (e) {
       // Ignora erro de incremento
     }
