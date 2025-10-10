@@ -21,6 +21,7 @@ import 'notifications_page.dart';
 import 'settings_page.dart';
 import 'search_results_page.dart';
 import 'content_creation_page.dart';
+import 'community_page.dart';
 
 
 
@@ -395,7 +396,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               _buildHomePage(filterManager),
                               ExplorePage(),
-                              _buildPlaceholderPage('Comunidade'),
+                              CommunityPage(),
                               NotificationsPage(),
                               SettingsPage(),
                             ],
@@ -573,7 +574,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         _buildHomePage(filterManager),
                         ExplorePage(),
-                        _buildPlaceholderPage('Comunidade'),
+                        CommunityPage(),
                         NotificationsPage(),
                         SettingsPage(),
                       ],

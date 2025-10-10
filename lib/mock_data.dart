@@ -2,6 +2,7 @@ import 'models/user.dart';
 import 'models/profile_models.dart';
 import 'models/comment.dart';
 import 'models/recommendation.dart';
+import 'models/community_models.dart';
 
 /// Dados mock estáticos para o app funcionar sem APIs ou banco de dados
 
@@ -342,6 +343,143 @@ List<ProfileContent> getSimilarVideos(ProfileContent content) {
       (v.category?.any((cat) => content.category?.contains(cat) ?? false) ?? false))
     .toList();
 }
+
+/// Canais de comunidade mock
+final List<Channel> mockChannels = [
+  Channel(
+    id: 'chat1',
+    creatorId: '1',
+    name: 'Chat Geral',
+    description: 'Discussões gerais sobre desenvolvimento e tecnologia',
+    type: 'chat',
+    isPrivate: false,
+    members: ['1', '2', '3'],
+  ),
+  Channel(
+    id: 'mural1',
+    creatorId: '1',
+    name: 'Mural de Projetos',
+    description: 'Compartilhe seus projetos e receba feedback',
+    type: 'mural',
+    isPrivate: false,
+    members: ['1', '2'],
+  ),
+  Channel(
+    id: 'chat2',
+    creatorId: '1',
+    name: 'Chat Premium',
+    description: 'Acesso exclusivo para apoiadores',
+    type: 'chat',
+    isPrivate: true,
+    tierRequired: 't3',
+    members: ['1'],
+  ),
+];
+
+/// Mensagens mock para canais
+final List<Message> mockMessages = [
+  Message(
+    id: 'msg1',
+    senderId: '1',
+    channelId: 'chat1',
+    text: 'Olá pessoal! Alguém trabalhando em projetos Flutter hoje?',
+    timestamp: DateTime.now().subtract(Duration(hours: 2)),
+    isPrivate: false,
+  ),
+  Message(
+    id: 'msg2',
+    senderId: '2',
+    channelId: 'chat1',
+    text: 'Sim! Estou implementando um sistema de autenticação. Qual biblioteca vocês recomendam?',
+    timestamp: DateTime.now().subtract(Duration(hours: 1, minutes: 45)),
+    isPrivate: false,
+  ),
+  Message(
+    id: 'msg3',
+    senderId: '3',
+    channelId: 'chat1',
+    text: 'Uso Firebase Auth, é bem integrado com Flutter. Fácil de configurar.',
+    timestamp: DateTime.now().subtract(Duration(hours: 1, minutes: 30)),
+    isPrivate: false,
+  ),
+  Message(
+    id: 'msg4',
+    senderId: '1',
+    channelId: 'chat1',
+    text: 'Valeu pela dica! Vou testar. Alguém já usou Supabase?',
+    timestamp: DateTime.now().subtract(Duration(minutes: 20)),
+    isPrivate: false,
+  ),
+  Message(
+    id: 'msg5',
+    senderId: '2',
+    channelId: 'chat2',
+    text: 'Conteúdo premium: Dicas avançadas de performance no Flutter.',
+    timestamp: DateTime.now().subtract(Duration(hours: 5)),
+    isPrivate: true,
+    tierRequired: 't3',
+  ),
+];
+
+/// Posts de mural mock
+final List<MuralPost> mockMuralPosts = [
+  MuralPost(
+    id: 'post1',
+    creatorId: '1',
+    channelId: 'mural1',
+    title: 'Meu novo app de gerenciamento de tarefas',
+    description: 'Criei um app completo com Flutter e Firebase. Inclui autenticação, CRUD de tarefas e notificações push. O design é clean e responsivo. Gostaria de feedback sobre a UX e possíveis melhorias. Link do repositório no GitHub na bio!',
+    images: [
+      'https://via.placeholder.com/400x300/4ECDC4/FFFFFF?text=App+Screenshot+1',
+      'https://via.placeholder.com/400x300/4ECDC4/FFFFFF?text=App+Screenshot+2',
+    ],
+    createdAt: DateTime.now().subtract(Duration(days: 3)),
+    likes: 12,
+    replies: [
+      MuralPost(
+        id: 'reply1',
+        creatorId: '2',
+        channelId: 'mural1',
+        description: 'App ficou ótimo! A navegação é fluida. Sugestão: adicionar dark mode.',
+        parentId: 'post1',
+        createdAt: DateTime.now().subtract(Duration(days: 2, hours: 4)),
+        likes: 3,
+      ),
+      MuralPost(
+        id: 'reply2',
+        creatorId: '3',
+        channelId: 'mural1',
+        description: 'Concordo com o dark mode. Também adorei a integração com Firebase!',
+        parentId: 'post1',
+        createdAt: DateTime.now().subtract(Duration(days: 2)),
+        likes: 2,
+      ),
+    ],
+  ),
+  MuralPost(
+    id: 'post2',
+    creatorId: '2',
+    channelId: 'mural1',
+    title: 'Tutorial: Animações customizadas no Flutter',
+    description: 'Compartilhando um tutorial completo sobre como criar animações suaves e performáticas. Uso Hero animations, implicit animations e custom painters. Incluo código fonte e exemplos práticos. Perfeito para elevar o nível do seu app!',
+    images: [
+      'https://via.placeholder.com/400x300/FF6B6B/FFFFFF?text=Animation+Demo',
+    ],
+    createdAt: DateTime.now().subtract(Duration(days: 1)),
+    likes: 8,
+    replies: [
+      MuralPost(
+        id: 'reply3',
+        creatorId: '1',
+        channelId: 'mural1',
+        description: 'Excelente tutorial! As animações ficaram incríveis. Vou implementar no meu projeto.',
+        parentId: 'post2',
+        createdAt: DateTime.now().subtract(Duration(hours: 6)),
+        likes: 1,
+      ),
+    ],
+  ),
+];
 
 /// Adiciona conteúdo recém-criado às listas mock apropriadas
 /// Baseado no tipo do conteúdo

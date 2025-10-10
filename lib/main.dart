@@ -11,6 +11,9 @@ import 'screens/landing_page.dart';
 import 'user_state.dart';
 import 'utils/filter_manager.dart';
 import 'providers/theme_provider.dart';
+import 'screens/community_chat_screen.dart';
+import 'screens/community_mural_screen.dart';
+import 'models/community_models.dart';
 
 /// Ponto de entrada da aplicação
 /// Inicializa o app com providers globais e configurações básicas
@@ -51,6 +54,10 @@ class MyApp extends StatelessWidget {
           title: 'App Flutter + Node.js + mySQL',
           theme: theme.currentTheme,
           home: LandingPage(),
+          routes: {
+            '/community_chat': (context) => CommunityChatScreen(channel: ModalRoute.of(context)!.settings.arguments as Channel),
+            '/community_mural': (context) => CommunityMuralScreen(channel: ModalRoute.of(context)!.settings.arguments as Channel),
+          },
         );
       },
     );

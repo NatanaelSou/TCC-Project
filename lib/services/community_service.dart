@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/community_models.dart';
+import '../mock_data.dart';
 
 /// Serviço para gerenciar funcionalidades de comunidade via API
 class CommunityService {
@@ -29,13 +30,18 @@ class CommunityService {
   /// @param userId ID do usuário
   /// @returns Lista de canais
   Future<List<Channel>> getChannels(String userId) async {
-    final response = await http.get(Uri.parse('$baseUrl/community/users/$userId/channels'));
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/community/users/$userId/channels'));
 
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((item) => Channel.fromJson(item)).toList();
-    } else {
-      throw Exception('Erro ao buscar canais');
+      if (response.statusCode == 200) {
+        final List data = jsonDecode(response.body);
+        return data.map((item) => Channel.fromJson(item)).toList();
+      } else {
+        throw Exception('Erro ao buscar canais');
+      }
+    } catch (e) {
+      // Fallback para dados mock quando API não está disponível
+      return mockChannels;
     }
   }
 
@@ -57,17 +63,32 @@ class CommunityService {
   /// @param messageData Dados da mensagem
   /// @returns Mensagem enviada
   Future<Message> sendMessage(String senderId, String channelId, Map<String, dynamic> messageData) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/community/channels/$channelId/messages/$senderId'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(messageData),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/community/channels/$channelId/messages/$senderId'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(messageData),
+      );
 
-    if (response.statusCode == 201) {
-      final data = jsonDecode(response.body);
-      return Message.fromJson(data);
-    } else {
-      throw Exception('Erro ao enviar mensagem');
+      if (response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        return Message.fromJson(data);
+      } else {
+        throw Exception('Erro ao enviar mensagem');
+      }
+    } catch (e) {
+      // Fallback para modo mock: cria mensagem local e adiciona à lista mock
+      final newMessage = Message(
+        id: 'msg_${DateTime.now().millisecondsSinceEpoch}',
+        senderId: senderId,
+        channelId: channelId,
+        text: messageData['text'] ?? '',
+        timestamp: DateTime.now(),
+        isPrivate: messageData['isPrivate'] ?? false,
+        tierRequired: messageData['tierRequired'],
+      );
+      mockMessages.add(newMessage);
+      return newMessage;
     }
   }
 
@@ -76,13 +97,18 @@ class CommunityService {
   /// @param limit Limite de mensagens
   /// @returns Lista de mensagens
   Future<List<Message>> getMessages(String channelId, {int limit = 50}) async {
-    final response = await http.get(Uri.parse('$baseUrl/community/channels/$channelId/messages?limit=$limit'));
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/community/channels/$channelId/messages?limit=$limit'));
 
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((item) => Message.fromJson(item)).toList();
-    } else {
-      throw Exception('Erro ao buscar mensagens');
+      if (response.statusCode == 200) {
+        final List data = jsonDecode(response.body);
+        return data.map((item) => Message.fromJson(item)).toList();
+      } else {
+        throw Exception('Erro ao buscar mensagens');
+      }
+    } catch (e) {
+      // Fallback para dados mock quando API não está disponível
+      return mockMessages.where((m) => m.channelId == channelId).toList();
     }
   }
 
@@ -110,13 +136,18 @@ class CommunityService {
   /// @param channelId ID do canal
   /// @returns Lista de posts
   Future<List<MuralPost>> getMuralPosts(String channelId) async {
-    final response = await http.get(Uri.parse('$baseUrl/community/channels/$channelId/posts'));
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/community/channels/$channelId/posts'));
 
-    if (response.statusCode == 200) {
-      final List data = jsonDecode(response.body);
-      return data.map((item) => MuralPost.fromJson(item)).toList();
-    } else {
-      throw Exception('Erro ao buscar posts de mural');
+      if (response.statusCode == 200) {
+        final List data = jsonDecode(response.body);
+        return data.map((item) => MuralPost.fromJson(item)).toList();
+      } else {
+        throw Exception('Erro ao buscar posts de mural');
+      }
+    } catch (e) {
+      // Fallback para dados mock quando API não está disponível
+      return mockMuralPosts.where((p) => p.channelId == channelId).toList();
     }
   }
 }

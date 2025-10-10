@@ -1,24 +1,22 @@
-# TODO: Redesign Video Player Screen Layout
+# TODO: Implement Community Features
 
 ## Overview
-Redesign `lib/screens/video_player_screen.dart` to have a layout similar to YouTube/Patreon while maintaining the Premiora design style and color scheme from `lib/constants.dart`.
+Implement community screens for chat and mural channels, update profile page to display user's channels, add navigation routes, and ensure tier-based access control.
 
 ## Goals
-- Create a YouTube/Patreon-like layout with video player at top, followed by video info, actions, description, and comments.
-- Add sidebar for recommendations on wide screens.
-- Ensure responsiveness across mobile, tablet, and desktop.
-- Maintain existing functionality and state management.
-- Use consistent colors and dimensions from constants.dart.
+- Create community_chat_screen.dart for chat channels with message display and sending.
+- Create community_mural_screen.dart for mural channels with post creation and display.
+- Update profile_page.dart to show user's created channels with navigation.
+- Add routes in main.dart for community screens.
+- Ensure UI is responsive and integrates with Material Design.
+- Add comments in Portuguese for new code.
+- Test community features including tier restrictions.
 
 ## Steps
-- [x] Analyze current layout structure in `_buildWideScreenLayout` and `_buildNarrowScreenLayout`.
-- [x] Refactor `_buildVideoInfo` to include creator information (avatar, name, subscribers) in a YouTube-like row.
-- [x] Update `_buildActionButtons` to include share button and rearrange like/dislike/subscribe buttons in YouTube style.
-- [x] Modify `_buildDescription` to make it expandable/collapsible like YouTube.
-- [x] Adjust `_buildCommentsSection` for better spacing and layout.
-- [x] Update `_buildWideScreenLayout` to ensure proper flex ratios and spacing.
-- [x] Update `_buildNarrowScreenLayout` to stack sections vertically with appropriate padding.
-- [x] Test responsiveness by checking breakpoints and layout behavior.
-- [x] Verify color usage matches constants.dart throughout the layout.
-- [x] Test video controls and interactions remain functional.
-- [x] Final visual check for YouTube/Patreon similarity while maintaining Premiora style.
+- [x] Update ProfileService.getChannels to return List<Channel>
+- [x] Update profile_page.dart to add channels section with navigation
+- [x] Create lib/screens/community_chat_screen.dart
+- [x] Create lib/screens/community_mural_screen.dart
+- [x] Update lib/main.dart to add routes for community screens
+- [ ] Test community features: create channels, join, send messages, create mural posts, ensure tier restrictions work
+- [ ] Ensure UI responsiveness and Material Design integration
