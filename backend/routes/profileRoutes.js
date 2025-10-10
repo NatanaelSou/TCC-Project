@@ -17,4 +17,7 @@ router.post('/:userId/support', profileController.supportTier);
 // Rota para seguir/deixar de seguir
 router.post('/follow', profileController.toggleFollow);
 
+// Rota para buscar canais do usuário
+router.get('/:userId/channels', profileController.getChannels);
+
 module.exports = router;

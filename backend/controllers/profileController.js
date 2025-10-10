@@ -52,3 +52,14 @@ exports.toggleFollow = async (req, res) => {
     res.status(500).json({ message: 'Erro ao alternar follow' });
   }
 };
+
+exports.getChannels = async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const channels = await profileService.getChannels(userId);
+    res.json(channels);
+  } catch (err) {
+    console.error('[ProfileController] Erro ao buscar canais:', err);
+    res.status(500).json({ message: 'Erro ao buscar canais' });
+  }
+};

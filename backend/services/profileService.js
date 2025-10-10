@@ -116,3 +116,25 @@ exports.toggleFollow = async (followerId, followedId) => {
     throw err;
   }
 };
+
+exports.getChannels = async (userId) => {
+  console.log('[ProfileService] Buscando canais do usuário:', userId);
+
+  try {
+    const [rows] = await db.query('SELECT * FROM channels WHERE creator_id = ? ORDER BY created_at DESC', [userId]);
+    return rows.map(row => ({
+      id: row.id,
+      creatorId: row.creator_id,
+      name: row.name,
+      description: row.description,
+      type: row.type,
+      isPrivate: row.is_private,
+      tierRequired: row.tier_required,
+      members: JSON.parse(row.members || '[]'),
+      createdAt: row.created_at
+    }));
+  } catch (err) {
+    console.error('[ProfileService] Erro ao buscar canais:', err);
+    throw err;
+  }
+};

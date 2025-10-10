@@ -5,7 +5,10 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import '../models/profile_models.dart';
+import '../mock_data.dart';
 import '../screens/video_player_screen.dart';
+import '../screens/post_detail_screen.dart';
+import '../services/content_service.dart';
 
 /// Seção de conteúdo com layout de grid
 /// Exibe cards de conteúdo como posts, vídeos, etc.
@@ -27,6 +30,21 @@ class ContentSection extends StatelessWidget {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => VideoPlayerScreen(video: content),
+      ),
+    );
+  }
+
+  /// Navega para a tela de detalhes do post
+  void _navigateToPostDetail(BuildContext context, ProfileContent content) async {
+    // Incrementa visualizações
+    try {
+      await ContentService().incrementViews(content.id);
+    } catch (e) {
+      // Ignora erro de incremento
+    }
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PostDetailScreen(post: content),
       ),
     );
   }
@@ -62,9 +80,13 @@ class ContentSection extends StatelessWidget {
   /// Constrói um card de conteúdo
   Widget _buildContentCard(BuildContext context, ProfileContent content) {
     return GestureDetector(
-      onTap: content.type == 'video' && content.videoUrl != null
-          ? () => _navigateToVideoPlayer(context, content)
-          : null,
+      onTap: () {
+        if (content.type == 'video' && content.videoUrl != null) {
+          _navigateToVideoPlayer(context, content);
+        } else {
+          _navigateToPostDetail(context, content);
+        }
+      },
       child: Container(
         width: 280,
         margin: EdgeInsets.only(right: AppDimensions.spacingLarge, bottom: AppDimensions.spacingMedium),
@@ -121,6 +143,47 @@ class ContentSection extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+          ),
+          // Tier badge para conteúdo privado (Patreon-style)
+          if (content.isPrivate)
+            Positioned(
+              bottom: 8,
+              right: 8,
+              child: _buildTierBadge(content),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTierBadge(ProfileContent content) {
+    final tier = mockSupportTiers.firstWhere(
+      (t) => t.id == content.tierRequired,
+      orElse: () => mockSupportTiers.first,
+    );
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: Color(int.parse('0xFF${tier.color.substring(1)}')).withOpacity(0.9),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.lock,
+            size: 10,
+            color: Colors.white,
+          ),
+          const SizedBox(width: 2),
+          Text(
+            tier.name.substring(0, 1).toUpperCase(), // Primeira letra do tier
+            style: const TextStyle(
+              fontSize: 9,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ],

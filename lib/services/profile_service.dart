@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/profile_models.dart';
-import 'http_service.dart';
 
 /// Serviço para gerenciar dados do perfil do usuário via API
 class ProfileService {
@@ -95,6 +94,20 @@ class ProfileService {
       return true;
     } else {
       throw Exception('Erro ao apoiar tier');
+    }
+  }
+
+  /// Busca canais do usuário via API
+  /// @param userId ID do usuário
+  /// @returns Lista de canais
+  Future<List<dynamic>> getChannels(String userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/profiles/$userId/channels'));
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception('Erro ao buscar canais');
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -133,7 +134,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
 
   /// Obtém nome do arquivo do caminho
   String _getFileName(String path) {
-    return path.split(Platform.pathSeparator).last;
+    return path.split(RegExp(r'[/\\]')).last;
   }
 
   @override
@@ -208,7 +209,7 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
                   child: Row(
                     children: [
                       // Preview da imagem
-                      if (!widget.isVideo)
+                      if (!widget.isVideo && !kIsWeb)
                         Container(
                           width: 40,
                           height: 40,
@@ -218,6 +219,19 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
                               image: FileImage(File(widget.selectedFilePath!)),
                               fit: BoxFit.cover,
                             ),
+                          ),
+                        )
+                      else if (!widget.isVideo && kIsWeb)
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Icon(
+                            Icons.image,
+                            color: Colors.grey[600],
                           ),
                         )
                       else

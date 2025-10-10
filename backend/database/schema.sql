@@ -130,3 +130,52 @@ INSERT INTO recommendations (content_id, recommended_content_ids, based_on) VALU
 (4, '[5]', 'category'),
 (5, '[4]', 'views')
 	ON DUPLICATE KEY UPDATE recommended_content_ids=VALUES(recommended_content_ids);
+
+-- Tabela para canais de comunidade
+CREATE TABLE IF NOT EXISTS channels (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  creator_id INT NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  description TEXT,
+  type ENUM('chat', 'mural') NOT NULL,
+  is_private BOOLEAN DEFAULT FALSE,
+  tier_required INT,
+  members JSON DEFAULT '[]',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (tier_required) REFERENCES support_tiers(id) ON DELETE SET NULL
+);
+
+-- Tabela para mensagens de chat
+CREATE TABLE IF NOT EXISTS messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  sender_id INT NOT NULL,
+  channel_id INT NOT NULL,
+  text TEXT NOT NULL,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_private BOOLEAN DEFAULT FALSE,
+  tier_required INT,
+  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (channel_id) REFERENCES channels(id) ON DELETE CASCADE,
+  FOREIGN KEY (tier_required) REFERENCES support_tiers(id) ON DELETE SET NULL
+);
+
+-- Tabela para posts de mural
+CREATE TABLE IF NOT EXISTS mural_posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  creator_id INT NOT NULL,
+  channel_id INT NOT NULL,
+  title VARCHAR(255),
+  description TEXT,
+  images JSON,
+  parent_id INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  likes INT DEFAULT 0,
+  replies JSON DEFAULT '[]',
+  is_private BOOLEAN DEFAULT FALSE,
+  tier_required INT,
+  FOREIGN KEY (creator_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (channel_id) REFERENCES channels(id) ON DELETE CASCADE,
+  FOREIGN KEY (parent_id) REFERENCES mural_posts(id) ON DELETE CASCADE,
+  FOREIGN KEY (tier_required) REFERENCES support_tiers(id) ON DELETE SET NULL
+);
