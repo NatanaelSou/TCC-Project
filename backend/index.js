@@ -10,12 +10,22 @@ app.use(express.json());
 // Rotas
 const userRoutes = require('./routes/userRoutes');
 const loginRoutes = require('./routes/loginRoutes'); // <-- importando login
+const profileRoutes = require('./routes/profileRoutes');
+const contentRoutes = require('./routes/contentRoutes');
+const communityRoutes = require('./routes/communityRoutes');
+
 app.use('/api/users', userRoutes);
 app.use('/api/login', loginRoutes); // <-- adicionando rota de login
+app.use('/api/profiles', profileRoutes);
+app.use('/api/content', contentRoutes);
+app.use('/api/community', communityRoutes);
 
 console.log("Rotas carregadas:");
 console.log("userRoutes importado:", userRoutes);
 console.log("loginRoutes importado:", loginRoutes);
+console.log("profileRoutes importado:", profileRoutes);
+console.log("contentRoutes importado:", contentRoutes);
+console.log("communityRoutes importado:", communityRoutes);
 
 // Rota de teste simples
 app.get('/ping', (req, res) => res.json({ message: 'pong' }));

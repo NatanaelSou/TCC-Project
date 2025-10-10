@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  flutter-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.10.0'
+    - run: flutter pub get
+    - run: flutter analyze
+    - run: flutter test
+    - run: flutter build apk --debug
+
+  backend-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+    - run: cd backend && npm install
+    - run: cd backend && npm test  # This will fail, but at least checks if script exists

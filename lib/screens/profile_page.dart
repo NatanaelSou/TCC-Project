@@ -4,6 +4,7 @@ import '../user_state.dart';
 import '../constants.dart';
 import '../services/profile_service.dart';
 import '../models/profile_models.dart';
+import '../models/community_models.dart';
 
 /// Página de perfil do usuário baseada em mistura de YouTube e Patreon
 /// Exibe informações do perfil, estatísticas e conteúdo dinâmicos
@@ -15,13 +16,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final ProfileService _profileService = ProfileService();
+  final ProfileService _profileService = ProfileService(baseUrl: 'http://localhost:3000/api');
 
   ProfileStats? _stats;
   List<ProfileContent> _recentPosts = [];
-  List<ProfileContent> _videos = [];
   List<ProfileContent> _exclusiveContent = [];
   List<SupportTier> _supportTiers = [];
+  List<Channel> _channels = [];
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -46,17 +47,17 @@ class _ProfilePageState extends State<ProfilePage> {
       final results = await Future.wait([
         _profileService.getProfileStats(userId),
         _profileService.getProfileContent(userId, 'posts', limit: 5),
-        _profileService.getProfileContent(userId, 'videos', limit: 5),
         _profileService.getProfileContent(userId, 'exclusive', limit: 5),
         _profileService.getSupportTiers(userId),
+        _profileService.getChannels(userId),
       ]);
 
       setState(() {
         _stats = results[0] as ProfileStats;
         _recentPosts = results[1] as List<ProfileContent>;
-        _videos = results[2] as List<ProfileContent>;
-        _exclusiveContent = results[3] as List<ProfileContent>;
-        _supportTiers = results[4] as List<SupportTier>;
+        _exclusiveContent = results[2] as List<ProfileContent>;
+        _supportTiers = results[3] as List<SupportTier>;
+        _channels = results[4] as List<Channel>;
         _isLoading = false;
       });
     } catch (e) {
@@ -109,6 +110,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.sidebar,
+        foregroundColor: AppColors.iconDark,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: AppColors.iconDark),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text('Perfil'),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,10 +129,11 @@ class _ProfilePageState extends State<ProfilePage> {
             _buildStatsSection(),
             // Seções de conteúdo
             _buildContentSection('Posts Recentes', _recentPosts),
-            _buildContentSection('Vídeos', _videos),
             _buildContentSection('Conteúdo Exclusivo', _exclusiveContent),
             // Níveis de suporte (estilo Patreon)
             _buildSupportTiers(),
+            // Canais de comunidade
+            _buildChannelsSection(),
           ],
         ),
       ),
@@ -237,8 +248,10 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: EdgeInsets.all(20),
       color: Colors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Wrap(
+        spacing: 20,
+        runSpacing: 10,
+        alignment: WrapAlignment.spaceEvenly,
         children: [
           _buildStatItem('Seguidores', _formatNumber(_stats!.followers)),
           _buildStatItem('Posts', _formatNumber(_stats!.posts)),
@@ -259,6 +272,8 @@ class _ProfilePageState extends State<ProfilePage> {
       return number.toString();
     }
   }
+
+
 
   /// Item de estatística
   Widget _buildStatItem(String label, String value) {
@@ -323,68 +338,71 @@ class _ProfilePageState extends State<ProfilePage> {
                 itemCount: contentList.length,
                 itemBuilder: (context, index) {
                   final content = contentList[index];
-                  return Container(
-                    width: 200,
-                    margin: EdgeInsets.only(right: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(10),
-                      image: content.thumbnailUrl.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(content.thumbnailUrl),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                    child: Stack(
-                      children: [
-                        if (content.thumbnailUrl.isEmpty)
-                          Center(
-                            child: Icon(
-                              content.type == 'video' ? Icons.play_circle_fill : Icons.article,
-                              size: 48,
-                              color: Colors.grey[400],
+                  return GestureDetector(
+                    onTap: null,
+                    child: Container(
+                      width: 200,
+                      margin: EdgeInsets.only(right: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(10),
+                        image: content.thumbnailUrl.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(content.thumbnailUrl),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: Stack(
+                        children: [
+                          if (content.thumbnailUrl.isEmpty)
+                            Center(
+                              child: Icon(
+                                content.type == 'video' ? Icons.play_circle_fill : Icons.article,
+                                size: 48,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          Positioned(
+                            bottom: 10,
+                            left: 10,
+                            right: 10,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  content.title,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.visibility,
+                                      size: 14,
+                                      color: Colors.white.withValues(alpha: 0.8),
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      _formatNumber(content.views),
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(alpha: 0.8),
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        Positioned(
-                          bottom: 10,
-                          left: 10,
-                          right: 10,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                content.title,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 5),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.visibility,
-                                    size: 14,
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                  ),
-                                  SizedBox(width: 4),
-                                  Text(
-                                    _formatNumber(content.views),
-                                    style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.8),
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -510,6 +528,130 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  /// Seção de canais de comunidade
+  Widget _buildChannelsSection() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.all(20),
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Meus Canais',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 15),
+          if (_channels.isEmpty)
+            Container(
+              height: 150,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  'Nenhum canal disponível',
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+              ),
+            )
+          else
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _channels.length,
+                itemBuilder: (context, index) {
+                  final channel = _channels[index];
+                  return GestureDetector(
+                    onTap: () {
+                      if (channel.type == 'chat') {
+                        Navigator.pushNamed(context, '/community_chat', arguments: channel);
+                      } else if (channel.type == 'mural') {
+                        Navigator.pushNamed(context, '/community_mural', arguments: channel);
+                      }
+                    },
+                    child: Container(
+                      width: 200,
+                      margin: EdgeInsets.only(right: 15),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Stack(
+                        children: [
+                          // Conteúdo do canal
+                          Padding(
+                            padding: EdgeInsets.all(15),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                      channel.type == 'chat' ? Icons.chat : Icons.image,
+                                      size: 24,
+                                      color: AppColors.btnSecondary,
+                                    ),
+                                    SizedBox(width: 8),
+                                    if (channel.isPrivate)
+                                      Icon(
+                                        Icons.lock,
+                                        size: 16,
+                                        color: Colors.amber[800],
+                                      ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Text(
+                                  channel.name,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 5),
+                                if (channel.description != null)
+                                  Text(
+                                    channel.description!,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey[600],
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                SizedBox(height: 5),
+                                Text(
+                                  channel.type == 'chat' ? 'Chat' : 'Mural',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.btnSecondary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
         ],
       ),
     );

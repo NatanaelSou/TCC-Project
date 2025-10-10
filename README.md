@@ -11,20 +11,8 @@ Hoje, influencers e criadores usam redes como Instagram para aparecer no algorit
 
 2. Como funciona a criação de conteúdo
 O Premiora não se limita a um formato só. A ideia é que o criador tenha liberdade total para produzir e compartilhar:
+Vídeos (editados ou brutos), Live streaming para interações em tempo real, Podcasts e áudios exclusivos, Posts e publicações (memes, textos, reflexões, bastidores etc.), Cursos e materiais educativos, Qualquer outro tipo de mídia que ele queira experimentar. Tudo isso pode ser organizado dentro da própria plataforma, sem depender de outros apps.
 
-Vídeos (editados ou brutos)
-
-Live streaming para interações em tempo real
-
-Podcasts e áudios exclusivos
-
-Posts e publicações (memes, textos, reflexões, bastidores etc.)
-
-Cursos e materiais educativos
-
-Qualquer outro tipo de mídia que ele queira experimentar
-
-Tudo isso pode ser organizado dentro da própria plataforma, sem depender de outros apps.
 3. Monetização e assinaturas
 
 Criadores podem disponibilizar conteúdos pagos além dos gratuitos.
@@ -69,11 +57,10 @@ Resumindo: Premiora seria como um híbrido entre Patreon, Discord, Twitch e Inst
 Objetivo do MVP
 Criar uma versão mínima funcional com:
 
-- **Cadastro e login** de usuários (criadores e espectadores).
+- **Cadastro e login de usuários** (criadores e espectadores).
 - **Publicação de conteúdo básico** (posts de texto/imagem).
 - **Assinaturas mensais** com tiers simulados.
 - **Comunidade inicial** (chat/mural).
-- **Conteúdo gratuito mínimo** para todos os usuários.
 
 ## Estrutura do projeto
 

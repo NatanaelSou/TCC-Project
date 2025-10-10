@@ -64,23 +64,28 @@ class CreatorSection extends StatelessWidget {
     },
   ];
 
+  final List<Map<String, dynamic>>? creators;
+
   const CreatorSection({
     required this.title,
     this.activeFilters,
+    this.creators,
     super.key,
   });
 
   /// Filtra os criadores baseado nos filtros ativos
   List<Map<String, dynamic>> get _filteredCreators {
+    final data = creators ?? _creatorsData;
+
     if (activeFilters == null || activeFilters!.isEmpty) {
-      return _creatorsData;
+      return data;
     }
 
     if (activeFilters!.contains(AppStrings.filterAll)) {
-      return _creatorsData;
+      return data;
     }
 
-    return _creatorsData.where((creator) {
+    return data.where((creator) {
       return activeFilters!.contains(creator['category']);
     }).toList();
   }

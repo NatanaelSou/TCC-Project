@@ -79,6 +79,15 @@ class UserState extends ChangeNotifier {
     }
   }
 
+  /// Atualiza apenas o email do usuário
+  /// @param newEmail Novo email do usuário
+  void setEmail(String newEmail) {
+    if (_user != null) {
+      _user = _user!.copyWith(email: newEmail);
+      notifyListeners();
+    }
+  }
+
   /// Atualiza apenas o avatar do usuário
   /// @param avatar Nova URL do avatar
   void setProfile(String avatar) {

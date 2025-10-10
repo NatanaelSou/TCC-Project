@@ -1,30 +1,22 @@
-# TODO List - TCC Project Refactoring
+# TODO: Implement Community Features
 
-## Completed Tasks
+## Overview
+Implement community screens for chat and mural channels, update profile page to display user's channels, add navigation routes, and ensure tier-based access control.
 
-- [x] Create User model with fromJson, toJson, copyWith, and equality
-- [x] Create Validators utility with email and password validation
-- [x] Create HttpService base class for HTTP operations
-- [x] Update AuthService to extend HttpService and return User objects
-- [x] Update ApiService to extend HttpService and return User objects
-- [x] Update UserState to use User model instead of separate properties
-- [x] Update LoginScreen to use Validators and UserState.loginWithUser
-- [x] Create FilterManager for managing filter state
-- [x] Test the app by running flutter run
+## Goals
+- Create community_chat_screen.dart for chat channels with message display and sending.
+- Create community_mural_screen.dart for mural channels with post creation and display.
+- Update profile_page.dart to show user's created channels with navigation.
+- Add routes in main.dart for community screens.
+- Ensure UI is responsive and integrates with Material Design.
+- Add comments in Portuguese for new code.
+- Test community features including tier restrictions.
 
-## Notes
-
-- AuthService now uses /worker-login endpoint as per backend API
-- All services now return User objects instead of Map<String, dynamic>
-- Validation logic moved to Validators utility
-- Filter logic extracted to FilterManager with ChangeNotifier
-- UserState now holds a User? object instead of separate fields
-- HttpService provides common HTTP methods for subclasses
-- Tests created for User model (though import path may need adjustment)
-
-## Next Steps (if needed)
-
-- Add FilterManager to main.dart providers
-- Update home_page.dart to use FilterManager instead of local state
-- Run tests with flutter test
-- Fix any compilation errors
+## Steps
+- [x] Update ProfileService.getChannels to return List<Channel>
+- [x] Update profile_page.dart to add channels section with navigation
+- [x] Create lib/screens/community_chat_screen.dart
+- [x] Create lib/screens/community_mural_screen.dart
+- [x] Update lib/main.dart to add routes for community screens
+- [ ] Test community features: create channels, join, send messages, create mural posts, ensure tier restrictions work
+- [ ] Ensure UI responsiveness and Material Design integration
