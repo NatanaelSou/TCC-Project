@@ -176,7 +176,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     Row(
                       children: [
                         Text(
-                          '${widget.post.creatorId ?? 'Anônimo'}',
+                          widget.post.creatorId ?? 'Anônimo',
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -464,7 +464,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 Row(
                   children: [
                     Text(
-                      '${comment.userId}',
+                      comment.userId,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: AppColors.textDark,

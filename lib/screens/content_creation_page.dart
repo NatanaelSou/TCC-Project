@@ -88,7 +88,7 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
                             ),
                           ),
                           Text(
-                            '${Provider.of<UserState>(context).user?.name ?? 'Anônimo'}',
+                            Provider.of<UserState>(context).user?.name ?? 'Anônimo',
                             style: const TextStyle(
                               color: AppColors.textDark,
                               fontSize: 14,
@@ -133,13 +133,9 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
 
       if (!mounted) return;
 
-      if (content != null) {
-        // Retorna o conteúdo criado para a página anterior
-        navigator.pop(content);
-      } else {
-        _showErrorSnackBar('Erro ao criar conteúdo. Tente novamente.');
-      }
-    } catch (e) {
+      // Retorna o conteúdo criado para a página anterior
+      navigator.pop(content);
+        } catch (e) {
       if (!mounted) return;
       _showErrorSnackBar('Erro inesperado: ${e.toString()}');
     } finally {

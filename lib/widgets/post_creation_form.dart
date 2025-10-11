@@ -260,7 +260,7 @@ class _PostCreationFormState extends State<PostCreationForm> {
                   subtitle: Text('Marcar se contém conteúdo adulto', style: TextStyle(color: AppColors.textGrey)),
                   value: _is18Plus,
                   onChanged: (value) => setState(() => _is18Plus = value),
-                  activeColor: AppColors.btnSecondary,
+                  activeThumbColor: AppColors.btnSecondary,
                 ),
 
                 SwitchListTile(
@@ -268,7 +268,7 @@ class _PostCreationFormState extends State<PostCreationForm> {
                   subtitle: Text('Apenas para assinantes pagantes', style: TextStyle(color: AppColors.textGrey)),
                   value: _isPrivate,
                   onChanged: (value) => setState(() => _isPrivate = value),
-                  activeColor: AppColors.btnSecondary,
+                  activeThumbColor: AppColors.btnSecondary,
                 ),
 
                 // Seletor de tier (Patreon-style)
@@ -284,7 +284,7 @@ class _PostCreationFormState extends State<PostCreationForm> {
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    value: _selectedTier,
+                    initialValue: _selectedTier,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -334,7 +334,7 @@ class _PostCreationFormState extends State<PostCreationForm> {
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    value: _selectedQuality,
+                    initialValue: _selectedQuality,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),

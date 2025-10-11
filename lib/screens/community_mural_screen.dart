@@ -230,8 +230,8 @@ class _CommunityMuralScreenState extends State<CommunityMuralScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showCreatePostModal,
-        child: Icon(Icons.add),
         backgroundColor: AppColors.btnSecondary,
+        child: Icon(Icons.add),
       ),
     );
   }

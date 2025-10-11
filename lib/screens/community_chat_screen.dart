@@ -193,6 +193,7 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
                 SizedBox(width: 8),
                 FloatingActionButton(
                   onPressed: _isSending ? null : _sendMessage,
+                  mini: true,
                   child: _isSending
                       ? SizedBox(
                           width: 20,
@@ -200,7 +201,6 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : Icon(Icons.send),
-                  mini: true,
                 ),
               ],
             ),

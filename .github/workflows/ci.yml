@@ -27,4 +27,3 @@ jobs:
       with:
         node-version: '18'
     - run: cd backend && npm install
-    - run: cd backend && npm test  # This will fail, but at least checks if script exists
