@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/profile_models.dart';
 import '../models/comment.dart';
 import '../constants.dart';
@@ -283,11 +284,19 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     if (widget.post.images!.length == 1) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          widget.post.images!.first,
+        child: CachedNetworkImage(
+          imageUrl: widget.post.images!.first,
           fit: BoxFit.cover,
           width: double.infinity,
           height: 300,
+          placeholder: (context, url) => Container(
+            color: Colors.grey[300],
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: Colors.grey[300],
+            child: Icon(Icons.image_not_supported, color: Colors.grey[600]),
+          ),
         ),
       );
     } else {
@@ -303,9 +312,17 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         itemBuilder: (context, index) {
           return ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              widget.post.images![index],
+            child: CachedNetworkImage(
+              imageUrl: widget.post.images![index],
               fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Colors.grey[300],
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[300],
+                child: Icon(Icons.image_not_supported, color: Colors.grey[600]),
+              ),
             ),
           );
         },

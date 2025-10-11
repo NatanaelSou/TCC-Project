@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../user_state.dart';
 import '../constants.dart';
 import '../services/community_service.dart';
@@ -348,9 +349,17 @@ class _CommunityPageState extends State<CommunityPage> {
                       margin: EdgeInsets.only(right: 8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        image: DecorationImage(
-                          image: NetworkImage(post.images![index]),
-                          fit: BoxFit.cover,
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: post.images![index],
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: Colors.grey[300],
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[300],
+                          child: Icon(Icons.image_not_supported, color: Colors.grey[600]),
                         ),
                       ),
                     );
@@ -492,8 +501,8 @@ class _CommunityPageState extends State<CommunityPage> {
       floatingActionButton: _selectedChannel?.type == 'mural'
           ? FloatingActionButton(
               onPressed: _showCreatePostModal,
-              child: Icon(Icons.add),
               backgroundColor: AppColors.btnSecondary,
+              child: Icon(Icons.add),
             )
           : null,
       body: Row(
@@ -610,6 +619,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                 SizedBox(width: 8),
                                 FloatingActionButton(
                                   onPressed: _isSending ? null : _sendMessage,
+                                  mini: true,
                                   child: _isSending
                                       ? SizedBox(
                                           width: 20,
@@ -617,7 +627,6 @@ class _CommunityPageState extends State<CommunityPage> {
                                           child: CircularProgressIndicator(strokeWidth: 2),
                                         )
                                       : Icon(Icons.send),
-                                  mini: true,
                                 ),
                               ],
                             ),

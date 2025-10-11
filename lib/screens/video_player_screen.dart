@@ -24,8 +24,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   static const double desktopBreakpoint = 1400;
 
   late VideoPlayerController _controller;
-  late AnimationController _controlsAnimationController;
-  late Animation<double> _controlsAnimation;
+  AnimationController? _controlsAnimationController;
+  Animation<double>? _controlsAnimation;
 
   bool _isInitialized = false;
   bool _isPlaying = false;
@@ -70,7 +70,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
       vsync: this,
     );
     _controlsAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controlsAnimationController, curve: Curves.easeInOut),
+      CurvedAnimation(parent: _controlsAnimationController!, curve: Curves.easeInOut),
     );
 
     setState(() {
@@ -91,22 +91,23 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   }
 
   void _onVideoTap() {
+    if (_controlsAnimationController == null) return;
     _controlsTimer?.cancel();
     setState(() {
       _showControls = !_showControls;
     });
     if (_showControls) {
-      _controlsAnimationController.forward();
+      _controlsAnimationController!.forward();
       _controlsTimer = Timer(const Duration(seconds: 3), () {
         if (mounted) {
           setState(() {
             _showControls = false;
           });
-          _controlsAnimationController.reverse();
+          _controlsAnimationController!.reverse();
         }
       });
     } else {
-      _controlsAnimationController.reverse();
+      _controlsAnimationController!.reverse();
     }
   }
 
@@ -144,7 +145,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _controller.dispose();
-    _controlsAnimationController.dispose();
+    _controlsAnimationController?.dispose();
     _commentController.dispose();
     _scrollController.dispose();
     _controlsTimer?.cancel();
@@ -319,10 +320,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     final isMobile = screenWidth <= mobileBreakpoint;
 
     return AnimatedBuilder(
-      animation: _controlsAnimation,
+      animation: _controlsAnimation ?? AlwaysStoppedAnimation(1.0),
       builder: (context, child) {
         return Opacity(
-          opacity: screenWidth <= tabletBreakpoint ? 1.0 : _controlsAnimation.value,
+          opacity: screenWidth <= tabletBreakpoint ? 1.0 : (_controlsAnimation?.value ?? 1.0),
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
