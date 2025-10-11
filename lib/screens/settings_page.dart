@@ -251,23 +251,28 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: Text('Cancelar'),
                     ),
                     TextButton(
-                      onPressed: () async {
-                        if (_newPasswordController.text != _confirmPasswordController.text) {
-                          setState(() {
-                            _errorMessage = 'As senhas não coincidem';
-                          });
-                          Navigator.of(context).pop();
-                          return;
-                        }
+            onPressed: () async {
+              if (_newPasswordController.text != _confirmPasswordController.text) {
+                setState(() {
+                  _errorMessage = 'As senhas não coincidem';
+                });
+                if (mounted) {
+                  Navigator.of(context).pop();
+                }
+                return;
+              }
+              final navigator = Navigator.of(context);
                         // Simulação de mudança de senha
                         await Future.delayed(Duration(seconds: 1));
-                        setState(() {
-                          _successMessage = 'Senha alterada com sucesso!';
-                          _currentPasswordController.clear();
-                          _newPasswordController.clear();
-                          _confirmPasswordController.clear();
-                        });
-                        Navigator.of(context).pop();
+                        if (mounted) {
+                          setState(() {
+                            _successMessage = 'Senha alterada com sucesso!';
+                            _currentPasswordController.clear();
+                            _newPasswordController.clear();
+                            _confirmPasswordController.clear();
+                          });
+                          navigator.pop();
+                        }
                       },
                       child: Text('Alterar'),
                     ),

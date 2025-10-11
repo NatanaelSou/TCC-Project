@@ -200,10 +200,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: AppDimensions.spacingLarge, vertical: 2),
       decoration: BoxDecoration(
-        color: isRead ? Colors.white : AppColors.btnSecondary.withOpacity(0.05),
+        color: isRead ? Colors.white : AppColors.btnSecondary.withAlpha(13),
         borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
         border: Border.all(
-          color: isRead ? Colors.grey.shade200 : AppColors.btnSecondary.withOpacity(0.2),
+          color: isRead ? Colors.grey.shade200 : AppColors.btnSecondary.withAlpha(51),
         ),
       ),
       child: ListTile(

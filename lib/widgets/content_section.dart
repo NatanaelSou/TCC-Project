@@ -35,13 +35,9 @@ class ContentSection extends StatelessWidget {
   }
 
   /// Navega para a tela de detalhes do post
-  void _navigateToPostDetail(BuildContext context, ProfileContent content) async {
-    // Incrementa visualizações
-    try {
-      await ContentService(baseUrl: 'http://localhost:3000/api').incrementViews(content.id);
-    } catch (e) {
-      // Ignora erro de incremento
-    }
+  void _navigateToPostDetail(BuildContext context, ProfileContent content) {
+    // Incrementa visualizações (não aguarda)
+    ContentService(baseUrl: 'http://localhost:3000/api').incrementViews(content.id).catchError((e) => null);
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => PostDetailScreen(post: content),
@@ -132,7 +128,7 @@ class ContentSection extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withAlpha(179),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -166,7 +162,7 @@ class ContentSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Color(int.parse('0xFF${tier.color.substring(1)}')).withOpacity(0.9),
+        color: Color(int.parse('0xFF${tier.color.substring(1)}')).withAlpha(230),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(

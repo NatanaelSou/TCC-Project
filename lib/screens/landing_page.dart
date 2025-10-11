@@ -4,7 +4,6 @@
 // Página inicial com design responsivo para mobile e desktop
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../constants.dart';
 import '../services/auth_service.dart';
 import '../user_state.dart';
 import '../widgets/header_widget.dart';
@@ -95,7 +94,7 @@ class _LandingPageState extends State<LandingPage> {
                 ),
                 // Hero Section
                 HeroSectionWidget(
-                  onStartPressed: () {}, // Placeholder para ação de "Comece Agora"
+                  onStartPressed: _showRegisterDialog, // Ação para abrir o modal de registro ao clicar em "Comece Agora"
                   onLoginPressed: _showLoginDialog,
                 ),
                 // Features Section

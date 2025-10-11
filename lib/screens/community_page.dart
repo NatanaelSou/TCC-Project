@@ -125,9 +125,11 @@ class _CommunityPageState extends State<CommunityPage> {
       _messageController.clear();
       await _loadMessages(_selectedChannel!.id);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao enviar mensagem: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao enviar mensagem: ${e.toString()}')),
+        );
+      }
     } finally {
       setState(() {
         _isSending = false;
@@ -229,12 +231,16 @@ class _CommunityPageState extends State<CommunityPage> {
 
       _titleController.clear();
       _descriptionController.clear();
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
       await _loadPosts(_selectedChannel!.id);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao criar post: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao criar post: ${e.toString()}')),
+        );
+      }
     } finally {
       setState(() {
         _isCreating = false;

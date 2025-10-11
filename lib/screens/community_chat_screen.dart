@@ -79,9 +79,11 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
       _messageController.clear();
       await _loadMessages(); // Recarrega mensagens após enviar
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao enviar mensagem: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao enviar mensagem: ${e.toString()}')),
+        );
+      }
     } finally {
       setState(() {
         _isSending = false;

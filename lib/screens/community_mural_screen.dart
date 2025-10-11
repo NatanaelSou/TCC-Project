@@ -82,12 +82,16 @@ class _CommunityMuralScreenState extends State<CommunityMuralScreen> {
 
       _titleController.clear();
       _descriptionController.clear();
-      Navigator.of(context).pop(); // Fecha o modal
+      if (mounted) {
+        Navigator.of(context).pop(); // Fecha o modal
+      }
       await _loadPosts(); // Recarrega posts
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao criar post: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao criar post: ${e.toString()}')),
+        );
+      }
     } finally {
       setState(() {
         _isCreating = false;

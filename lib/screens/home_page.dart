@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Widgets personalizados
-import '../widgets/sidebar_item.dart';
 import '../widgets/sidebar_widget.dart';
 import '../widgets/top_bar_widget.dart';
 import '../widgets/home_content_widget.dart';
@@ -10,7 +9,6 @@ import '../widgets/content_type_bottom_sheet.dart';
 
 // Serviços e Estado
 import '../user_state.dart';
-import '../utils/filter_manager.dart';
 import '../constants.dart';
 import '../mock_data.dart';
 import '../models/profile_models.dart';
@@ -110,7 +108,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     // Estado do Usuário e Filtros
     final userState = Provider.of<UserState>(context);
-    final filterManager = Provider.of<FilterManager>(context);
 
     return LayoutBuilder(
       builder: (context, constraints) {

@@ -103,9 +103,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         _commentController.clear();
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao adicionar comentário: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao adicionar comentário: $e')),
+        );
+      }
     }
   }
 
@@ -226,7 +228,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: Color(int.parse('0xFF${tier.color.substring(1)}')).withOpacity(0.1),
+        color: Color(int.parse('0xFF${tier.color.substring(1)}')).withAlpha(26),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Color(int.parse('0xFF${tier.color.substring(1)}')),

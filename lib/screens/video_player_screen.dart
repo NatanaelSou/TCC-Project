@@ -21,7 +21,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   // Breakpoints responsivos
   static const double mobileBreakpoint = 600;
   static const double tabletBreakpoint = 1000;
-  static const double desktopBreakpoint = 1400;
 
   late VideoPlayerController _controller;
   AnimationController? _controlsAnimationController;
@@ -42,7 +41,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   Duration _totalDuration = Duration.zero;
 
   List<Comment> _comments = [];
-  List<ProfileContent> _similarVideos = [];
   List<ProfileContent> _recommendedVideos = [];
   final TextEditingController _commentController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -133,7 +131,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     // Load comments and similar videos
     setState(() {
       _comments = getCommentsForContent(widget.video.id);
-      _similarVideos = getSimilarVideos(widget.video);
       _recommendedVideos = mockVideos.where((v) => v.id != widget.video.id).take(5).toList();
       // Mock like/dislike counts based on views
       _likes = (widget.video.views * 0.1).round();
@@ -232,9 +229,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isWideScreen = screenWidth > tabletBreakpoint;
-    final isMobile = screenWidth <= mobileBreakpoint;
-    final isTablet = screenWidth > mobileBreakpoint && screenWidth <= tabletBreakpoint;
-    final isDesktop = screenWidth > tabletBreakpoint;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -330,12 +324,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: isMobile ? [
-                  Colors.black.withOpacity(0.98),
-                  Colors.black.withOpacity(0.8),
-                  Colors.black.withOpacity(0.6),
+                  Colors.black.withAlpha(250),
+                  Colors.black.withAlpha(204),
+                  Colors.black.withAlpha(153),
                 ] : [
-                  Colors.black.withOpacity(0.7),
-                  Colors.black.withOpacity(0.3),
+                  Colors.black.withAlpha(179),
+                  Colors.black.withAlpha(77),
                   Colors.transparent,
                 ],
               ),
@@ -417,9 +411,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                           thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
                           overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
                           activeTrackColor: Colors.red,
-                          inactiveTrackColor: Colors.white.withOpacity(0.3),
+                          inactiveTrackColor: Colors.white.withAlpha(77),
                           thumbColor: Colors.red,
-                          overlayColor: Colors.red.withOpacity(0.3),
+                          overlayColor: Colors.red.withAlpha(77),
                         ),
                         child: Slider(
                           value: _currentPosition.inSeconds.toDouble(),
