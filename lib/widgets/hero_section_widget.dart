@@ -37,16 +37,16 @@ class HeroSectionWidget extends StatelessWidget {
                         style: TextStyle(
                           fontSize: titleFontSize,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: AppColors.textDark,
                           height: 1.2,
                         ),
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        'Descubra e apoie seus criadores favoritos com assinaturas exclusivas. Acesse conteúdo único, interaja na comunidade e seja parte de algo especial.',
+                        'Descubra e apoie seus criadores favoritos com assinaturas exclusivas no ${AppStrings.appTitle}. Acesse conteúdo único, interaja na comunidade e seja parte de algo especial.',
                         style: TextStyle(
                           fontSize: descFontSize,
-                          color: Colors.black87,
+                          color: AppColors.textGrey,
                           height: 1.6,
                         ),
                       ),
@@ -68,7 +68,7 @@ class HeroSectionWidget extends StatelessWidget {
                   child: Container(
                     height: 400,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF5F5F5),
+                      color: AppColors.cardBg,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Center(
@@ -91,7 +91,7 @@ class HeroSectionWidget extends StatelessWidget {
                   height: 250,
                   margin: const EdgeInsets.only(bottom: 40),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5F5F5),
+                    color: AppColors.cardBg,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Center(
@@ -110,17 +110,17 @@ class HeroSectionWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: titleFontSize,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: AppColors.textDark,
                     height: 1.2,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Descubra e apoie seus criadores favoritos com assinaturas exclusivas. Acesse conteúdo único, interaja na comunidade e seja parte de algo especial.',
+                  'Descubra e apoie seus criadores favoritos com assinaturas exclusivas no ${AppStrings.appTitle}. Acesse conteúdo único, interaja na comunidade e seja parte de algo especial.',
                   style: TextStyle(
                     fontSize: descFontSize,
-                    color: Colors.black87,
+                    color: AppColors.textGrey,
                     height: 1.6,
                   ),
                   textAlign: TextAlign.center,
@@ -161,7 +161,7 @@ class HeroSectionWidget extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: Colors.black),
+        side: BorderSide(color: AppColors.secondary),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
         ),
@@ -169,7 +169,7 @@ class HeroSectionWidget extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(color: AppColors.textDark),
       ),
     );
   }

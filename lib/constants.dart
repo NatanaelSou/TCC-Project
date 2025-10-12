@@ -9,9 +9,9 @@ class AppColors {
 
   // Sidebar - Cores específicas da barra lateral
   static const Color sidebar = Colors.white;
-  static const Color sidebarItemActive = Colors.black;
+  static const Color sidebarItemActive = Color.fromARGB(255, 155, 210, 255); // Lilac for active
   static const Color sidebarPromptBg = Color.fromARGB(184, 255, 255, 255);
-  static const Color sidebarPromptShadow = Color(0x30FF6F91);
+  static const Color sidebarPromptShadow = Color(0x30C8A2C8); // Lilac shadow
 
   // Text - Cores para textos em diferentes contextos
   static const Color textLight = Color.fromARGB(255, 255, 255, 255);
@@ -20,26 +20,26 @@ class AppColors {
 
   // Icons - Cores para ícones
   static const Color iconLight = Colors.white;
-  static const Color iconDark = Colors.black;
+  static const Color iconDark = Color(0xFFADD8E6); // Light blue for icons
 
   // Cards - Cores para cards de conteúdo
-  static const Color cardBg = Color(0xFFF5F5F7);
+  static const Color cardBg = Colors.white;
   static const Color cardImagePlaceholder = Colors.grey;
 
   // Inputs - Cores para campos de entrada
   static const Color inputFill = Colors.white;
 
   // Background - Cores de fundo
-  static const Color background = Color(0xFFF5F5F5);
+  static const Color background = Colors.white;
 
   // Buttons - Cores para botões
-  static const Color btnSecondary = Color(0xFFFF6F91);
+  static const Color btnSecondary = Color.fromARGB(255, 114, 203, 255); // Lilac
 }
 
 /// Classe para constantes de texto reutilizáveis
 class AppStrings {
   // Textos comuns da interface
-  static const String appTitle = 'App Flutter + Node.js + mySQL';
+  static const String appTitle = 'Apoia+';
   static const String loginTitle = 'Login';
   static const String logoutText = 'Logout';
   static const String welcomeMessage = 'Bem-vindo ao App!';

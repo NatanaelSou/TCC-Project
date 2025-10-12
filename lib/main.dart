@@ -14,6 +14,7 @@ import 'providers/theme_provider.dart';
 import 'screens/community_chat_screen.dart';
 import 'screens/community_mural_screen.dart';
 import 'models/community_models.dart';
+import 'constants.dart';
 
 /// Ponto de entrada da aplicação
 /// Inicializa o app com providers globais e configurações básicas
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
     return Consumer<ThemeNotifier>(
       builder: (context, theme, child) {
         return MaterialApp(
-          title: 'App Flutter + Node.js + mySQL',
+          title: AppStrings.appTitle,
           theme: theme.currentTheme,
           home: LandingPage(),
           routes: {

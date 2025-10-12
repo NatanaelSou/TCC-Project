@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// Widget para o cabeçalho da landing page com logo e navegação
 class HeaderWidget extends StatelessWidget {
@@ -21,21 +22,18 @@ class HeaderWidget extends StatelessWidget {
           // Logo
           Row(
             children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                  shape: BoxShape.circle,
-                ),
+              Icon(
+                Icons.volunteer_activism,
+                color: AppColors.secondary,
+                size: 32,
               ),
               const SizedBox(width: 8),
-              const Text(
-                'Premiora',
+              Text(
+                AppStrings.appTitle,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: AppColors.textDark,
                 ),
               ),
             ],
@@ -69,9 +67,9 @@ class HeaderWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 16,
-          color: Colors.black87,
+          color: AppColors.textDark,
         ),
       ),
     );
@@ -82,7 +80,7 @@ class HeaderWidget extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: Colors.black),
+        side: BorderSide(color: AppColors.secondary),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
         ),
@@ -90,7 +88,7 @@ class HeaderWidget extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.black),
+        style: TextStyle(color: AppColors.textDark),
       ),
     );
   }

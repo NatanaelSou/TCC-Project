@@ -36,15 +36,15 @@ class FeaturesSectionWidget extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
-      color: Colors.grey[50],
+      color: AppColors.background,
       child: Column(
         children: [
-          const Text(
-            'Por que escolher nossa plataforma?',
+          Text(
+            'Por que escolher o ${AppStrings.appTitle}?',
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: AppColors.textDark,
             ),
             textAlign: TextAlign.center,
           ),
@@ -82,11 +82,11 @@ class FeaturesSectionWidget extends StatelessWidget {
       width: isDesktop ? 250 : isTablet ? 200 : double.infinity,
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+        color: AppColors.cardBg,
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: AppColors.textDark.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -97,24 +97,24 @@ class FeaturesSectionWidget extends StatelessWidget {
           Icon(
             feature['icon'] as IconData,
             size: 50,
-            color: AppColors.btnSecondary,
+            color: AppColors.secondary,
           ),
           const SizedBox(height: 20),
           Text(
             feature['title'] as String,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: AppColors.textDark,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 15),
           Text(
             feature['description'] as String,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
-              color: Colors.black87,
+              color: AppColors.textGrey,
               height: 1.5,
             ),
             textAlign: TextAlign.center,

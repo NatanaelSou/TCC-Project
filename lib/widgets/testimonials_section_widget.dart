@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants.dart';
 
 /// Widget para a seção de depoimentos/testimonials da landing page
 class TestimonialsSectionWidget extends StatelessWidget {
@@ -29,12 +30,12 @@ class TestimonialsSectionWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
       child: Column(
         children: [
-          const Text(
-            'O que nossos usuários dizem',
+          Text(
+            'O que nossos usuários dizem sobre o ${AppStrings.appTitle}',
             style: TextStyle(
               fontSize: 36,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: AppColors.textDark,
             ),
             textAlign: TextAlign.center,
           ),
@@ -72,17 +73,17 @@ class TestimonialsSectionWidget extends StatelessWidget {
       width: isDesktop ? 300 : isTablet ? 250 : double.infinity,
       padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.grey[200]!),
+        color: AppColors.cardBg,
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+        border: Border.all(color: AppColors.secondary.withOpacity(0.2)),
       ),
       child: Column(
         children: [
           Text(
             '"${testimonial['text']}"',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
-              color: Colors.black87,
+              color: AppColors.textGrey,
               height: 1.6,
               fontStyle: FontStyle.italic,
             ),
@@ -91,10 +92,10 @@ class TestimonialsSectionWidget extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             testimonial['author'] as String,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: AppColors.textDark,
             ),
             textAlign: TextAlign.center,
           ),

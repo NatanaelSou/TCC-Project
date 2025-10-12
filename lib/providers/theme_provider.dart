@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants.dart';
 
 class ThemeNotifier extends ChangeNotifier {
   bool _isDark = false;
@@ -14,31 +15,105 @@ class ThemeNotifier extends ChangeNotifier {
 
   static final ThemeData _lightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: Colors.blue,
-    scaffoldBackgroundColor: Colors.white,
+    primaryColor: AppColors.primary, // Light blue
+    scaffoldBackgroundColor: AppColors.background, // White
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.white,
-      foregroundColor: Colors.black,
+      backgroundColor: AppColors.background, // White
+      foregroundColor: AppColors.textDark, // Black
     ),
     textTheme: TextTheme(
-      bodyLarge: TextStyle(color: Colors.black),
-      bodyMedium: TextStyle(color: Colors.black87),
+      bodyLarge: TextStyle(color: AppColors.textDark), // Black
+      bodyMedium: TextStyle(color: AppColors.textGrey), // Grey
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.secondary, // Lilac
+        foregroundColor: AppColors.textLight, // White
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
+        ),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: AppColors.secondary), // Lilac border
+        foregroundColor: AppColors.textDark, // Black
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
+        ),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: AppColors.inputFill, // White
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+        borderSide: BorderSide(color: AppColors.primary), // Light blue
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+        borderSide: BorderSide(color: AppColors.secondary), // Lilac
+      ),
+    ),
+    // cardTheme: CardTheme(
+    //   color: AppColors.cardBg, // White
+    //   elevation: 4,
+    //   shape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+    //   ),
+    // ),
     // Add more customizations as needed
   );
 
   static final ThemeData _darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: Colors.blueGrey,
-    scaffoldBackgroundColor: Colors.black,
+    primaryColor: AppColors.primary, // Light blue (adjust for dark if needed)
+    scaffoldBackgroundColor: Colors.grey[900], // Dark background
     appBarTheme: AppBarTheme(
-      backgroundColor: Colors.black,
-      foregroundColor: Colors.white,
+      backgroundColor: Colors.grey[900],
+      foregroundColor: AppColors.textLight, // White
     ),
     textTheme: TextTheme(
-      bodyLarge: TextStyle(color: Colors.white),
-      bodyMedium: TextStyle(color: Colors.white70),
+      bodyLarge: TextStyle(color: AppColors.textLight), // White
+      bodyMedium: TextStyle(color: Colors.grey[300]), // Light grey
     ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.secondary, // Lilac
+        foregroundColor: AppColors.textLight, // White
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
+        ),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: AppColors.secondary), // Lilac border
+        foregroundColor: AppColors.textLight, // White
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimensions.borderRadiusLarge),
+        ),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.grey[800],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+        borderSide: BorderSide(color: AppColors.primary), // Light blue
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+        borderSide: BorderSide(color: AppColors.secondary), // Lilac
+      ),
+    ),
+    // cardTheme: CardTheme(
+    //   color: Colors.grey[800],
+    //   elevation: 4,
+    //   shape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+    //   ),
+    // ),
     // Add more customizations as needed
   );
 }
