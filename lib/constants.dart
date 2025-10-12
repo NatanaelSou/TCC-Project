@@ -9,9 +9,9 @@ class AppColors {
 
   // Sidebar - Cores específicas da barra lateral
   static const Color sidebar = Colors.white;
-  static const Color sidebarItemActive = Color.fromARGB(255, 155, 210, 255); // Lilac for active
+  static const Color sidebarItemActive = Colors.black;
   static const Color sidebarPromptBg = Color.fromARGB(184, 255, 255, 255);
-  static const Color sidebarPromptShadow = Color(0x30C8A2C8); // Lilac shadow
+  static const Color sidebarPromptShadow = Color(0x30FF6F91);
 
   // Text - Cores para textos em diferentes contextos
   static const Color textLight = Color.fromARGB(255, 255, 255, 255);
@@ -20,20 +20,20 @@ class AppColors {
 
   // Icons - Cores para ícones
   static const Color iconLight = Colors.white;
-  static const Color iconDark = Color(0xFFADD8E6); // Light blue for icons
+  static const Color iconDark = Colors.black;
 
   // Cards - Cores para cards de conteúdo
-  static const Color cardBg = Colors.white;
+  static const Color cardBg = Color(0xFFF5F5F7);
   static const Color cardImagePlaceholder = Colors.grey;
 
   // Inputs - Cores para campos de entrada
   static const Color inputFill = Colors.white;
 
   // Background - Cores de fundo
-  static const Color background = Colors.white;
+  static const Color background = Color(0xFFF5F5F5);
 
   // Buttons - Cores para botões
-  static const Color btnSecondary = Color.fromARGB(255, 114, 203, 255); // Lilac
+  static const Color btnSecondary = Color(0xFFFF6F91);
 }
 
 /// Classe para constantes de texto reutilizáveis

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 /// Widget para o cabeçalho da landing page com logo e navegação
 class HeaderWidget extends StatelessWidget {
