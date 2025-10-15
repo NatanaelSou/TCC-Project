@@ -3,11 +3,12 @@
 // Widget que exibe uma seção de criadores com suporte a filtragem múltipla
 // Permite filtrar criadores por múltiplas categorias simultaneamente
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import '../constants.dart';
 
 /// Seção de criadores com suporte a filtragem
 /// Exibe cards de criadores em layout horizontal rolável
-class CreatorSection extends StatelessWidget {
+class CreatorSection extends StatefulWidget {
   // Propriedades
   final String title;
   final List<String>? activeFilters;
@@ -66,28 +67,43 @@ class CreatorSection extends StatelessWidget {
 
   final List<Map<String, dynamic>>? creators;
 
-  const CreatorSection({
+  CreatorSection({
     required this.title,
     this.activeFilters,
     this.creators,
     super.key,
   });
 
+  
+  @override
+  State<CreatorSection> createState() => _CreatorSectionState();
+}
+
+class _CreatorSectionState extends State<CreatorSection> {
+  final ScrollController _scrollController = ScrollController();
+
   /// Filtra os criadores baseado nos filtros ativos
   List<Map<String, dynamic>> get _filteredCreators {
-    final data = creators ?? _creatorsData;
+    final data = widget.creators ?? CreatorSection._creatorsData;
 
-    if (activeFilters == null || activeFilters!.isEmpty) {
+    if (widget.activeFilters == null || widget.activeFilters!.isEmpty) {
       return data;
     }
 
-    if (activeFilters!.contains(AppStrings.filterAll)) {
+    if (widget.activeFilters!.contains(AppStrings.filterAll)) {
       return data;
     }
 
     return data.where((creator) {
-      return activeFilters!.contains(creator['category']);
+      return widget.activeFilters!.contains(creator['category']);
     }).toList();
+  }
+
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   /// Constrói o cabeçalho da seção
@@ -95,7 +111,7 @@ class CreatorSection extends StatelessWidget {
     return Row(
       children: [
         Text(
-          title,
+          widget.title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -105,12 +121,24 @@ class CreatorSection extends StatelessWidget {
         Spacer(),
         IconButton(
           icon: Icon(Icons.chevron_left),
-          onPressed: () {},
+          onPressed: () {
+            _scrollController.animateTo(
+              _scrollController.offset - 300,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          },
           color: AppColors.iconDark,
         ),
         IconButton(
           icon: Icon(Icons.chevron_right),
-          onPressed: () {},
+          onPressed: () {
+            _scrollController.animateTo(
+              _scrollController.offset + 300,
+              duration: Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          },
           color: AppColors.iconDark,
         ),
       ],
@@ -192,12 +220,23 @@ class CreatorSection extends StatelessWidget {
       children: [
         _buildHeader(),
         SizedBox(height: AppDimensions.spacingSmall),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: filteredCreators
-                .map((creator) => _buildCreatorCard(creator))
-                .toList(),
+        // ScrollConfiguration deve envolver o SingleChildScrollView
+        ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(
+            dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+            },
+          ),
+          child: SingleChildScrollView(
+            controller: _scrollController, // use _scrollController
+            scrollDirection: Axis.horizontal,
+            physics: const ClampingScrollPhysics(), // melhor para desktop/web
+            child: Row(
+              children: filteredCreators
+                  .map((creator) => _buildCreatorCard(creator))
+                  .toList(),
+            ),
           ),
         ),
       ],

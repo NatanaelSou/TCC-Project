@@ -3,6 +3,8 @@
 // Widget que exibe uma seção de conteúdo (posts, vídeos, etc.)
 // Mostra itens de conteúdo em layout de grid responsivo
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+
 import '../constants.dart';
 import '../models/profile_models.dart';
 import '../mock_data.dart';
@@ -12,7 +14,7 @@ import '../services/content_service.dart';
 
 /// Seção de conteúdo com layout de grid
 /// Exibe cards de conteúdo como posts, vídeos, etc.
-class ContentSection extends StatelessWidget {
+class ContentSection extends StatefulWidget {
   // Propriedades
   final String title;
   final List<ProfileContent> contents;
@@ -25,6 +27,19 @@ class ContentSection extends StatelessWidget {
     super.key,
   });
 
+  @override
+  State<ContentSection> createState() => _ContentSectionState();
+}
+
+class _ContentSectionState extends State<ContentSection> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   /// Navega para o player de vídeo
   void _navigateToVideoPlayer(BuildContext context, ProfileContent content) {
     Navigator.of(context).push(
@@ -35,10 +50,12 @@ class ContentSection extends StatelessWidget {
   }
 
   /// Navega para a tela de detalhes do post
-  void _navigateToPostDetail(BuildContext context, ProfileContent content) async {
+  void _navigateToPostDetail(
+      BuildContext context, ProfileContent content) async {
     // Incrementa visualizações
     try {
-      await ContentService(baseUrl: 'http://192.168.1.7:3000/api').incrementViews(content.id);
+      await ContentService(baseUrl: 'http://192.168.1.7:3000/api')
+          .incrementViews(content.id);
     } catch (e) {
       // Ignora erro de incremento
     }
@@ -54,7 +71,7 @@ class ContentSection extends StatelessWidget {
     return Row(
       children: [
         Text(
-          title,
+          widget.title,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,
@@ -62,7 +79,7 @@ class ContentSection extends StatelessWidget {
           ),
         ),
         Spacer(),
-        if (showViewAll)
+        if (widget.showViewAll)
           TextButton(
             onPressed: () {},
             child: Text(
@@ -89,7 +106,9 @@ class ContentSection extends StatelessWidget {
       },
       child: Container(
         width: 280,
-        margin: EdgeInsets.only(right: AppDimensions.spacingLarge, bottom: AppDimensions.spacingMedium),
+        margin: EdgeInsets.only(
+            right: AppDimensions.spacingLarge,
+            bottom: AppDimensions.spacingMedium),
         decoration: BoxDecoration(
           color: AppColors.cardBg,
           borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
@@ -117,7 +136,8 @@ class ContentSection extends StatelessWidget {
     return Container(
       height: 160,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimensions.borderRadiusMedium)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppDimensions.borderRadiusMedium)),
         image: DecorationImage(
           image: NetworkImage(content.thumbnailUrl),
           fit: BoxFit.cover,
@@ -166,7 +186,8 @@ class ContentSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Color(int.parse('0xFF${tier.color.substring(1)}')).withOpacity(0.9),
+        color:
+            Color(int.parse('0xFF${tier.color.substring(1)}')).withOpacity(0.9),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -257,8 +278,6 @@ class ContentSection extends StatelessWidget {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -266,12 +285,13 @@ class ContentSection extends StatelessWidget {
       children: [
         _buildHeader(),
         SizedBox(height: AppDimensions.spacingSmall),
-        if (contents.isEmpty)
+        if (widget.contents.isEmpty)
           Container(
             height: 100,
             decoration: BoxDecoration(
               color: AppColors.cardBg,
-              borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+              borderRadius:
+                  BorderRadius.circular(AppDimensions.borderRadiusMedium),
             ),
             child: Center(
               child: Text(
@@ -284,10 +304,22 @@ class ContentSection extends StatelessWidget {
             ),
           )
         else
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: contents.map((content) => _buildContentCard(context, content)).toList(),
+          ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: {
+                PointerDeviceKind.touch,
+                PointerDeviceKind.mouse,
+              },
+            ),
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              physics: const ClampingScrollPhysics(),
+              child: Row(
+                children: widget.contents
+                    .map((content) => _buildContentCard(context, content))
+                    .toList(),
+              ),
             ),
           ),
       ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/gestures.dart';
+
 import '../constants.dart';
 import '../utils/filter_manager.dart';
 import '../utils/content_utils.dart';
@@ -20,7 +22,8 @@ class HomeContentWidget extends StatelessWidget {
     // Função para filtrar conteúdos pela categoria selecionada
     List<ProfileContent> filterContents(List<ProfileContent> contents) {
       // Sempre mostrar tudo por padrão
-      if (filterManager.activeFilters.isEmpty || filterManager.isFilterActive('Todos')) {
+      if (filterManager.activeFilters.isEmpty ||
+          filterManager.isFilterActive('Todos')) {
         return contents;
       }
       return ContentUtils.filterContents(contents, filterManager.activeFilters);
@@ -32,31 +35,48 @@ class HomeContentWidget extends StatelessWidget {
     }
 
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: AppDimensions.spacingExtraLarge, vertical: AppDimensions.spacingLarge),
+      padding: EdgeInsets.symmetric(
+          horizontal: AppDimensions.spacingExtraLarge,
+          vertical: AppDimensions.spacingLarge),
       child: Column(
         children: [
           // Tags de filtro
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: FilterManager.availableFilters.map((filter) => FilterTag(
-                key: ValueKey(filter),
-                label: filter,
-                active: isFilterActive(filter),
-                onTap: () => filterManager.toggleFilter(filter),
-              )).toList(),
+          ScrollConfiguration(
+            behavior: ScrollConfiguration.of(context).copyWith(
+              dragDevices: {
+                PointerDeviceKind.mouse,
+                PointerDeviceKind.touch,
+              },
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const ClampingScrollPhysics(),
+              child: Row(
+                children: FilterManager.availableFilters
+                    .map((filter) => FilterTag(
+                          key: ValueKey(filter),
+                          label: filter,
+                          active: isFilterActive(filter),
+                          onTap: () => filterManager.toggleFilter(filter),
+                        ))
+                    .toList(),
+              ),
             ),
           ),
+
           SizedBox(height: AppDimensions.spacingExtraLarge),
           // Seções de criadores
           CreatorSection(
             title: 'Principais criadores',
-            activeFilters: filterManager.activeFilters,
           ),
           SizedBox(height: AppDimensions.spacingLarge),
-          CreatorSection(
+          ContentSection(
             title: 'Em alta esta semana',
-            activeFilters: filterManager.activeFilters,
+            contents: filterContents([
+              ...mockRecentPosts,
+              ...mockVideos,
+              ...mockExclusiveContent,
+            ]),
           ),
           SizedBox(height: AppDimensions.spacingExtraLarge),
           // Seções de conteúdo filtradas
@@ -115,7 +135,8 @@ class HomeContentWidget extends StatelessWidget {
           height: 100,
           decoration: BoxDecoration(
             color: AppColors.cardBg,
-            borderRadius: BorderRadius.circular(AppDimensions.borderRadiusMedium),
+            borderRadius:
+                BorderRadius.circular(AppDimensions.borderRadiusMedium),
           ),
           child: Center(
             child: Text(
