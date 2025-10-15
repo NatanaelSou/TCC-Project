@@ -16,7 +16,7 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  final CommunityService _communityService = CommunityService(baseUrl: 'http://localhost:3000/api');
+  final CommunityService _communityService = CommunityService(baseUrl: 'http://192.168.1.7:3000/api');
   List<Channel> _channels = [];
   bool _isLoading = true;
   String? _errorMessage;

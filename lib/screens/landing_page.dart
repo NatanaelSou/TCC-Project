@@ -4,7 +4,6 @@
 // Página inicial com design responsivo para mobile e desktop
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../constants.dart';
 import '../services/auth_service.dart';
 import '../user_state.dart';
 import '../widgets/header_widget.dart';
@@ -32,7 +31,7 @@ class _LandingPageState extends State<LandingPage> {
   final TextEditingController _loginPasswordController = TextEditingController();
 
   // Serviço de autenticação
-  final AuthService _authService = AuthService(baseUrl: 'http://localhost:3000/api');
+  final AuthService _authService = AuthService(baseUrl: 'http://192.168.1.7:3000/api');
 
   // Estados dos modais
   bool _showLoginModal = false;

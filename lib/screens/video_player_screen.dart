@@ -21,7 +21,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   // Breakpoints responsivos
   static const double mobileBreakpoint = 600;
   static const double tabletBreakpoint = 1000;
-  static const double desktopBreakpoint = 1400;
+  //static const double desktopBreakpoint = 1400;
 
   late VideoPlayerController _controller;
   AnimationController? _controlsAnimationController;
@@ -232,9 +232,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isWideScreen = screenWidth > tabletBreakpoint;
-    final isMobile = screenWidth <= mobileBreakpoint;
-    final isTablet = screenWidth > mobileBreakpoint && screenWidth <= tabletBreakpoint;
-    final isDesktop = screenWidth > tabletBreakpoint;
+    //final isMobile = screenWidth <= mobileBreakpoint;
+    //final isTablet = screenWidth > mobileBreakpoint && screenWidth <= tabletBreakpoint;
+    //final isDesktop = screenWidth > tabletBreakpoint;
 
     return Scaffold(
       backgroundColor: AppColors.background,

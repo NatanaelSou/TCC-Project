@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final ProfileService _profileService = ProfileService(baseUrl: 'http://localhost:3000/api');
+  final ProfileService _profileService = ProfileService(baseUrl: 'http://192.168.1.7:3000/api');
 
   ProfileStats? _stats;
   List<ProfileContent> _recentPosts = [];
