@@ -148,8 +148,11 @@ class CreatorSection extends StatelessWidget {
     return Container(
       height: AppDimensions.creatorCardImageHeight,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppDimensions.borderRadiusMedium)),
-        color: creator['imageColor'] as Color,
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppDimensions.borderRadiusMedium)),
+        color: (creator['imageColor'] is Color)
+            ? creator['imageColor'] as Color
+            : Colors.grey,
       ),
     );
   }
@@ -162,15 +165,14 @@ class CreatorSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            creator['name'],
+            creator['name'] ?? 'Nome desconhecido',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: AppColors.textDark,
             ),
           ),
-          SizedBox(height: 4),
           Text(
-            creator['description'],
+            creator['description'] ?? 'Sem descrição',
             style: TextStyle(
               fontSize: 12,
               color: AppColors.textGrey,
@@ -193,7 +195,9 @@ class CreatorSection extends StatelessWidget {
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: filteredCreators.map((creator) => _buildCreatorCard(creator)).toList(),
+            children: filteredCreators
+                .map((creator) => _buildCreatorCard(creator))
+                .toList(),
           ),
         ),
       ],

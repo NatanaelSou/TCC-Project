@@ -61,7 +61,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     if (widget.video.videoUrl == null) {
       throw Exception('O vídeo não possui uma URL válida.');
     }
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl!));
+    _controller =
+        VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl!));
     await _controller.initialize();
 
     // Initialize animation controller for controls
@@ -70,7 +71,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
       vsync: this,
     );
     _controlsAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controlsAnimationController!, curve: Curves.easeInOut),
+      CurvedAnimation(
+          parent: _controlsAnimationController!, curve: Curves.easeInOut),
     );
 
     setState(() {
@@ -134,7 +136,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     setState(() {
       _comments = getCommentsForContent(widget.video.id);
       _similarVideos = getSimilarVideos(widget.video);
-      _recommendedVideos = mockVideos.where((v) => v.id != widget.video.id).take(5).toList();
+      _recommendedVideos =
+          mockVideos.where((v) => v.id != widget.video.id).take(5).toList();
       // Mock like/dislike counts based on views
       _likes = (widget.video.views * 0.1).round();
       _dislikes = (widget.video.views * 0.02).round();
@@ -208,8 +211,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     });
   }
 
-
-
   void _submitComment() {
     if (_commentController.text.trim().isEmpty) return;
 
@@ -239,7 +240,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: isWideScreen ? _buildWideScreenLayout() : _buildNarrowScreenLayout(),
+        child: isWideScreen
+            ? _buildWideScreenLayout()
+            : _buildNarrowScreenLayout(),
       ),
     );
   }
@@ -284,8 +287,37 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
           _buildDescription(),
           _buildCommentsSection(),
           _buildRecommendations(),
+          _buildSimilarVideos(),
         ],
       ),
+    );
+  }
+
+  Widget _buildSimilarVideos() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            'Vídeos similares',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textDark,
+            ),
+          ),
+        ),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _similarVideos.length,
+          itemBuilder: (context, index) {
+            final video = _similarVideos[index];
+            return _buildRecommendedVideoItem(video);
+          },
+        ),
+      ],
     );
   }
 
@@ -323,21 +355,25 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
       animation: _controlsAnimation ?? AlwaysStoppedAnimation(1.0),
       builder: (context, child) {
         return Opacity(
-          opacity: screenWidth <= tabletBreakpoint ? 1.0 : (_controlsAnimation?.value ?? 1.0),
+          opacity: screenWidth <= tabletBreakpoint
+              ? 1.0
+              : (_controlsAnimation?.value ?? 1.0),
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: isMobile ? [
-                  Colors.black.withOpacity(0.98),
-                  Colors.black.withOpacity(0.8),
-                  Colors.black.withOpacity(0.6),
-                ] : [
-                  Colors.black.withOpacity(0.7),
-                  Colors.black.withOpacity(0.3),
-                  Colors.transparent,
-                ],
+                colors: isMobile
+                    ? [
+                        Colors.black.withOpacity(0.98),
+                        Colors.black.withOpacity(0.8),
+                        Colors.black.withOpacity(0.6),
+                      ]
+                    : [
+                        Colors.black.withOpacity(0.7),
+                        Colors.black.withOpacity(0.3),
+                        Colors.transparent,
+                      ],
               ),
             ),
             child: Column(
@@ -358,7 +394,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     IconButton(
                       onPressed: _toggleFullscreen,
                       icon: Icon(
-                        _isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen,
+                        _isFullscreen
+                            ? Icons.fullscreen_exit
+                            : Icons.fullscreen,
                         color: Colors.white,
                         size: 24,
                       ),
@@ -372,8 +410,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                   children: [
                     IconButton(
                       onPressed: () {
-                        final newPosition = _currentPosition - const Duration(seconds: 10);
-                        _seekToPosition(newPosition < Duration.zero ? Duration.zero : newPosition);
+                        final newPosition =
+                            _currentPosition - const Duration(seconds: 10);
+                        _seekToPosition(newPosition < Duration.zero
+                            ? Duration.zero
+                            : newPosition);
                       },
                       icon: const Icon(
                         Icons.replay_10,
@@ -393,8 +434,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     const SizedBox(width: 16),
                     IconButton(
                       onPressed: () {
-                        final newPosition = _currentPosition + const Duration(seconds: 10);
-                        _seekToPosition(newPosition > _totalDuration ? _totalDuration : newPosition);
+                        final newPosition =
+                            _currentPosition + const Duration(seconds: 10);
+                        _seekToPosition(newPosition > _totalDuration
+                            ? _totalDuration
+                            : newPosition);
                       },
                       icon: const Icon(
                         Icons.forward_10,
@@ -407,15 +451,18 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 const Spacer(),
                 // Bottom progress bar and time
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: Column(
                     children: [
                       // Progress bar
                       SliderTheme(
                         data: SliderTheme.of(context).copyWith(
                           trackHeight: 4,
-                          thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                          overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
+                          thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 6),
+                          overlayShape:
+                              const RoundSliderOverlayShape(overlayRadius: 12),
                           activeTrackColor: Colors.red,
                           inactiveTrackColor: Colors.white.withOpacity(0.3),
                           thumbColor: Colors.red,
@@ -518,15 +565,21 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 child: ElevatedButton.icon(
                   onPressed: _toggleFollow,
                   icon: Icon(
-                    _isFollowing ? Icons.notifications : Icons.notifications_outlined,
+                    _isFollowing
+                        ? Icons.notifications
+                        : Icons.notifications_outlined,
                     size: 16,
                   ),
                   label: Text(_isFollowing ? 'Inscrito' : 'Inscrever-se'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _isFollowing ? AppColors.btnSecondary : Colors.transparent,
-                    foregroundColor: _isFollowing ? Colors.white : AppColors.btnSecondary,
+                    backgroundColor: _isFollowing
+                        ? AppColors.btnSecondary
+                        : Colors.transparent,
+                    foregroundColor:
+                        _isFollowing ? Colors.white : AppColors.btnSecondary,
                     side: BorderSide(color: AppColors.btnSecondary),
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                   ),
                 ),
               ),
@@ -583,7 +636,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
               ),
               Text(
                 _likes.toString(),
-                style: TextStyle(color: AppColors.textGrey, fontSize: textFontSize),
+                style: TextStyle(
+                    color: AppColors.textGrey, fontSize: textFontSize),
               ),
             ],
           ),
@@ -600,7 +654,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
               ),
               Text(
                 _dislikes.toString(),
-                style: TextStyle(color: AppColors.textGrey, fontSize: textFontSize),
+                style: TextStyle(
+                    color: AppColors.textGrey, fontSize: textFontSize),
               ),
             ],
           ),
@@ -619,7 +674,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
               ),
               Text(
                 'Compartilhar',
-                style: TextStyle(color: AppColors.textGrey, fontSize: textFontSize),
+                style: TextStyle(
+                    color: AppColors.textGrey, fontSize: textFontSize),
               ),
             ],
           ),
@@ -640,7 +696,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
               ),
               Text(
                 'Salvar',
-                style: TextStyle(color: AppColors.textGrey, fontSize: textFontSize),
+                style: TextStyle(
+                    color: AppColors.textGrey, fontSize: textFontSize),
               ),
             ],
           ),
@@ -808,7 +865,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                                 style: TextButton.styleFrom(
                                   padding: EdgeInsets.zero,
                                   minimumSize: const Size(0, 0),
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
                                 child: const Text(
                                   'Responder',
@@ -832,8 +890,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
       ),
     );
   }
-
-
 
   Widget _buildRecommendations() {
     final screenWidth = MediaQuery.of(context).size.width;
