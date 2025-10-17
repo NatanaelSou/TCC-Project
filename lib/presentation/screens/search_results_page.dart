@@ -41,7 +41,11 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
 
     try {
       final creators = await _apiService.searchCreators(widget.query);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       final contents = await _apiService.searchContents(widget.query);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
       setState(() {
         _creators = creators;

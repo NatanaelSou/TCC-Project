@@ -68,6 +68,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     _controller =
         VideoPlayerController.networkUrl(Uri.parse(widget.video.videoUrl!));
     await _controller.initialize();
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
     // Initialize animation controller for controls
     _controlsAnimationController = AnimationController(
@@ -369,13 +371,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 end: Alignment.bottomCenter,
                 colors: isMobile
                     ? [
-                        Colors.black.withOpacity(0.98),
-                        Colors.black.withOpacity(0.8),
-                        Colors.black.withOpacity(0.6),
+                        Colors.black.withValues(alpha: 0.98),
+                        Colors.black.withValues(alpha: 0.8),
+                        Colors.black.withValues(alpha: 0.6),
                       ]
                     : [
-                        Colors.black.withOpacity(0.7),
-                        Colors.black.withOpacity(0.3),
+                        Colors.black.withValues(alpha: 0.7),
+                        Colors.black.withValues(alpha: 0.3),
                         Colors.transparent,
                       ],
               ),
@@ -468,9 +470,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                           overlayShape:
                               const RoundSliderOverlayShape(overlayRadius: 12),
                           activeTrackColor: Colors.red,
-                          inactiveTrackColor: Colors.white.withOpacity(0.3),
+                          inactiveTrackColor: Colors.white.withValues(alpha: 0.3),
                           thumbColor: Colors.red,
-                          overlayColor: Colors.red.withOpacity(0.3),
+                          overlayColor: Colors.red.withValues(alpha: 0.3),
                         ),
                         child: Slider(
                           value: _currentPosition.inSeconds.toDouble(),

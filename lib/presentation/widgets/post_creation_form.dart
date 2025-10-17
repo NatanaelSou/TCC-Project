@@ -254,7 +254,7 @@ class _PostCreationFormState extends State<PostCreationForm> {
                         });
                       },
                       backgroundColor: AppColors.background,
-                      selectedColor: AppColors.btnSecondary.withOpacity(0.2),
+                      selectedColor: AppColors.btnSecondary.withValues(alpha: 0.2),
                       checkmarkColor: AppColors.btnSecondary,
                     );
                   }).toList(),

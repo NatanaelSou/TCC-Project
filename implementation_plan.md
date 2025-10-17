@@ -1,11 +1,13 @@
 # Implementation Plan
 
 ## Overview
+
 The goal of this implementation is to complete the MVP features outlined in README.md by adding the missing "Comunidade inicial (chat/mural)" functionality, which includes basic chat and mural (discussion board) features for creators and users to interact. This fits into the existing Premiora platform by providing a dedicated community space that integrates with user authentication, content publication, and simulated tier-based access restrictions. The current codebase has solid foundations for auth, content creation, and tiers, but lacks real-time or basic chat/mural interactions, which are essential for community building as described in the app's core concept of uniting content and community.
 
 The scope includes creating a simple chat system for direct messaging or group chats restricted by tiers, and a mural as a threaded discussion board for posts and replies. This will use mock data initially for simplicity, with backend endpoints for persistence. High-level approach: Extend existing services and screens with new widgets for chat/mural, integrate with auth for access control, and ensure tier simulation restricts private chats/murals. This addresses the MVP gap without overcomplicating the initial version, allowing creators to open channels and users to participate.
 
 ## Types
+
 Introduce new data models for chat messages, mural posts, and community channels, extending existing profile and content models with relationships for tier access.
 
 - **ChatMessage**: Represents a single message in a chat.
@@ -26,6 +28,7 @@ Introduce new data models for chat messages, mural posts, and community channels
 Update existing SupportTier to include channelAccess (bool, whether tier grants access to private channels). No changes to User or ProfileContent beyond adding channelSubscriptions (List<String>, subscribed channel IDs).
 
 ## Files
+
 Create new files for community features, modify existing services/screens for integration, and update configurations for dependencies.
 
 - New files:
@@ -55,36 +58,39 @@ Create new files for community features, modify existing services/screens for in
 - Configuration updates: Update backend/config/db.js to include community tables in schema; add to schema.sql for migrations.
 
 ## Functions
+
 Add new functions for community operations, modify existing auth/content functions for integration.
 
 - New functions:
   - lib/services/community_service.dart: createChannel(creatorId, channelData) -> Future<CommunityChannel?> (POST /channels); joinChannel(userId, channelId) -> Future<bool> (PUT /channels/:id/members); sendMessage(channelId, messageData) -> Future<ChatMessage?> (POST /channels/:id/messages); getMessages(channelId, limit) -> Future<List<ChatMessage>> (GET /channels/:id/messages); createMuralPost(channelId, postData) -> Future<MuralPost?> (POST /murals/:id/posts); getMuralPosts(channelId) -> Future<List<MuralPost>> (GET /murals/:id/posts).
   - backend/services/communityService.js: createChannel(req, res) (validate tier, save to DB); addMessage(channelId, message) (check access, save); similar for mural posts.
-  - lib/screens/community_page.dart: _loadChannels() (fetch and display channels); _createChannel() (modal for new channel).
+  - lib/screens/community_page.dart: \_loadChannels() (fetch and display channels); \_createChannel() (modal for new channel).
 
 - Modified functions:
   - lib/services/content_service.dart.createContent(creatorId, data): Add check if content is for a channel (if channelId present, route to community service).
   - backend/services/profileService.js.getProfile(userId): Include channels array in response.
-  - lib/screens/profile_page.dart._buildSupportTiers(): Add channel creation button if user is creator.
+  - lib/screens/profile_page.dart.\_buildSupportTiers(): Add channel creation button if user is creator.
 
 - No functions to remove.
 
 ## Classes
+
 Introduce new StatefulWidgets for community screens, extend existing providers if needed.
 
 - New classes:
-  - lib/screens/community_page.dart.CommunityPage (StatefulWidget): Lists channels, filters by type/private; key methods: buildChannelList(), _joinChannel().
-  - lib/screens/chat_screen.dart.ChatScreen (StatefulWidget, extends StatefulWidget): Displays messages, handles input/send; key methods: _loadMessages(), _sendMessage(), inherits from post_detail_screen patterns.
-  - lib/screens/mural_screen.dart.MuralScreen (StatefulWidget): Shows threaded posts; key methods: _loadPosts(), _createReply(); uses ListView.builder like post_detail_screen.
+  - lib/screens/community_page.dart.CommunityPage (StatefulWidget): Lists channels, filters by type/private; key methods: buildChannelList(), \_joinChannel().
+  - lib/screens/chat_screen.dart.ChatScreen (StatefulWidget, extends StatefulWidget): Displays messages, handles input/send; key methods: \_loadMessages(), \_sendMessage(), inherits from post_detail_screen patterns.
+  - lib/screens/mural_screen.dart.MuralScreen (StatefulWidget): Shows threaded posts; key methods: \_loadPosts(), \_createReply(); uses ListView.builder like post_detail_screen.
   - lib/services/community_service.dart.CommunityService (class): Singleton-like service with http methods; no inheritance.
 
 - Modified classes:
-  - lib/screens/home_page.dart.HomePage (_HomePageState): Add index 3 for CommunityPage in _pages list; update _onItemTapped() to navigate to community.
-  - lib/screens/profile_page.dart.ProfilePage (_ProfilePageState): Add _channels list and buildChannelsSection() method.
+  - lib/screens/home_page.dart.HomePage (\_HomePageState): Add index 3 for CommunityPage in \_pages list; update \_onItemTapped() to navigate to community.
+  - lib/screens/profile_page.dart.ProfilePage (\_ProfilePageState): Add \_channels list and buildChannelsSection() method.
 
 - No classes to remove.
 
 ## Dependencies
+
 Add WebSocket support for real-time chat updates, but start with HTTP polling to keep MVP simple; no major version changes.
 
 - New packages (Flutter): web_socket_channel ^2.4.0 (for future real-time); sqflite ^2.3.0 if local caching needed (optional).
@@ -92,6 +98,7 @@ Add WebSocket support for real-time chat updates, but start with HTTP polling to
 - No version changes to existing (http, provider, file_picker remain).
 
 ## Testing
+
 Implement unit tests for new models/services and widget tests for screens; manual verification for MVP flows.
 
 - New test files: test/models/community_models_test.dart (JSON serialization, validation); test/services/community_service_test.dart (mock HTTP responses for create/send); test/widgets/chat_message_bubble_test.dart (rendering with tier badge).
@@ -99,6 +106,7 @@ Implement unit tests for new models/services and widget tests for screens; manua
 - Validation: Manual testing - create channel as creator, join/subscribe as user, post message/reply, verify tier restriction (mock user without tier can't access private). Use flutter test and backend unit tests with Jest.
 
 ## Implementation Order
+
 Implement in sequence to build incrementally: models first, then backend, services, UI, integration.
 
 1. Create community models in lib/models/community_models.dart and backend/models/community.js; update schema.sql with new tables (channels, messages, mural_posts); run migrations via execute_command 'node backend/insert_data.js' or SQL.

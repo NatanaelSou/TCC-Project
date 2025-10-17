@@ -98,6 +98,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     try {
       // Usar serviço para adicionar comentário
       final newComment = await _contentService.addComment(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
         widget.post.id,
         '1', // ID do usuário mock
         _commentController.text.trim(),
@@ -231,7 +233,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: Color(int.parse('0xFF${tier.color.substring(1)}')).withOpacity(0.1),
+        color: Color(int.parse('0xFF${tier.color.substring(1)}')).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Color(int.parse('0xFF${tier.color.substring(1)}')),

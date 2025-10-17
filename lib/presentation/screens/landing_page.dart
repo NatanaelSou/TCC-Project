@@ -159,6 +159,8 @@ class _LandingPageState extends State<LandingPage> {
     });
     try {
       final user = await _authService.register(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
         _registerEmailController.text,
         _registerPasswordController.text,
         name: _registerNameController.text,
@@ -199,6 +201,8 @@ class _LandingPageState extends State<LandingPage> {
     });
     try {
       final user = await _authService.login(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
         _loginEmailController.text,
         _loginPasswordController.text,
       );

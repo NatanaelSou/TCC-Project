@@ -266,6 +266,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         }
                         // Simulação de mudança de senha
                         await Future.delayed(Duration(seconds: 1));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
                         setState(() {
                           _successMessage = 'Senha alterada com sucesso!';
                           _currentPasswordController.clear();

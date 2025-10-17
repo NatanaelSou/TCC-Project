@@ -50,6 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
       // Carrega dados em paralelo
       final results = await Future.wait([
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
         _profileService.getProfileStats(userId),
         _profileService.getProfileContent(userId, 'posts', limit: 5),
         _profileService.getProfileContent(userId, 'exclusive', limit: 5),

@@ -13,6 +13,8 @@ class ApiService {
   Future<List<User>> getUsers() async {
     // Simula delay de rede
     await Future.delayed(const Duration(milliseconds: 500));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     return mockUsers;
   }
 
@@ -22,6 +24,8 @@ class ApiService {
   Future<User> getUserById(String userId) async {
     // Simula delay de rede
     await Future.delayed(const Duration(milliseconds: 300));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     final user = mockUsers.firstWhere(
       (u) => u.id.toString() == userId,
       orElse: () => throw Exception('Usuário não encontrado'),
@@ -36,7 +40,11 @@ class ApiService {
   Future<User> updateUser(String userId, Map<String, dynamic> userData) async {
     // Simula delay de rede
     await Future.delayed(const Duration(milliseconds: 400));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     final user = await getUserById(userId);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     // Simula atualização (na prática, apenas retorna o usuário existente)
     return user;
   }
@@ -46,6 +54,8 @@ class ApiService {
   Future<void> deleteUser(String userId) async {
     // Simula delay de rede
     await Future.delayed(const Duration(milliseconds: 300));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     // Simula exclusão (não faz nada na prática)
   }
 
@@ -55,6 +65,8 @@ class ApiService {
   Future<List<Map<String, dynamic>>> searchCreators(String query) async {
     // Simula delay de rede
     await Future.delayed(const Duration(milliseconds: 300));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     if (query.isEmpty) return [];
 
     final lowerQuery = query.toLowerCase();
@@ -71,6 +83,8 @@ class ApiService {
   Future<List<ProfileContent>> searchContents(String query) async {
     // Simula delay de rede
     await Future.delayed(const Duration(milliseconds: 300));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     if (query.isEmpty) return [];
 
     final lowerQuery = query.toLowerCase();

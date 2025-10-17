@@ -28,6 +28,8 @@ void main() async {
   // Testa conexão com API (opcional)
   try {
     await apiService.getUsers();
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
   } catch (e) {
     // Conexão falhou, mas continua
   }

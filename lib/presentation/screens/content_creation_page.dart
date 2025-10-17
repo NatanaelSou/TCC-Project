@@ -137,6 +137,8 @@ class _ContentCreationPageState extends State<ContentCreationPage> {
 
       // Cria o conteúdo
       final content = await _contentService.createContent(creatorId, data);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
       if (!mounted) return;
 

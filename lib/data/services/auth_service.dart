@@ -13,18 +13,27 @@ class AuthService {
   /// @param password Senha do usuário
   /// @returns Instância de User
   Future<User> login(String email, String password) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
-    );
+    try {
+      final response = await http.post(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+        Uri.parse('$baseUrl/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'password': password}),
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return User.fromJson(data['user']);
-    } else {
-      final data = jsonDecode(response.body);
-      throw Exception(data['message'] ?? 'Erro no login');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return User.fromJson(data['user']);
+      } else {
+        final data = jsonDecode(response.body);
+        throw Exception(data['message'] ?? 'Erro no login');
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        throw Exception('Erro de conexão: Verifique se o servidor está rodando e acessível');
+      }
+      rethrow;
     }
   }
 
@@ -34,18 +43,27 @@ class AuthService {
   /// @param name Nome opcional do usuário
   /// @returns Instância de User criado
   Future<User> register(String email, String password, {String? name}) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/users/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password, 'name': name}),
-    );
+    try {
+      final response = await http.post(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+        Uri.parse('$baseUrl/users/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email, 'password': password, 'name': name}),
+      );
 
-    if (response.statusCode == 201) {
-      final data = jsonDecode(response.body);
-      return User.fromJson(data['user']);
-    } else {
-      final data = jsonDecode(response.body);
-      throw Exception(data['message'] ?? 'Erro no registro');
+      if (response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        return User.fromJson(data['user']);
+      } else {
+        final data = jsonDecode(response.body);
+        throw Exception(data['message'] ?? 'Erro no registro');
+      }
+    } catch (e) {
+      if (e is http.ClientException) {
+        throw Exception('Erro de conexão: Verifique se o servidor está rodando e acessível');
+      }
+      rethrow;
     }
   }
 }

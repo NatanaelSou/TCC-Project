@@ -68,7 +68,7 @@ class CreatorSection extends StatefulWidget {
 
   final List<Map<String, dynamic>>? creators;
 
-  CreatorSection({
+  const CreatorSection({
     required this.title,
     this.activeFilters,
     this.creators,

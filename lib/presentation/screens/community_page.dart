@@ -56,6 +56,8 @@ class _CommunityPageState extends State<CommunityPage> {
       final userId = userState.user?.id?.toString() ?? '1';
 
       final channels = await _communityService.getChannels(userId);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       setState(() {
         _channels = channels;
         _isLoading = false;
@@ -99,6 +101,8 @@ class _CommunityPageState extends State<CommunityPage> {
 
     try {
       final messages = await _communityService.getMessages(channelId);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       setState(() {
         _messages = messages;
         _contentLoading = false;
@@ -126,9 +130,13 @@ class _CommunityPageState extends State<CommunityPage> {
       final userId = userState.user?.id?.toString() ?? '1';
 
       await _communityService.sendMessage(userId, _selectedChannel!.id, {'text': text});
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
       _messageController.clear();
       await _loadMessages(_selectedChannel!.id);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao enviar mensagem: ${e.toString()}')),
@@ -200,6 +208,8 @@ class _CommunityPageState extends State<CommunityPage> {
 
     try {
       final posts = await _communityService.getMuralPosts(channelId);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       setState(() {
         _posts = posts;
         _contentLoading = false;
@@ -228,6 +238,8 @@ class _CommunityPageState extends State<CommunityPage> {
       final userId = userState.user?.id?.toString() ?? '1';
 
       await _communityService.createMuralPost(userId, _selectedChannel!.id, {
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
         'title': title,
         'description': description,
       });
@@ -236,6 +248,8 @@ class _CommunityPageState extends State<CommunityPage> {
       _descriptionController.clear();
       Navigator.of(context).pop();
       await _loadPosts(_selectedChannel!.id);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao criar post: ${e.toString()}')),

@@ -46,6 +46,8 @@ class _CommunityMuralScreenState extends State<CommunityMuralScreen> {
 
   /// Carrega posts do mural
   Future<void> _loadPosts() async {
+    if (!mounted) return;
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -53,11 +55,15 @@ class _CommunityMuralScreenState extends State<CommunityMuralScreen> {
 
     try {
       final posts = await _communityService.getMuralPosts(widget.channel.id);
+      if (!mounted) return;
+
       setState(() {
         _posts = posts;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted) return;
+
       setState(() {
         _errorMessage = 'Erro ao carregar posts: ${e.toString()}';
         _isLoading = false;
@@ -85,18 +91,24 @@ class _CommunityMuralScreenState extends State<CommunityMuralScreen> {
         'description': description,
       });
 
+      if (!mounted) return;
+
       _titleController.clear();
       _descriptionController.clear();
       Navigator.of(context).pop(); // Fecha o modal
       await _loadPosts(); // Recarrega posts
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao criar post: ${e.toString()}')),
       );
     } finally {
-      setState(() {
-        _isCreating = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isCreating = false;
+        });
+      }
     }
   }
 

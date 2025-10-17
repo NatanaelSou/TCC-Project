@@ -6,12 +6,12 @@ Descripiton...
 Projeto Premiora
 
 1. O que é o Premiora
-O Premiora é uma plataforma feita para juntar em um só lugar o que hoje os criadores precisam separar: a exposição do conteúdo e a comunidade em torno dele.
-Hoje, influencers e criadores usam redes como Instagram para aparecer no algoritmo e precisam direcionar sua comunidade para outros espaços, como WhatsApp ou Telegram. O Premiora resolve isso: dá ao criador um ambiente único para divulgar, interagir e monetizar seu trabalho.
+   O Premiora é uma plataforma feita para juntar em um só lugar o que hoje os criadores precisam separar: a exposição do conteúdo e a comunidade em torno dele.
+   Hoje, influencers e criadores usam redes como Instagram para aparecer no algoritmo e precisam direcionar sua comunidade para outros espaços, como WhatsApp ou Telegram. O Premiora resolve isso: dá ao criador um ambiente único para divulgar, interagir e monetizar seu trabalho.
 
 2. Como funciona a criação de conteúdo
-O Premiora não se limita a um formato só. A ideia é que o criador tenha liberdade total para produzir e compartilhar:
-Vídeos (editados ou brutos), Live streaming para interações em tempo real, Podcasts e áudios exclusivos, Posts e publicações (memes, textos, reflexões, bastidores etc.), Cursos e materiais educativos, Qualquer outro tipo de mídia que ele queira experimentar. Tudo isso pode ser organizado dentro da própria plataforma, sem depender de outros apps.
+   O Premiora não se limita a um formato só. A ideia é que o criador tenha liberdade total para produzir e compartilhar:
+   Vídeos (editados ou brutos), Live streaming para interações em tempo real, Podcasts e áudios exclusivos, Posts e publicações (memes, textos, reflexões, bastidores etc.), Cursos e materiais educativos, Qualquer outro tipo de mídia que ele queira experimentar. Tudo isso pode ser organizado dentro da própria plataforma, sem depender de outros apps.
 
 3. Monetização e assinaturas
 
@@ -21,8 +21,7 @@ O sistema de assinatura é mensal, com diferentes níveis (tiers) que o criador 
 
 Cada tier pode ter benefícios específicos: acesso a canais privados, conteúdos exclusivos, bastidores, interação direta, entre outros.
 
-O preço é flexível: cada criador decide quanto cobrar em cada nível de assinatura.
-4. Comunidade dentro da plataforma
+O preço é flexível: cada criador decide quanto cobrar em cada nível de assinatura. 4. Comunidade dentro da plataforma
 
 Mais do que uma vitrine de conteúdos, o Premiora é também um espaço de comunidade.
 
@@ -32,15 +31,13 @@ Esses espaços podem ser livres ou restritos a assinantes de determinados tiers.
 
 Os criadores podem ter moderadores para ajudar na organização.
 
-A comunidade vira parte do conteúdo, fortalecendo o vínculo entre criador e público.
-5. Para o usuário
+A comunidade vira parte do conteúdo, fortalecendo o vínculo entre criador e público. 5. Para o usuário
 
 Todo criador precisa oferecer um conteúdo mínimo gratuito, que funciona como porta de entrada.
 
 Usuários podem acompanhar de graça, mas também têm a opção de apoiar e ter acesso a mais através da assinatura mensal.
 
-A experiência é completa: o usuário assiste, interage e participa da comunidade sem precisar sair da plataforma.
-6. Para o criador
+A experiência é completa: o usuário assiste, interage e participa da comunidade sem precisar sair da plataforma. 6. Para o criador
 
 Total autonomia para decidir o que postar, como postar e quanto cobrar.
 
@@ -105,8 +102,8 @@ flutter pub get
 flutter run           # para mobile
 flutter run -d chrome # para web
 # selecione modo ( escolha o chrome caso nao tenha um emulator )
-# Outras saidas.. Se Saida -> 
-{ "message": "pong" } # Saida: API mínima: /ping retorna 
+# Outras saidas.. Se Saida ->
+{ "message": "pong" } # Saida: API mínima: /ping retorna
 # Conexao Node.JS normal
 ```
 

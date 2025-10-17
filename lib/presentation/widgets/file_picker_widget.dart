@@ -41,6 +41,8 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
   Future<void> _pickVideoFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
         type: FileType.video,
         allowMultiple: false,
       );
@@ -57,11 +59,15 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
   /// Seleciona imagem do dispositivo
   Future<void> _pickImage() async {
     await _showImageSourceDialog();
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
   }
 
   /// Mostra diálogo para escolher fonte da imagem
   Future<void> _showImageSourceDialog() async {
     await showDialog(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Selecionar imagem'),
@@ -94,6 +100,8 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
   Future<void> _pickFromGallery() async {
     try {
       final XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       if (image != null) {
         widget.onFileSelected(image.path);
       }
@@ -106,6 +114,8 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
   Future<void> _pickImageFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
         type: FileType.image,
         allowMultiple: false,
       );

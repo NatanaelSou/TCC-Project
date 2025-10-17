@@ -57,6 +57,8 @@ class _ContentSectionState extends State<ContentSection> {
     // Incrementa visualizações
     try {
       await ContentService(baseUrl: '$baseUrl/api')
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
           .incrementViews(content.id);
     } catch (e) {
       // Ignora erro de incremento
@@ -154,7 +156,7 @@ class _ContentSectionState extends State<ContentSection> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -189,7 +191,7 @@ class _ContentSectionState extends State<ContentSection> {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color:
-            Color(int.parse('0xFF${tier.color.substring(1)}')).withOpacity(0.9),
+            Color(int.parse('0xFF${tier.color.substring(1)}')).withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(

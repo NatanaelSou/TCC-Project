@@ -46,6 +46,8 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
 
   /// Carrega mensagens do canal
   Future<void> _loadMessages() async {
+    if (!mounted) return;
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;
@@ -53,12 +55,16 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
 
     try {
       final messages = await _communityService.getMessages(widget.channel.id);
+      if (!mounted) return;
+
       setState(() {
         _messages = messages; // Ordem cronológica: antigas no topo, recentes no final
         _isLoading = false;
       });
       _scrollToBottom();
     } catch (e) {
+      if (!mounted) return;
+
       setState(() {
         _errorMessage = 'Erro ao carregar mensagens: ${e.toString()}';
         _isLoading = false;
@@ -81,16 +87,22 @@ class _CommunityChatScreenState extends State<CommunityChatScreen> {
 
       await _communityService.sendMessage(userId, widget.channel.id, {'text': text});
 
+      if (!mounted) return;
+
       _messageController.clear();
       await _loadMessages(); // Recarrega mensagens após enviar
     } catch (e) {
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao enviar mensagem: ${e.toString()}')),
       );
     } finally {
-      setState(() {
-        _isSending = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
     }
   }
 

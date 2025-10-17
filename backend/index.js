@@ -31,4 +31,4 @@ console.log("communityRoutes importado:", communityRoutes);
 app.get('/ping', (req, res) => res.json({ message: 'pong' }));
 
 // Inicializar servidor
-app.listen(3000, '0.0.0.0', () => console.log("Servirdor: http://192.168.1.7:3000 - /api/users - /api/login - /api/profiles - /api/content - /api/community"));
+app.listen(3000, '0.0.0.0', () => console.log("Servidor: http://192.168.3.8:3000 - /api/users - /api/login - /api/profiles - /api/content - /api/community"));

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-const String baseUrl = 'http://192.168.1.7:3000';
+// Para desenvolvimento local (host machine)
+const String baseUrl = 'http://192.168.3.8:3000';
+
+// Para emulador Android, descomente a linha abaixo e comente a acima
+// const String baseUrl = 'http://10.0.2.2:3000';
 
 /// Classe centralizada de constantes de cores da aplicação
 /// Organiza todas as cores utilizadas na interface para facilitar manutenção

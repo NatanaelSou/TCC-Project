@@ -18,6 +18,8 @@ class CommunityService {
   /// @returns Canal criado
   Future<Channel> createChannel(String creatorId, Map<String, dynamic> channelData) async {
     final response = await http.post(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       Uri.parse('$baseUrl/community/users/$creatorId/channels'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(channelData),
@@ -37,6 +39,8 @@ class CommunityService {
   Future<List<Channel>> getChannels(String userId) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/community/users/$userId/channels'));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
       if (response.statusCode == 200) {
         final List data = jsonDecode(response.body);
@@ -56,6 +60,8 @@ class CommunityService {
   /// @returns Status da operação
   Future<void> joinChannel(String userId, String channelId) async {
     final response = await http.post(Uri.parse('$baseUrl/community/channels/$channelId/join/$userId'));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
     if (response.statusCode != 200) {
       throw Exception('Erro ao juntar-se ao canal');
@@ -70,6 +76,8 @@ class CommunityService {
   Future<Message> sendMessage(String senderId, String channelId, Map<String, dynamic> messageData) async {
     try {
       final response = await http.post(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
         Uri.parse('$baseUrl/community/channels/$channelId/messages/$senderId'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(messageData),
@@ -104,6 +112,8 @@ class CommunityService {
   Future<List<Message>> getMessages(String channelId, {int limit = 50}) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/community/channels/$channelId/messages?limit=$limit'));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
       if (response.statusCode == 200) {
         final List data = jsonDecode(response.body);
@@ -124,6 +134,8 @@ class CommunityService {
   /// @returns Post criado
   Future<MuralPost> createMuralPost(String creatorId, String channelId, Map<String, dynamic> postData) async {
     final response = await http.post(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       Uri.parse('$baseUrl/community/channels/$channelId/posts/$creatorId'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(postData),
@@ -143,6 +155,8 @@ class CommunityService {
   Future<List<MuralPost>> getMuralPosts(String channelId) async {
     try {
       final response = await http.get(Uri.parse('$baseUrl/community/channels/$channelId/posts'));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
       if (response.statusCode == 200) {
         final List data = jsonDecode(response.body);

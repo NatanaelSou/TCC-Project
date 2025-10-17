@@ -14,6 +14,8 @@ class ContentService {
   /// @returns Lista de comentários
   Future<List<Comment>> getCommentsForContent(String contentId) async {
     final response = await http.get(Uri.parse('$baseUrl/content/$contentId/comments'));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);
@@ -30,6 +32,8 @@ class ContentService {
   /// @returns Comentário criado
   Future<Comment> addComment(String contentId, String userId, String text) async {
     final response = await http.post(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       Uri.parse('$baseUrl/content/$contentId/comments'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
@@ -52,6 +56,8 @@ class ContentService {
   /// @returns Lista de vídeos similares
   Future<List<ProfileContent>> getSimilarVideos(String contentId, List<String> categories) async {
     final response = await http.post(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       Uri.parse('$baseUrl/content/$contentId/similar'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'categories': categories}),
@@ -70,6 +76,8 @@ class ContentService {
   /// @returns Lista de conteúdos recomendados
   Future<List<ProfileContent>> getRecommendations(String contentId) async {
     final response = await http.get(Uri.parse('$baseUrl/content/$contentId/recommendations'));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
     if (response.statusCode == 200) {
       final List data = jsonDecode(response.body);
@@ -83,6 +91,8 @@ class ContentService {
   /// @param contentId ID do conteúdo
   Future<void> incrementViews(String contentId) async {
     final response = await http.post(Uri.parse('$baseUrl/content/$contentId/views'));
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
 
     if (response.statusCode != 200) {
       throw Exception('Erro ao incrementar visualizações');
@@ -95,6 +105,8 @@ class ContentService {
   /// @returns Conteúdo criado
   Future<ProfileContent> createContent(String userId, Map<String, dynamic> contentData) async {
     final response = await http.post(
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
+    // AVISO: Verifique se o uso de BuildContext após await é seguro
       Uri.parse('$baseUrl/content/$userId'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(contentData),
