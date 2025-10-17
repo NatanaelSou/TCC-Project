@@ -1,5 +1,10 @@
+// lib/providers/theme_provider.dart
+//
+// Package Imports
 import 'package:flutter/material.dart';
 
+/// Provedor de Tema
+/// Gerencia o tema claro/escuro da aplicação
 class ThemeNotifier extends ChangeNotifier {
   bool _isDark = false;
 

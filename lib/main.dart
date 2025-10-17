@@ -1,19 +1,21 @@
 // lib/main.dart
 //
-// Ponto de entrada da aplicação Flutter
-// Configura providers globais e inicializa a interface
+// Packge Imports
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-// Serviços e Estado
-import 'services/api_service.dart';
-import 'screens/landing_page.dart';
-import 'user_state.dart';
-import 'utils/filter_manager.dart';
+//
+// Resources Imports
+import 'core/utils/filter_manager.dart';
+import 'data/services/api_service.dart';
+import 'data/models/community_models.dart';
 import 'providers/theme_provider.dart';
-import 'screens/community_chat_screen.dart';
-import 'screens/community_mural_screen.dart';
-import 'models/community_models.dart';
+import 'providers/user_state.dart';
+//
+// UI Imports
+import 'presentation/screens/landing_page.dart';
+import 'presentation/screens/community_chat_screen.dart';
+import 'presentation/screens/community_mural_screen.dart';
+
 
 /// Ponto de entrada da aplicação
 /// Inicializa o app com providers globais e configurações básicas
